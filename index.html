@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Adrián Birnbaun — Graphic, Digital &amp; UX/UI Designer</title>
+  <meta name="description" content="Adrián Birnbaun — graphic, digital, web and UX/UI designer based in Buenos Aires.">
+  <meta name="theme-color" content="#050505">
+
+  <!-- Fonts: Archivo (display, 900) + JetBrains Mono (technical). Both open-source. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@900&family=JetBrains+Mono:wght@400&display=swap">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header class="site-header home-header">
+    <span class="site-name">Adrián Birnbaun</span>
+  </header>
+
+  <!-- ============================================================
+       MAIN NAVIGATION
+       Each item is one link with two independent visual layers:
+         .word   — the huge word (blurs + fades on hover)
+         .ticker — the small moving line (always crisp, always white)
+       The ticker is decorative for screen readers; the link's
+       accessible name is the word itself.
+       ============================================================ -->
+  <main class="site-main" id="main">
+    <nav class="nav" aria-label="Main">
+      <ul class="nav__list">
+
+        <li class="nav__item">
+          <a class="nav__link" href="projects.html">
+            <span class="word">Projects</span>
+            <span class="ticker" aria-hidden="true" data-text="[ VIEW PROJECTS ] ↗">
+              <span class="ticker__track">
+                <span class="ticker__group">[ VIEW PROJECTS ] ↗</span>
+              </span>
+            </span>
+          </a>
+        </li>
+
+        <li class="nav__item">
+          <a class="nav__link" href="about.html">
+            <span class="word">About me</span>
+            <span class="ticker" aria-hidden="true" data-text="[ ABOUT ME ] ↗">
+              <span class="ticker__track">
+                <span class="ticker__group">[ ABOUT ME ] ↗</span>
+              </span>
+            </span>
+          </a>
+        </li>
+
+        <li class="nav__item">
+          <a class="nav__link" href="contact.html">
+            <span class="word">Contact</span>
+            <span class="ticker" aria-hidden="true" data-text="[ CONTACT ] ↗">
+              <span class="ticker__track">
+                <span class="ticker__group">[ CONTACT ] ↗</span>
+              </span>
+            </span>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+  </main>
+
+  <p class="contact-mark home-mark" aria-label="Copyright 2026">© <span>26</span></p>
+
+  <!-- Canvas grain stays behind the interface and never receives pointer input. -->
+  <canvas class="grain" aria-hidden="true"></canvas>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Side B — Posters &amp; Illustrations · Adrián Birnbaun</title>
+<meta name="description" content="Side B: an exhibition of posters and illustrations by Adrián Birnbaun — personal experiments and commissioned pieces.">
+<meta name="theme-color" content="#eef1ea">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1ea; --bg-2:#e4e8df; --ink:#121212; --ink-2:#5c615b; --ink-3:#9aa097; --line:rgba(18,18,18,.12);
+  --sans:"Archivo", system-ui, sans-serif; --mono:"JetBrains Mono", ui-monospace, monospace;
+  --pad:clamp(16px,3.4vw,48px); --ease:cubic-bezier(.22,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img{display:block;max-width:100%}
+:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
+.mono{font:400 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.35;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* header */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:18px var(--pad);transition:background .3s}
+.hdr.solid{background:rgba(238,241,234,.85);backdrop-filter:blur(10px)}
+.hdr .l{justify-self:start}.hdr .r{justify-self:end;display:flex;gap:10px;align-items:center}
+.hdr a.mono{transition:opacity .2s}.hdr a.mono:hover{opacity:.5}
+.mark{font:900 22px/1 var(--sans);letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.mark i{width:22px;height:22px;border-radius:50%;background:var(--ink);position:relative}
+.mark i::after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--bg)}
+.pill{border:1px solid var(--ink);border-radius:999px;padding:8px 14px;transition:background .25s,color .25s}
+.pill:hover{background:var(--ink);color:var(--bg)}
+
+/* intro */
+.intro{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:120px var(--pad) 40px;position:relative;overflow:hidden}
+.intro .fan{position:absolute;left:62%;top:40%;width:0;height:0}
+.intro .fan img{position:absolute;max-width:none;width:clamp(120px,15vw,220px);left:0;top:0;box-shadow:0 30px 50px -24px rgba(0,0,0,.35);border-radius:4px;opacity:0;
+  transform:translate(-50%,-50%) rotate(0) translateY(60px);animation:fan 1.3s var(--ease) forwards}
+@keyframes fan{to{opacity:1;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) rotate(var(--r))}}
+.intro h1{font:900 clamp(64px,15vw,240px)/.82 var(--sans);letter-spacing:-.05em;position:relative;z-index:2;mix-blend-mode:multiply}
+.intro h1 span{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .06em .04em 0}
+.intro h1 span b{display:inline-block;font-weight:900;transform:translateY(100%);animation:up 1s .5s var(--ease) forwards}
+.intro h1 span:nth-child(2) b{animation-delay:.6s}
+@keyframes up{to{transform:none}}
+.intro .row{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-top:22px;position:relative;z-index:2;opacity:0;animation:fade 1s .9s forwards}
+@keyframes fade{to{opacity:1}}
+.intro p{max-width:40ch;font-size:clamp(16px,1.4vw,19px);color:var(--ink-2)}
+.cue{display:flex;align-items:center;gap:10px}
+.cue i{width:1px;height:40px;background:var(--line);position:relative;overflow:hidden}
+.cue i::after{content:"";position:absolute;left:0;top:-40%;width:1px;height:40%;background:var(--ink);animation:cue 1.8s var(--ease) infinite}
+@keyframes cue{to{top:110%}}
+
+/* scroll carousel */
+.rail{position:relative}
+.stick{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;flex-direction:column}
+.stage{position:relative;flex:1}
+.card{position:absolute;left:50%;top:44%;width:var(--w);will-change:transform,opacity;cursor:zoom-in;transform-origin:50% 120%}
+.card img{width:100%;height:auto;border-radius:5px;box-shadow:0 1px 2px rgba(0,0,0,.08),0 30px 60px -28px rgba(0,0,0,.45);transition:box-shadow .4s}
+.card:hover img{box-shadow:0 1px 2px rgba(0,0,0,.08),0 40px 70px -26px rgba(0,0,0,.55)}
+.cap{position:absolute;left:0;right:0;bottom:clamp(28px,6vh,64px);text-align:center;padding:0 var(--pad);pointer-events:none}
+.cap .kicker{color:var(--ink-2);display:flex;justify-content:center;gap:14px}
+.cap h2{font:500 clamp(30px,4.2vw,62px)/1.02 var(--sans);letter-spacing:-.035em;margin-top:10px;height:1.1em;overflow:hidden}
+.cap h2 span{display:block;transition:transform .5s var(--ease),opacity .5s}
+.cap h2 span.out{transform:translateY(-100%);opacity:0}
+.cap h2 span.in{transform:translateY(100%);opacity:0}
+.bar{position:absolute;left:var(--pad);right:var(--pad);top:88px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.prog{flex:1;max-width:340px;height:1px;background:var(--line);position:relative}
+.prog i{position:absolute;left:0;top:-1px;height:3px;background:var(--ink);width:0}
+.nav{display:flex;gap:6px}
+.nav button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:.25s}
+.nav button:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:80;background:rgba(238,241,234,.96);backdrop-filter:blur(6px);display:grid;grid-template-rows:auto 1fr auto;opacity:0;pointer-events:none;transition:opacity .3s}
+.lb.open{opacity:1;pointer-events:auto}
+.lb .top,.lb .bot{display:flex;justify-content:space-between;align-items:center;padding:18px var(--pad);gap:16px}
+.lb figure{display:grid;place-items:center;min-height:0;padding:0 var(--pad)}
+.lb img{max-height:calc(100svh - 170px);max-width:100%;width:auto;height:auto;object-fit:contain;border-radius:4px;box-shadow:0 40px 80px -30px rgba(0,0,0,.4);transform:scale(.96);transition:transform .45s var(--ease)}
+.lb.open img{transform:none}
+.lb .t{font:500 clamp(20px,2.4vw,32px) var(--sans);letter-spacing:-.02em}
+
+footer{padding:40px var(--pad) 30px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.intro .fan img{opacity:1;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) rotate(var(--r))}.intro h1 span b{transform:none}.intro .row{opacity:1}}
+@media (max-width:760px){
+  .hdr{grid-template-columns:1fr auto}
+  .hdr .c{display:none}
+  .hdr .l.mono{max-width:46vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .intro .row{flex-direction:column;align-items:flex-start}
+  .intro .fan{top:36%;left:50%}
+  .bar{top:72px}
+  .nav{display:none}
+  .cap h2{font-size:28px}
+  .card{top:46%}
+}
+
+@media (max-width:760px){
+  .hdr{padding:14px 16px}
+  .hdr .pill{padding:7px 11px;font-size:10px}
+  .intro{padding:96px 16px 32px}
+  .intro h1{font-size:clamp(72px,24vw,110px)}
+  .intro p{font-size:15.5px}
+  .bar{left:16px;right:16px;top:64px}
+  .prog{max-width:none}
+  .card{top:45%}
+  .card img{border-radius:4px}
+  .cap{bottom:calc(28px + env(safe-area-inset-bottom))}
+  .cap h2{font-size:clamp(24px,7.4vw,30px)}
+  .lb .top,.lb .bot{padding:14px 16px}
+  .lb figure{padding:0 12px}
+  .lb img{max-height:calc(100svh - 170px)}
+  .lb .bot{display:grid;grid-template-columns:auto auto;justify-content:space-between;row-gap:10px}
+  .lb .bot .t{grid-column:1/-1;grid-row:1;text-align:center;font-size:20px}
+  .lb .pill{padding:9px 14px}
+  footer{padding:28px 16px;flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr" id="hdr">
+  <a class="l mono" href="../../projects.html" onclick="event.preventDefault();abBack('../../projects.html')">[ ESC / CLOSE ] ← Projects</a>
+  <a class="c mark" href="#top" aria-label="Side B, top"><i></i>Side B</a>
+  <div class="r"><a class="mono pill" href="https://instagram.com/wydbaun" target="_blank" rel="noopener">@wydbaun ↗</a></div>
+</header>
+
+<main id="top">
+  <section class="intro">
+    <div class="fan" id="fan" aria-hidden="true"></div>
+    <h1><span><b>Side</b></span> <span><b>B.</b></span></h1>
+    <div class="row">
+      <p>Posters and illustrations made between briefs — personal experiments, late-night ideas and a few commissioned pieces.</p>
+      <span class="cue mono"><i></i>Scroll to browse</span>
+    </div>
+  </section>
+
+  <section class="rail" id="rail" aria-label="Gallery">
+    <div class="stick">
+      <div class="bar">
+        <span class="mono" id="count">01</span>
+        <span class="prog" aria-hidden="true"><i id="prog"></i></span>
+        <div class="nav"><button id="prev" aria-label="Previous piece">←</button><button id="next" aria-label="Next piece">→</button></div>
+      </div>
+      <div class="stage" id="stage"></div>
+      <div class="cap" aria-live="polite">
+        <div class="kicker mono"><span id="capK">Personal</span></div>
+        <h2><span id="capT">Please</span></h2>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="mono">
+  <span>Side B — Adrián Birnbaun · Buenos Aires</span>
+  <a href="https://instagram.com/wydbaun" target="_blank" rel="noopener">@wydbaun ↗</a>
+</footer>
+
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Piece viewer">
+  <div class="top"><span class="mono" id="lbN"></span><button class="mono pill" id="lbX">Close</button></div>
+  <figure><img id="lbImg" alt=""></figure>
+  <div class="bot"><button class="mono pill" id="lbP">← Prev</button><span class="t" id="lbT"></span><button class="mono pill" id="lbNx">Next →</button></div>
+</div>
+
+<script>
+/* ESC / close = one step back inside the portfolio (fallback: projects) */
+let abInSite=false;try{abInSite=sessionStorage.getItem('ab-nav')==='1'}catch(_){}
+const abBack=(fallback)=>{location.href=fallback;return;
+  if(history.length>1&&abInSite){let left=false;addEventListener('pagehide',()=>left=true,{once:true});history.back();setTimeout(()=>{if(!left)location.href=fallback},1500)}else location.href=fallback};
+try{sessionStorage.setItem('ab-nav','1')}catch(_){}
+
+const W=[
+ ['p14','Please','Personal',1025,1280],
+ ['p14a',"I’m a Challenger",'Personal',1025,1280],
+ ['p15','The Curiosity Will Devour You','Personal',1025,1280],
+ ['p16',"God’s Plan",'Personal',1025,1280],
+ ['p13','A Matter of Time','Personal',1024,1280],
+ ['p17',"Don’t Text Me",'Personal',1025,1280],
+ ['poster-18-argentina','Campeón 2024','Personal',1025,1280],
+ ['p20t','Stamp Nº20','Personal',1025,1280],
+ ['p21',"If It’s Net",'Personal',1025,1280],
+ ['poster-01','When the Creativity Hits','Personal',1118,1118],
+ ['poster-2','Lost in Your Eyes','Personal',1400,1397],
+ ['poster-3','Rampage','Personal',1118,1118],
+ ['poster-4','Void','Personal',1118,1118],
+ ['poster-5','Inner Peace','Personal',1118,1118],
+ ['poster-6','Hunger &amp; Ambition','Personal',1118,1118],
+ ['poster-7','Joyful Demons','Commission',1118,1118],
+ ['poster-7-b','Joyful Demons II','Commission',1118,1118],
+ ['poster-8','Essential Items','Personal',1400,1400],
+ ['poster-9','Danger','Personal',1400,1400],
+ ['poster-10b','Discover All of It','Personal',1118,1118],
+ ['poster-11-b','Creative Perception','Personal',1118,1118],
+ ['poster-12','Have You Seen Him?','Personal',1118,1118],
+ ['no-time','No Time for Fancy Poems','Personal',1400,1400],
+ ['poster-22-sin-textura','Stinky One','Personal',596,842],
+ ['poster-23','Both of Us','Personal',596,842],
+ ['poster-24','Be Cunning','Personal',596,843],
+ ['poster-chico-bano','Get Shit Done','Commission',1120,1400],
+ ['poster-grande-cafe',"It’s Time Coffee Club",'Commission',1000,1400],
+ ['poster-grande-ramen','Tuna Flavour','Commission',1000,1400]
+];
+const N=W.length,$=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const src=s=>`web/${s}.webp`,pad=n=>String(n).padStart(2,'0');
+const dec=t=>{const d=document.createElement('textarea');d.innerHTML=t;return d.value};
+
+/* header */
+addEventListener('scroll',()=>$('#hdr').classList.toggle('solid',scrollY>40),{passive:true});
+
+/* intro fan */
+[[4,-260,-12,-12],[1,-130,-40,-6],[9,0,-56,0],[5,130,-40,6],[21,260,-12,12]].forEach(([i,x,y,r],k)=>{
+  const im=new Image();im.src=src(W[i][0]);im.alt='';
+  const s=innerWidth<760?.42:1;
+  im.style.cssText=`--x:${x*s}px;--y:${y*s}px;--r:${r}deg;animation-delay:${.1+k*.08}s`;
+  $('#fan').appendChild(im)});
+
+/* carousel */
+const stage=$('#stage'),rail=$('#rail');
+$('#count').textContent=`01 / ${pad(N)}`;
+rail.style.height=`calc(100svh + ${N-1} * 38svh)`;
+const cards=W.map((w,i)=>{
+  const c=document.createElement('button');c.className='card';c.setAttribute('aria-label',`Open ${dec(w[1])}`);
+  const ratio=w[4]/w[3];
+  const mob=innerWidth<760;c.style.setProperty('--w',mob?`min(${Math.round(66/Math.max(ratio,1))}vw, ${Math.round(46/ratio)}svh)`:`min(${Math.round(26/Math.max(ratio,1))}vw, ${Math.round(46/ratio)}svh)`);
+  c.innerHTML=`<img src="${src(w[0])}" alt="${w[1]}" width="${w[3]}" height="${w[4]}" loading="${i<4?'eager':'lazy'}" decoding="async">`;
+  c.onclick=()=>openLB(i);stage.appendChild(c);return c});
+let cur=-1,p=0,target=0;
+function railProgress(){const r=rail.getBoundingClientRect();const tot=rail.offsetHeight-innerHeight;return Math.min(1,Math.max(0,-r.top/tot))}
+function layout(){
+  const vw=innerWidth,mob=vw<760,gap=mob?vw*.72:Math.min(vw*.24,420);
+  const pos=p*(N-1);
+  cards.forEach((c,i)=>{
+    const o=i-pos,ao=Math.abs(o);
+    if(ao>4.5){c.style.visibility='hidden';return}
+    c.style.visibility='visible';
+    const x=o*gap,y=ao*ao*(mob?10:18)+ (ao<1?0:0),rot=o*(mob?7:9),sc=1-Math.min(ao,3)*.07;
+    c.style.transform=`translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rot}deg) scale(${sc})`;
+    c.style.zIndex=100-Math.round(ao*10);
+    c.style.opacity=ao>3.5?Math.max(0,4.5-ao):1;
+  });
+  $('#prog').style.width=(p*100)+'%';
+  const a=Math.round(pos);if(a!==cur){setCap(a);cur=a}
+}
+function setCap(a){
+  const w=W[a],t=$('#capT');$('#count').textContent=`${pad(a+1)} / ${pad(N)}`;
+  $('#capK').textContent=w[2];
+  if(reduce||cur<0){t.innerHTML=w[1];return}
+  t.classList.add('out');
+  setTimeout(()=>{t.innerHTML=w[1];t.classList.remove('out');t.classList.add('in');requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.remove('in')))},220);
+}
+(function loop(){target=railProgress();p+= (target-p)*(reduce?1:.12);if(Math.abs(target-p)<.0001)p=target;layout();requestAnimationFrame(loop)})();
+function goTo(i){i=Math.max(0,Math.min(N-1,i));const tot=rail.offsetHeight-innerHeight;scrollTo({top:rail.offsetTop+tot*(i/(N-1))+1,behavior:reduce?'auto':'smooth'})}
+$('#prev').onclick=()=>goTo(cur-1);$('#next').onclick=()=>goTo(cur+1);
+addEventListener('resize',()=>{const mob=innerWidth<760;cards.forEach((c,i)=>{const w=W[i],r=w[4]/w[3];c.style.setProperty('--w',mob?`min(${Math.round(66/Math.max(r,1))}vw, ${Math.round(46/r)}svh)`:`min(${Math.round(26/Math.max(r,1))}vw, ${Math.round(46/r)}svh)`)});layout()});
+
+/* lightbox */
+const lb=$('#lb');let li=0,opener=null;
+function openLB(i){opener=document.activeElement;li=(i+N)%N;const w=W[li];$('#lbImg').src=src(w[0]);$('#lbImg').alt=dec(w[1]);$('#lbT').innerHTML=w[1];$('#lbN').textContent=`${pad(li+1)} / ${pad(N)} · ${w[2]}`;lb.classList.add('open');document.body.style.overflow='hidden';$('#lbX').focus()}
+function closeLB(){lb.classList.remove('open');document.body.style.overflow='';opener&&opener.focus()}
+$('#lbX').onclick=closeLB;$('#lbP').onclick=()=>openLB(li-1);$('#lbNx').onclick=()=>openLB(li+1);
+let sx=null;lb.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+lb.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)openLB(li+(dx<0?1:-1));sx=null});
+lb.addEventListener('click',e=>{if(e.target===lb||e.target.tagName==='FIGURE')closeLB()});
+addEventListener('keydown',e=>{
+  if(lb.classList.contains('open')){if(e.key==='Escape')closeLB();if(e.key==='ArrowLeft')openLB(li-1);if(e.key==='ArrowRight')openLB(li+1);return}
+  if(e.key==='Escape')abBack('../../projects.html');
+  const r=rail.getBoundingClientRect();if(r.top<=0&&r.bottom>=innerHeight){if(e.key==='ArrowRight'){e.preventDefault();goTo(cur+1)}if(e.key==='ArrowLeft'){e.preventDefault();goTo(cur-1)}}
+});
+</script>
+</body>
+</html>

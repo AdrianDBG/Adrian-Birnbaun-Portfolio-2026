@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loula — Cobrá y pagá en dólares, sin fronteras</title>
+<meta name="description" content="Loula: billetera para freelancers, importadores y empresas. Recibí USD o USDC, convertí al instante y operá con confirmación en el mismo día. Concepto de diseño por Adrián Birnbaun.">
+<meta name="theme-color" content="#0c1822">
+<link rel="icon" href="img/iso-lima.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#1617d0; --azul-2:#3435f0; --lima:#c5f124; --petroleo:#173140; --lila:#a99bf6;
+  --noche:#0c1822; --noche-2:#112230; --linea:rgba(255,255,255,.09);
+  --claro:#f3f4fa; --tinta:#0e1620; --gris:#6b7684;
+  --display:"Comfortaa", ui-rounded, system-ui, sans-serif;
+  --sans:"Lexend", system-ui, sans-serif;
+  --r:22px; --pad:clamp(18px,4vw,56px); --max:1240px;
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--noche);color:#fff;font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;font-variant-numeric:tabular-nums}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--lima);outline-offset:3px;border-radius:8px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ── Portfolio frame ── */
+.pf{background:#000;color:#bdbdbd;display:flex;justify-content:space-between;gap:16px;padding:9px var(--pad);font:400 10.5px/1.4 ui-monospace,"JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase}
+.pf a{transition:color .2s}.pf a:hover{color:#fff}
+.pf span{opacity:.55}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:48px;padding:0 22px;border-radius:999px;font:500 15px var(--sans);white-space:nowrap;transition:transform .2s var(--ease),background .25s,color .25s,box-shadow .25s}
+.btn:active{transform:scale(.97)}
+.btn-lima{background:var(--lima);color:var(--tinta)}
+.btn-lima:hover{background:#d6fb4a;box-shadow:0 8px 30px -8px rgba(197,241,36,.55)}
+.btn-ghost{border:1px solid rgba(255,255,255,.22)}
+.btn-ghost:hover{background:rgba(255,255,255,.08)}
+.btn-azul{background:var(--azul);color:#fff}
+.btn-azul:hover{background:var(--azul-2)}
+.btn .arr{transition:transform .25s var(--ease)}
+.btn:hover .arr{transform:translateX(3px)}
+
+/* ── Nav ── */
+.nav{position:sticky;top:0;z-index:40;transition:background .3s,border-color .3s,backdrop-filter .3s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(12,24,34,.78);backdrop-filter:blur(14px) saturate(1.4);border-color:var(--linea)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img.iso{width:26px;height:26px}
+.brand img.word{height:17px;width:auto}
+.nav ul{display:flex;gap:30px;list-style:none;font-size:14.5px;color:#c9d0d8}
+.nav ul a{position:relative;transition:color .2s}
+.nav ul a:hover{color:#fff}
+.nav ul a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;border-radius:2px;background:var(--lima);transform:scaleX(0);transition:transform .3s var(--ease)}
+.nav ul a:hover::after{transform:scaleX(1)}
+.nav .act{display:flex;gap:10px;align-items:center}
+.nav .btn{height:42px;padding:0 18px;font-size:14px}
+.burger{display:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--linea);place-items:center}
+.burger span{display:block;width:18px;height:2px;background:#fff;border-radius:2px;position:relative;transition:.3s}
+.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:18px;height:2px;background:#fff;border-radius:2px;transition:.3s}
+.burger span::before{top:-6px}.burger span::after{top:6px}
+.nav.open .burger span{background:transparent}
+.nav.open .burger span::before{top:0;transform:rotate(45deg)}
+.nav.open .burger span::after{top:0;transform:rotate(-45deg)}
+.mmenu{display:none}
+
+/* ── Hero ── */
+.hero{position:relative;overflow:hidden;padding:clamp(40px,7vw,90px) 0 clamp(70px,9vw,120px)}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(60% 55% at 78% 40%,rgba(22,23,208,.55) 0%,rgba(22,23,208,0) 70%),
+  radial-gradient(35% 35% at 92% 85%,rgba(197,241,36,.16) 0%,rgba(197,241,36,0) 70%),
+  radial-gradient(40% 40% at 10% 0%,rgba(169,155,246,.12) 0%,rgba(169,155,246,0) 70%);pointer-events:none}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(var(--linea) 1px,transparent 1px),linear-gradient(90deg,var(--linea) 1px,transparent 1px);background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(70% 70% at 70% 40%,#000 0%,transparent 75%);mask-image:radial-gradient(70% 70% at 70% 40%,#000 0%,transparent 75%)}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,72px);align-items:center}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--linea);font-size:13px;color:#d7dde3}
+.pill b{background:var(--lima);color:var(--tinta);font-weight:600;font-size:11px;padding:3px 9px;border-radius:999px;letter-spacing:.02em}
+.live{width:7px;height:7px;border-radius:50%;background:var(--lima);box-shadow:0 0 0 0 rgba(197,241,36,.6);animation:live 2s infinite}
+@keyframes live{70%{box-shadow:0 0 0 8px rgba(197,241,36,0)}100%{box-shadow:0 0 0 0 rgba(197,241,36,0)}}
+.hero h1{font:700 clamp(42px,6.2vw,84px)/1.02 var(--display);letter-spacing:-.035em;margin:22px 0 22px}
+.hero h1 .hl{color:var(--lima);position:relative;white-space:nowrap}
+.hero h1 .hl svg{position:absolute;left:0;bottom:-.12em;width:100%;height:.28em;overflow:visible}
+.hero h1 .hl path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.1s .8s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.lead{font-size:clamp(16px,1.35vw,19px);color:#b8c2cc;max-width:40ch;font-weight:300}
+.lead strong{color:#fff;font-weight:500}
+.signup{margin-top:34px;display:flex;gap:8px;max-width:470px;padding:6px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--linea);transition:border-color .25s,background .25s}
+.signup:focus-within{border-color:rgba(197,241,36,.6);background:rgba(255,255,255,.09)}
+.signup input{flex:1;min-width:0;background:none;border:0;outline:none;padding:0 16px;font-size:15px}
+.signup input::placeholder{color:#8894a0}
+.form-msg{min-height:20px;margin-top:10px;font-size:13px;color:#8894a0}
+.form-msg.ok{color:var(--lima)}.form-msg.err{color:#ff9a9a}
+.trust{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:26px;font-size:13px;color:#98a4b0}
+.trust span{display:inline-flex;align-items:center;gap:8px}
+.trust svg{color:var(--lima)}
+
+/* Phone mockup */
+.stagehero{position:relative;height:clamp(560px,52vw,640px);display:grid;place-items:center}
+.phone{position:relative;width:300px;height:612px;border-radius:48px;padding:10px;background:linear-gradient(145deg,#2b3a48,#0c141b 40%,#1c2833);box-shadow:0 60px 100px -30px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08) inset,0 30px 80px -20px rgba(22,23,208,.55);transform:rotate(-4deg);animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:rotate(-4deg) translateY(-10px)}}
+.screen{position:relative;height:100%;border-radius:39px;overflow:hidden;background:#0b1620;padding:14px 16px 0}
+.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:92px;height:26px;border-radius:20px;background:#000;z-index:3}
+.sbar{display:flex;justify-content:space-between;font-size:11px;font-weight:500;padding:2px 10px 0;height:24px;color:#e6ebf0}
+.app-top{display:flex;justify-content:space-between;align-items:center;margin:16px 0 18px}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--lila),var(--azul));display:grid;place-items:center;font:600 12px var(--sans)}
+.app-top .hello{font-size:11px;color:#8b97a3;line-height:1.3}
+.app-top .hello b{display:block;color:#fff;font-size:13px;font-weight:500}
+.bell{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.07);display:grid;place-items:center;position:relative}
+.bell::after{content:"";position:absolute;top:8px;right:9px;width:6px;height:6px;border-radius:50%;background:var(--lima)}
+.balance{border-radius:24px;padding:18px;background:radial-gradient(120% 90% at 100% 0%,#3d3ef5 0%,var(--azul) 45%,#0e0f8a 100%);position:relative;overflow:hidden}
+.balance::after{content:"";position:absolute;right:-26px;bottom:-34px;width:130px;height:130px;background:url(img/iso-blanco.png) center/contain no-repeat;opacity:.09;transform:rotate(-8deg)}
+.seg{display:inline-flex;background:rgba(0,0,0,.22);border-radius:999px;padding:3px;gap:2px}
+.seg button{font-size:10.5px;font-weight:500;padding:4px 10px;border-radius:999px;color:#c9ccff;transition:.25s}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--azul)}
+.bal-label{font-size:11px;color:#c9ccff;margin-top:14px}
+.bal-num{white-space:nowrap;font:600 28px/1.15 var(--sans);letter-spacing:-.02em;margin-top:2px}
+.bal-num small{font-size:17px;color:#c9ccff;margin-left:2px}
+.bal-delta{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;background:rgba(197,241,36,.16);color:var(--lima);padding:3px 8px;border-radius:999px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 16px}
+.actions div{background:rgba(255,255,255,.06);border-radius:16px;padding:10px 0 8px;display:grid;justify-items:center;gap:5px;font-size:10.5px;color:#d3dae1}
+.actions i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08)}
+.actions div:nth-child(2) i{background:var(--lima);color:var(--tinta)}
+.list-h{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.list-h span{color:#8b97a3;font-size:11px}
+.tx{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.tx .ic{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font:600 11px var(--sans);flex:none}
+.tx .t{flex:1;min-width:0;font-size:12px;line-height:1.3}
+.tx .t small{display:block;color:#7f8b97;font-size:10.5px}
+.tx .a{font-size:12px;font-weight:500;text-align:right;line-height:1.3}
+.tx .a small{display:block;color:#7f8b97;font-weight:400;font-size:10px}
+.pos{color:var(--lima)}
+
+/* Floating cards */
+.fcard{position:absolute;z-index:2;background:rgba(17,34,48,.72);backdrop-filter:blur(16px) saturate(1.5);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:12px 14px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);font-size:12px}
+.fcard.notif{top:9%;left:-6%;display:flex;gap:10px;align-items:center;width:250px;animation:float2 6s ease-in-out infinite}
+.fcard.notif .ic{width:36px;height:36px;border-radius:12px;background:var(--lima);display:grid;place-items:center;color:var(--tinta);flex:none}
+.fcard.notif b{display:block;font-size:13px;font-weight:500}
+.fcard.notif small{color:#8b97a3}
+.fcard.fx{bottom:14%;right:-3%;width:210px;animation:float2 7s ease-in-out -2s infinite}
+.fx-row{display:flex;justify-content:space-between;align-items:baseline}
+.fx-row b{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.fx-chg{font-size:11px;color:var(--lima)}
+.fx-chg.down{color:#ff9a9a}
+.spark{width:100%;height:38px;margin-top:6px}
+.fcard.ok{bottom:5%;left:4%;display:flex;align-items:center;gap:8px;padding:10px 14px;animation:float2 8s ease-in-out -4s infinite}
+.fcard.ok .dot{width:8px;height:8px;border-radius:50%;background:var(--lima)}
+@keyframes float2{50%{transform:translateY(-8px)}}
+
+/* ── Marquee ── */
+.marquee{border-top:1px solid var(--linea);border-bottom:1px solid var(--linea);overflow:hidden;padding:18px 0;background:var(--noche-2)}
+.marquee .track{display:flex;gap:48px;width:max-content;animation:mq 40s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.marquee span{display:inline-flex;align-items:center;gap:12px;font:500 15px var(--sans);color:#9aa6b2;white-space:nowrap}
+.marquee span b{font:700 13px var(--display);color:var(--tinta);background:#e8ecf1;border-radius:8px;padding:4px 8px}
+.marquee span b.l{background:var(--lima)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ── Sections ── */
+section{position:relative}
+.sec{padding:clamp(80px,10vw,140px) 0}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:500 12.5px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--lima)}
+.eyebrow::before{content:"";width:18px;height:2px;border-radius:2px;background:currentColor}
+.h2{font:700 clamp(34px,4.4vw,58px)/1.06 var(--display);letter-spacing:-.03em;margin:16px 0 18px;max-width:18ch}
+.sub{color:#9aa6b2;font-size:17px;font-weight:300;max-width:52ch}
+.light{background:var(--claro);color:var(--tinta)}
+.light .sub{color:var(--gris)}
+.light .eyebrow{color:var(--azul)}
+
+/* Audience tabs */
+.aud-head{display:flex;justify-content:space-between;align-items:end;gap:32px;flex-wrap:wrap;margin-bottom:44px}
+.tabs{display:inline-flex;padding:5px;border-radius:999px;background:#fff;border:1px solid #e1e4ee;position:relative}
+.tabs button{position:relative;z-index:1;height:42px;padding:0 20px;border-radius:999px;font-size:14.5px;font-weight:500;color:var(--gris);transition:color .3s}
+.tabs button[aria-selected="true"]{color:#fff}
+.tabs .ind{position:absolute;top:5px;bottom:5px;left:5px;border-radius:999px;background:var(--azul);transition:transform .45s var(--ease),width .45s var(--ease)}
+.panel{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel[hidden]{display:none}
+.panel .copy{background:#fff;border:1px solid #e6e9f1;border-radius:var(--r);padding:clamp(26px,3vw,42px);display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+.panel h3{font:700 clamp(26px,2.6vw,36px)/1.12 var(--display);letter-spacing:-.02em}
+.panel p{color:var(--gris);margin-top:14px;max-width:44ch}
+.checks{list-style:none;display:grid;gap:12px;margin-top:6px}
+.checks li{display:flex;gap:12px;align-items:flex-start;font-size:15px}
+.checks li::before{content:"";flex:none;width:22px;height:22px;border-radius:50%;margin-top:1px;background:var(--lima) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%230e1620' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+.panel .vis{border-radius:var(--r);background:var(--petroleo);color:#fff;padding:clamp(22px,3vw,36px);position:relative;overflow:hidden;min-height:380px;display:flex;align-items:center;justify-content:center}
+.panel .vis::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 80% 10%,rgba(22,23,208,.7),transparent 70%),radial-gradient(40% 40% at 0% 100%,rgba(197,241,36,.18),transparent 70%)}
+.panel.show .copy,.panel.show .vis{animation:pin .55s var(--ease) both}
+.panel.show .vis{animation-delay:.06s}
+@keyframes pin{from{opacity:0;transform:translateY(12px)}}
+
+/* mini UI inside panels */
+.ui{position:relative;width:100%;max-width:400px;display:grid;gap:12px}
+.ui-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:18px;padding:16px}
+.ui-card .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.ui-card small{color:#9aa6b2;font-size:12px}
+.ui-card .big{font:600 26px var(--sans);letter-spacing:-.02em}
+.inv-line{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-top:1px solid rgba(255,255,255,.08)}
+.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:999px;background:rgba(197,241,36,.16);color:var(--lima)}
+.badge.w{background:rgba(255,255,255,.1);color:#dfe5ea}
+.copyfield{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.25);border-radius:12px;padding:10px 12px;font-size:13px;margin-top:8px}
+.copyfield button{font-size:11px;color:var(--lima);font-weight:500}
+.bars{display:flex;align-items:end;gap:8px;height:120px;margin-top:12px}
+.bars i{flex:1;border-radius:8px 8px 3px 3px;background:rgba(255,255,255,.14);height:var(--h);transform-origin:bottom;transform:scaleY(0);transition:transform .8s var(--ease)}
+.bars i.l{background:var(--lima)}
+.panel.show .bars i{transform:scaleY(1)}
+.bars i:nth-child(2){transition-delay:.05s}.bars i:nth-child(3){transition-delay:.1s}.bars i:nth-child(4){transition-delay:.15s}.bars i:nth-child(5){transition-delay:.2s}.bars i:nth-child(6){transition-delay:.25s}.bars i:nth-child(7){transition-delay:.3s}
+.route{display:flex;align-items:center;gap:10px;font-size:13px}
+.route .flag{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;font:600 11px var(--sans);flex:none}
+.route .path{flex:1;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 6px,transparent 6px 12px);position:relative;overflow:hidden}
+.route .path::after{content:"";position:absolute;top:-3px;left:-10%;width:8px;height:8px;border-radius:50%;background:var(--lima);box-shadow:0 0 12px var(--lima);animation:travel 2.6s var(--ease) infinite}
+@keyframes travel{to{left:105%}}
+
+/* ── Bento ── */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:56px}
+.cell{grid-column:span 2;background:var(--noche-2);border:1px solid var(--linea);border-radius:var(--r);padding:28px;position:relative;overflow:hidden;transition:border-color .3s,transform .4s var(--ease)}
+.cell:hover{border-color:rgba(255,255,255,.2)}
+.cell.w3{grid-column:span 3}.cell.w4{grid-column:span 4}
+.cell h3{font:700 22px/1.2 var(--display);letter-spacing:-.015em;margin:18px 0 8px}
+.cell p{color:#98a4b0;font-size:15px;max-width:40ch}
+.ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(197,241,36,.12);color:var(--lima)}
+.cell.blue{background:linear-gradient(160deg,#2021e6,var(--azul) 45%,#0d0e8c);border-color:transparent}
+.cell.blue p{color:#cfd1ff}
+.cell.blue .ico{background:rgba(255,255,255,.14);color:#fff}
+.cell.lime{background:var(--lima);color:var(--tinta);border-color:transparent}
+.cell.lime p{color:#3c4a12}
+.cell.lime .ico{background:rgba(14,22,32,.1);color:var(--tinta)}
+
+/* converter */
+.conv{display:grid;gap:10px;margin-top:22px}
+.cbox{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:10px 12px 10px 16px;transition:border-color .2s}
+.cbox:focus-within{border-color:rgba(255,255,255,.45)}
+.cbox label{font-size:11px;color:#cfd1ff;display:block}
+.cbox input{width:100%;background:none;border:0;outline:none;font:600 24px var(--sans);letter-spacing:-.02em;padding:0}
+.cbox .grow{flex:1;min-width:0}
+.cur{display:flex;gap:4px;background:rgba(255,255,255,.12);border-radius:999px;padding:3px}
+.cur button{font-size:12px;font-weight:500;padding:6px 10px;border-radius:999px;color:#dfe1ff;transition:.2s}
+.cur button[aria-pressed="true"]{background:#fff;color:var(--azul)}
+.swap{justify-self:center;width:38px;height:38px;border-radius:50%;background:var(--lima);color:var(--tinta);display:grid;place-items:center;margin:-22px 0;position:relative;z-index:1;border:4px solid #1718c0;transition:transform .4s var(--ease)}
+.swap:hover{transform:rotate(180deg)}
+.conv-foot{display:flex;justify-content:space-between;font-size:12px;color:#cfd1ff;margin-top:4px}
+
+/* timeline same day */
+.tl{margin-top:26px;position:relative;display:grid;gap:14px}
+.tl::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.12)}
+.tl::after{content:"";position:absolute;left:11px;top:6px;width:2px;height:0;background:var(--lima);transition:height 1.6s var(--ease)}
+.in .tl::after{height:calc(100% - 12px)}
+.tl div{display:flex;gap:14px;align-items:center;font-size:14px;position:relative}
+.tl i{width:24px;height:24px;border-radius:50%;background:var(--noche-2);border:2px solid rgba(255,255,255,.2);flex:none;transition:.4s}
+.in .tl i{border-color:var(--lima);background:var(--lima)}
+.in .tl div:nth-child(2) i{transition-delay:.6s}.in .tl div:nth-child(3) i{transition-delay:1.2s}
+.tl span{color:#98a4b0;margin-left:auto;font-size:12.5px}
+
+/* globe dots */
+.globe{position:absolute;right:-60px;bottom:-80px;width:330px;height:330px;opacity:.9}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pl 2.4s ease-out infinite}
+@keyframes pl{0%{transform:scale(.4);opacity:1}100%{transform:scale(2.4);opacity:0}}
+
+/* ── Steps ── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px;position:relative}
+.step{background:#fff;border:1px solid #e6e9f1;border-radius:var(--r);padding:30px;position:relative}
+.step .n{font:700 14px var(--display);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--claro);color:var(--azul);border:1px solid #e1e4ee;transition:.5s var(--ease)}
+.step.in .n{background:var(--azul);color:#fff;border-color:var(--azul)}
+.step h3{font:700 22px/1.2 var(--display);margin:22px 0 8px;letter-spacing:-.015em}
+.step p{color:var(--gris);font-size:15px}
+.step .mini{margin-top:24px;border-radius:14px;background:var(--claro);padding:14px;font-size:13px;display:grid;gap:8px}
+.mini .f{background:#fff;border:1px solid #e1e4ee;border-radius:10px;padding:9px 12px;color:var(--gris);display:flex;justify-content:space-between}
+.mini .f b{color:var(--tinta);font-weight:500}
+.mini .go{background:var(--azul);color:#fff;border-radius:10px;padding:9px 12px;text-align:center;font-weight:500}
+.prog{height:6px;border-radius:6px;background:#e1e4ee;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--lima);border-radius:6px;transition:width 1.4s var(--ease) .3s}
+.step.in .prog i{width:100%}
+
+/* ── Values / security ── */
+.vals{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--linea);margin-top:56px}
+.val{padding:30px 26px 10px 0;border-right:1px solid var(--linea)}
+.val+.val{padding-left:26px}
+.val:last-child{border-right:0}
+.val b{display:block;font:700 clamp(34px,3.6vw,52px)/1 var(--display);letter-spacing:-.03em;color:var(--lima)}
+.val span{display:block;margin-top:12px;color:#98a4b0;font-size:14.5px;max-width:24ch}
+
+/* ── FAQ ── */
+.faq{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,6vw,90px)}
+.faq details{border-bottom:1px solid #dfe3ec}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 0;font:500 18px var(--sans)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary i{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid #d5dae5;position:relative;transition:.35s var(--ease)}
+.faq summary i::before,.faq summary i::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;background:var(--tinta);border-radius:2px;transform:translate(-50%,-50%);transition:.35s var(--ease)}
+.faq summary i::after{transform:translate(-50%,-50%) rotate(90deg)}
+.faq details[open] summary i{background:var(--azul);border-color:var(--azul)}
+.faq details[open] summary i::before{background:#fff}
+.faq details[open] summary i::after{transform:translate(-50%,-50%) rotate(0);background:#fff}
+.faq summary:hover{color:var(--azul)}
+.faq .ans{overflow:hidden;color:var(--gris);max-width:60ch}
+.faq .ans p{padding:0 0 24px}
+
+/* ── CTA ── */
+.cta{color:#fff;max-width:calc(var(--max) + 120px);margin:0 auto;width:calc(100% - var(--pad)*2);border-radius:clamp(24px,3vw,40px);background:var(--azul);position:relative;overflow:hidden;padding:clamp(56px,8vw,110px) clamp(24px,6vw,90px);display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+.cta::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 100% 100%,rgba(197,241,36,.35),transparent 60%),radial-gradient(50% 60% at 0% 0%,rgba(169,155,246,.35),transparent 60%)}
+.cta > *{position:relative;z-index:1}
+.cta h2{font:700 clamp(38px,5vw,72px)/1.02 var(--display);letter-spacing:-.035em;max-width:14ch}
+.cta p{color:#d6d8ff;margin:18px 0 32px;max-width:42ch;font-size:17px;font-weight:300}
+.stores{display:flex;gap:10px;flex-wrap:wrap}
+.store{display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 18px;border-radius:14px;background:#000;border:1px solid rgba(255,255,255,.15);transition:transform .2s,background .2s}
+.store:hover{transform:translateY(-2px);background:#111}
+.store small{display:block;font-size:10px;color:#aaa;line-height:1}
+.store b{display:block;font-weight:500;font-size:15px;line-height:1.2}
+
+
+/* ── Billetera 3D (CTA) ── */
+.wscene{position:relative;height:clamp(300px,30vw,400px);display:grid;place-items:center;perspective:900px}
+.wscene::before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.22),rgba(197,241,36,.1) 55%,transparent);filter:blur(6px)}
+.wallet{position:relative;width:280px;height:230px;transform:rotate(-12deg);animation:wfloat 6s ease-in-out infinite;transform-style:preserve-3d;cursor:pointer}
+@keyframes wfloat{0%,100%{transform:rotate(-12deg) translateY(0)}50%{transform:rotate(-9deg) translateY(-14px)}}
+.w-shadow{position:absolute;left:50%;bottom:8%;width:220px;height:34px;margin-left:-110px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,40,.45),transparent);animation:wshadow 6s ease-in-out infinite}
+@keyframes wshadow{50%{transform:scale(.86);opacity:.7}}
+.w-back{position:absolute;left:10px;right:6px;top:-6px;height:120px;border-radius:40px 40px 20px 20px;background:linear-gradient(180deg,#1a1cb0,#10127e);box-shadow:inset 0 10px 20px rgba(255,255,255,.12)}
+.bill{position:absolute;width:150px;height:112px;border-radius:16px;top:-58px;background:linear-gradient(150deg,#e6ff8a 0%,#c5f124 45%,#a4d411 100%);box-shadow:inset -6px -8px 14px rgba(70,110,0,.28),inset 5px 6px 10px rgba(255,255,255,.5),0 6px 14px rgba(0,0,40,.25);transition:transform .6s var(--ease)}
+.bill::before{content:"";position:absolute;inset:10px;border-radius:9px;border:2.5px solid rgba(70,110,0,.3);
+  background:radial-gradient(circle at 12px 12px,rgba(70,110,0,.28) 7px,transparent 8px),radial-gradient(circle at calc(100% - 12px) calc(100% - 12px),rgba(70,110,0,.28) 7px,transparent 8px)}
+.bill::after{content:"$";position:absolute;inset:0;display:grid;place-items:center;font:700 34px var(--display);color:rgba(70,110,0,.35)}
+.bill.b1{left:30px;transform:rotate(-14deg);animation:bill1 6s var(--ease) infinite}
+.bill.b2{left:108px;transform:rotate(9deg);animation:bill2 6s var(--ease) infinite}
+@keyframes bill1{0%,100%{transform:rotate(-14deg) translateY(0)}45%,60%{transform:rotate(-18deg) translateY(-26px)}}
+@keyframes bill2{0%,100%{transform:rotate(9deg) translateY(0)}50%,65%{transform:rotate(13deg) translateY(-38px)}}
+.wallet:hover .bill{animation-play-state:paused}
+.wallet:hover .bill.b1{transform:rotate(-20deg) translateY(-44px)}
+.wallet:hover .bill.b2{transform:rotate(15deg) translateY(-58px)}
+.w-body{position:absolute;inset:34px 0 0 0;border-radius:44px;overflow:hidden;
+  background:radial-gradient(130% 110% at 18% 8%,#9295ff 0%,#5558f4 28%,#2f32d8 60%,#1a1c9e 100%);
+  box-shadow:inset -16px -20px 34px rgba(0,0,50,.45),inset 12px 14px 26px rgba(255,255,255,.28),0 42px 60px -22px rgba(0,0,50,.7)}
+.w-body::before{content:"";position:absolute;left:16px;top:22px;bottom:30px;width:22px;border-radius:20px;background:linear-gradient(90deg,rgba(255,255,255,.38),rgba(255,255,255,0));filter:blur(2px)}
+.w-body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:18px;background:linear-gradient(0deg,rgba(0,0,40,.35),transparent)}
+.w-strap{position:absolute;right:-18px;top:112px;width:150px;height:76px;border-radius:40px 20px 20px 40px;
+  background:linear-gradient(160deg,#e2ff7c 0%,#c5f124 40%,#9ccb0c 100%);
+  box-shadow:inset -8px -10px 16px rgba(70,110,0,.35),inset 6px 8px 12px rgba(255,255,255,.45),-8px 14px 22px -8px rgba(0,0,40,.55)}
+.w-btn{position:absolute;left:24px;top:50%;width:46px;height:46px;margin-top:-23px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fffdf2 0%,#efe9d4 45%,#cfc6a8 100%);box-shadow:0 4px 8px rgba(0,0,0,.25),inset -3px -4px 6px rgba(0,0,0,.12)}
+.coin{position:absolute;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font:700 24px var(--display);color:#4c6d00;
+  background:radial-gradient(circle at 35% 30%,#efff9e 0%,#c5f124 50%,#94c20a 100%);box-shadow:inset -5px -6px 10px rgba(70,110,0,.35),0 14px 24px -10px rgba(0,0,40,.6)}
+.coin.c1{left:6%;top:14%;animation:coin 5s ease-in-out infinite}
+.coin.c2{right:8%;bottom:10%;width:42px;height:42px;font-size:17px;animation:coin 6s ease-in-out -2s infinite}
+@keyframes coin{0%,100%{transform:translateY(0) rotateY(0)}50%{transform:translateY(-16px) rotateY(180deg)}}
+.spark4{position:absolute;width:26px;height:26px;background:#fff;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);animation:tw 3s ease-in-out infinite}
+.spark4.s1{right:18%;top:10%}.spark4.s2{left:18%;bottom:12%;width:16px;height:16px;animation-delay:1s}.spark4.s3{right:4%;top:46%;width:12px;height:12px;animation-delay:2s}
+@keyframes tw{0%,100%{transform:scale(.6) rotate(0);opacity:.5}50%{transform:scale(1) rotate(45deg);opacity:1}}
+@media (max-width:1080px){.wscene{height:320px}}
+@media (max-width:760px){.wscene{height:260px;transform:scale(.72);margin:-10px 0 -20px}.coin.c2{display:none}}
+
+/* ── Footer ── */
+footer{padding:clamp(70px,8vw,110px) 0 36px;color:#98a4b0}
+.fgrid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:40px}
+.fgrid h4{color:#fff;font:500 14px var(--sans);margin-bottom:16px}
+.fgrid a{display:block;font-size:14.5px;line-height:2.1;transition:color .2s}
+.fgrid a:hover{color:var(--lima)}
+.fgrid .word{height:22px;width:auto;margin-bottom:18px}
+.fgrid p{max-width:34ch;font-size:14.5px}
+.fbot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:64px;padding-top:24px;border-top:1px solid var(--linea);font-size:13px}
+.disc{font-size:12px;color:#6f7b87;margin-top:14px;max-width:80ch}
+
+/* ── Reveal ── */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+.load>*{animation:up .9s var(--ease) both}
+.load>*:nth-child(2){animation-delay:.08s}.load>*:nth-child(3){animation-delay:.16s}.load>*:nth-child(4){animation-delay:.24s}.load>*:nth-child(5){animation-delay:.32s}.load>*:nth-child(6){animation-delay:.4s}
+.stagehero{animation:up 1.1s .2s var(--ease) both}
+@keyframes up{from{opacity:0;transform:translateY(22px)}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  .hero h1 .hl path{stroke-dashoffset:0}
+  .bars i{transform:none}
+}
+
+/* ── Responsive ── */
+@media (max-width:1080px){
+  .nav ul{display:none}
+  .burger{display:grid}
+  .nav .act .btn-ghost{display:none}
+  .mmenu{display:block;position:fixed;inset:74px 0 auto 0;background:rgba(12,24,34,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--linea);padding:12px var(--pad) 24px;transform:translateY(-8px);opacity:0;pointer-events:none;transition:.3s var(--ease)}
+  .nav.open .mmenu{transform:none;opacity:1;pointer-events:auto}
+  .mmenu a{display:block;padding:14px 0;border-bottom:1px solid var(--linea);font-size:17px}
+  .hero .wrap{grid-template-columns:1fr}
+  .stagehero{height:600px}
+  .bento{grid-template-columns:repeat(2,1fr)}
+  .cell,.cell.w3,.cell.w4{grid-column:span 2}
+  .vals{grid-template-columns:repeat(2,1fr)}
+  .val:nth-child(2){border-right:0}
+  .val:nth-child(3){padding-left:0}
+  .val:nth-child(n+3){border-top:1px solid var(--linea)}
+  .faq{grid-template-columns:1fr}
+  .cta{grid-template-columns:1fr}
+  .fgrid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .panel{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .tabs{width:100%;overflow-x:auto}
+  .tabs button{padding:0 14px;font-size:13.5px}
+  .pf span{display:none}
+  .signup{flex-direction:column;border-radius:22px}
+  .signup input{height:46px}
+  .fcard.notif{left:0;top:4%}
+  .fcard.fx{right:0}
+  .phone{transform:rotate(-3deg) scale(.92)}
+  .fgrid{grid-template-columns:1fr}
+}
+@media (max-width:420px){.fcard.fx{display:none}.nav .act .btn-lima{display:none}}
+
+/* ── Mobile polish ── */
+@media (max-width:600px){
+  .pf{font-size:9.5px;padding:8px 16px}
+  .pf a:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:68%}
+  .nav .wrap{height:64px}
+  .hero{padding:26px 0 56px}
+  .hero h1{font-size:clamp(38px,11.5vw,50px);margin:18px 0 16px}
+  .signup{padding:6px}
+  .signup .btn{width:100%}
+  .trust{gap:8px 16px;font-size:12.5px}
+  /* hero phone: tarjetas fuera del teléfono */
+  .stagehero{height:auto;display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:6px}
+  .phone{transform:none;width:272px;height:556px;animation:none}
+  .fcard{position:relative;inset:auto;animation:none;width:auto}
+  .fcard.notif{order:-1;width:100%;max-width:300px;left:auto;top:auto}
+  .fcard.fx{display:none}
+  .fcard.ok{left:auto;bottom:auto}
+  .sec{padding:72px 0}
+  .h2{font-size:clamp(30px,9vw,40px)}
+  .sub{font-size:15.5px}
+  .aud-head{margin-bottom:28px;gap:22px}
+  .tabs{display:grid;grid-template-columns:repeat(3,1fr)}
+  .tabs button{padding:0 6px;font-size:13px}
+  .panel .vis{min-height:0;padding:20px}
+  .bento{gap:12px;margin-top:36px}
+  .cell{padding:22px}
+  /* conversor: moneda debajo del monto para que el número entre */
+  .cbox{flex-wrap:wrap;padding:12px 14px}
+  .cbox .grow{flex-basis:100%}
+  .cbox input{font-size:26px}
+  .cur{width:100%;justify-content:space-between}
+  .cur button{flex:1}
+  .conv-foot{flex-direction:column;gap:2px}
+  /* globo como fondo, sin tapar texto */
+  .globe{width:230px;height:230px;right:-70px;bottom:-90px;opacity:.45}
+  .vals{margin-top:36px}
+  .val{padding:22px 14px 18px 0}
+  .val+.val{padding-left:14px}
+  .val:nth-child(3){padding-left:0}
+  .steps{gap:12px;margin-top:36px}
+  .step{padding:22px}
+  .faq summary{font-size:16px;padding:18px 0}
+  .cta{padding:44px 22px 20px;width:calc(100% - 32px)}
+  .cta h2{font-size:clamp(36px,10.5vw,46px)}
+  .stores{flex-direction:column}
+  .stores > *{width:100%;justify-content:center}
+  .fgrid{grid-template-columns:1fr 1fr;gap:28px 20px}
+  .fgrid > div:first-child{grid-column:1/-1}
+  .fbot{flex-direction:column;gap:6px;margin-top:40px}
+}
+</style>
+</head>
+<body>
+
+<!-- Portfolio frame -->
+<div class="pf">
+  <a href="../../../projects.html" onclick="event.preventDefault();abBack('../../../projects.html')">[ ESC / CLOSE ] ← Adrián Birnbaun / Projects</a>
+  <span>Loula — Web concept · UX/UI + Front-end</span>
+  <a href="../../../loula.html">Case study ↗</a>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Loula, inicio">
+      <img class="iso" src="img/iso-lima.png" alt="" width="26" height="26">
+      <img class="word" src="img/loula-blanco.png" alt="Loula" width="75" height="17">
+    </a>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="#para-quien">Para quién</a></li>
+        <li><a href="#producto">Producto</a></li>
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#faq">Preguntas</a></li>
+      </ul>
+    </nav>
+    <div class="act">
+      <a class="btn btn-ghost" href="#">Ingresar</a>
+      <a class="btn btn-lima" href="#empezar">Abrir cuenta</a>
+      <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mmenu"><span></span></button>
+    </div>
+  </div>
+  <div class="mmenu" id="mmenu">
+    <a href="#para-quien">Para quién</a>
+    <a href="#producto">Producto</a>
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#faq">Preguntas</a>
+    <a href="#">Ingresar</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="load">
+      <span class="pill"><b>Nuevo</b><i class="live" aria-hidden="true"></i> Confirmación en el mismo día</span>
+      <h1>Cobrá en dólares.<br><span class="hl">Sin fronteras.<svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3 14 C 80 4, 200 2, 297 10" fill="none" stroke="#c5f124" stroke-width="4" stroke-linecap="round" pathLength="1"/></svg></span></h1>
+      <p class="lead">La billetera para <strong>freelancers, importadores y empresas</strong> que operan con el exterior. Recibí USD o USDC, convertí al instante y pagá a proveedores de todo el mundo.</p>
+      <form class="signup" id="signup" novalidate>
+        <label for="email" class="sr">Tu email</label>
+        <input id="email" type="email" placeholder="Tu email de trabajo" autocomplete="email" required>
+        <button class="btn btn-lima" type="submit">Abrir cuenta gratis <span class="arr" aria-hidden="true">→</span></button>
+      </form>
+      <p class="form-msg" id="formMsg" aria-live="polite">Sin costo de apertura · Alta 100% online</p>
+      <div class="trust">
+        <span><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Fondos protegidos</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Acreditación en el día</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v10H8l-4 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Soporte en español</span>
+      </div>
+    </div>
+
+    <div class="stagehero" aria-hidden="true">
+      <div class="fcard notif">
+        <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 19V5m0 14l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><b>Recibiste US$ 2.400</b><small>Studio Nórdico · hace 2 min</small></div>
+      </div>
+
+      <div class="phone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="sbar"><span>9:41</span><span>●●● ▮</span></div>
+          <div class="app-top">
+            <div style="display:flex;gap:10px;align-items:center"><div class="avatar">MV</div><div class="hello">Buen día,<b>Martina</b></div></div>
+            <div class="bell"><svg width="15" height="15" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0" fill="none" stroke="#fff" stroke-width="1.8"/></svg></div>
+          </div>
+          <div class="balance">
+            <div class="seg" id="seg"><button aria-pressed="true" data-c="USD">USD</button><button aria-pressed="false" data-c="USDC">USDC</button><button aria-pressed="false" data-c="ARS">ARS</button></div>
+            <div class="bal-label">Saldo disponible</div>
+            <div class="bal-num"><span id="balSym" style="font-size:.6em;color:#c9ccff;margin-right:4px">US$</span><span id="bal">0</span></div>
+            <span class="bal-delta">▲ <span id="balDelta">+US$ 2.400 hoy</span></span>
+          </div>
+          <div class="actions">
+            <div><i><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 19V5m0 14l-6-6m6 6l6-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></i>Recibir</div>
+            <div><i><svg width="14" height="14" viewBox="0 0 24 24"><path d="M7 7h11l-3-3M17 17H6l3 3" fill="none" stroke="#0e1620" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Convertir</div>
+            <div><i><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 5v14m0-14l-6 6m6-6l6 6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></i>Enviar</div>
+          </div>
+          <div class="list-h"><b style="font-weight:500">Actividad</b><span>Ver todo</span></div>
+          <div class="tx"><div class="ic" style="background:rgba(197,241,36,.15);color:var(--lima)">SN</div><div class="t">Studio Nórdico<small>Pago recibido · USD</small></div><div class="a pos">+2.400,00<small>Hoy</small></div></div>
+          <div class="tx"><div class="ic" style="background:rgba(169,155,246,.18);color:var(--lila)">⇄</div><div class="t">USD → ARS<small>Conversión</small></div><div class="a">−500,00<small>Hoy</small></div></div>
+          <div class="tx"><div class="ic" style="background:rgba(255,255,255,.08)">SZ</div><div class="t">Shenzhen Parts Co.<small>Pago a proveedor</small></div><div class="a">−3.180,00<small>Ayer</small></div></div>
+          <div class="tx"><div class="ic" style="background:rgba(22,23,208,.35)">₮</div><div class="t">Wallet externa<small>Depósito · USDC</small></div><div class="a pos">+1.000,00<small>Lun</small></div></div>
+        </div>
+      </div>
+
+      <div class="fcard fx">
+        <div class="fx-row"><small style="color:#8b97a3">USD / ARS · referencia</small><span class="fx-chg" id="fxChg">▲ 0,42%</span></div>
+        <div class="fx-row" style="margin-top:2px"><b id="fxVal">1.235,40</b></div>
+        <svg class="spark" viewBox="0 0 180 38" preserveAspectRatio="none"><defs><linearGradient id="sg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#c5f124" stop-opacity=".35"/><stop offset="1" stop-color="#c5f124" stop-opacity="0"/></linearGradient></defs><path id="sparkA" fill="url(#sg)"/><path id="sparkL" fill="none" stroke="#c5f124" stroke-width="2" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="fcard ok"><i class="dot"></i>Pago a proveedor confirmado</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="track" id="mq">
+    <span><b class="l">USD</b>Cuenta en dólares</span>
+    <span><b>USDC</b>Stablecoin integrada</span>
+    <span><b>ARS</b>Conversión al instante</span>
+    <span><b class="l">24h</b>Confirmación en el día</span>
+    <span><b>SWIFT</b>Pagos internacionales</span>
+    <span><b>B2B</b>Comercio transfronterizo</span>
+    <span><b class="l">API</b>Integración para empresas</span>
+  </div>
+</div>
+
+<!-- ============ PARA QUIÉN ============ -->
+<section class="sec light" id="para-quien">
+  <div class="wrap">
+    <div class="aud-head">
+      <div class="rv">
+        <span class="eyebrow">Para quién</span>
+        <h2 class="h2">Una cuenta, tres formas de crecer afuera.</h2>
+        <p class="sub">Loula se adapta a cómo trabajás: cobrar un proyecto, pagar un contenedor o mover la tesorería de tu empresa.</p>
+      </div>
+      <div class="tabs rv d1" role="tablist" aria-label="Tipo de usuario" id="tabs">
+        <span class="ind" aria-hidden="true"></span>
+        <button role="tab" id="t-free" aria-controls="p-free" aria-selected="true">Freelancers</button>
+        <button role="tab" id="t-imp" aria-controls="p-imp" aria-selected="false" tabindex="-1">Importadores</button>
+        <button role="tab" id="t-emp" aria-controls="p-emp" aria-selected="false" tabindex="-1">Empresas</button>
+      </div>
+    </div>
+
+    <div class="panel show rv d2" role="tabpanel" id="p-free" aria-labelledby="t-free">
+      <div class="copy">
+        <div><h3>Cobrá a clientes del exterior como si fueran locales.</h3>
+        <p>Compartí tus datos de cuenta en USD, enviá facturas y recibí el pago el mismo día. Sin plataformas intermedias ni comisiones escondidas.</p></div>
+        <ul class="checks"><li>Datos bancarios propios en USD</li><li>Facturas con link de pago</li><li>Retirá en ARS cuando lo necesites</li></ul>
+      </div>
+      <div class="vis">
+        <div class="ui">
+          <div class="ui-card">
+            <div class="row"><small>Factura #0142</small><span class="badge">Pagada</span></div>
+            <div class="big" style="margin:8px 0 10px">US$ 2.400,00</div>
+            <div class="inv-line"><span>Diseño de producto · Sprint 3</span><span>US$ 2.400</span></div>
+            <div class="inv-line"><span>Cliente</span><span>Studio Nórdico · SE</span></div>
+          </div>
+          <div class="ui-card">
+            <small>Tus datos para cobrar</small>
+            <div class="copyfield"><span>Routing · 0260 7359 3</span><button type="button" data-copy="026073593">Copiar</button></div>
+            <div class="copyfield"><span>Cuenta · •••• 4821</span><button type="button" data-copy="000000004821">Copiar</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-imp" aria-labelledby="t-imp" hidden>
+      <div class="copy">
+        <div><h3>Pagá a proveedores globales sin vueltas.</h3>
+        <p>Transferí a fábricas y proveedores en más de 40 países, seguí cada pago en tiempo real y conciliá tus operaciones de comercio exterior en un solo lugar.</p></div>
+        <ul class="checks"><li>Pagos en USD y USDC</li><li>Seguimiento de cada transferencia</li><li>Comprobantes listos para tu despachante</li></ul>
+      </div>
+      <div class="vis">
+        <div class="ui">
+          <div class="ui-card">
+            <div class="row"><small>Pago a proveedor</small><span class="badge w">En camino</span></div>
+            <div class="big" style="margin:8px 0 16px">US$ 3.180,00</div>
+            <div class="route"><span class="flag">AR</span><span class="path"></span><span class="flag">CN</span></div>
+            <div class="row" style="margin-top:12px"><small>Buenos Aires</small><small>Shenzhen Parts Co.</small></div>
+          </div>
+          <div class="ui-card">
+            <div class="row"><small>Estado</small><small>Llega hoy · 16:30</small></div>
+            <div class="inv-line"><span>✓ Enviado</span><span>10:12</span></div>
+            <div class="inv-line"><span>✓ Validado</span><span>10:14</span></div>
+            <div class="inv-line" style="color:var(--lima)"><span>● Acreditando</span><span>—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-emp" aria-labelledby="t-emp" hidden>
+      <div class="copy">
+        <div><h3>Tesorería en dólares para tu empresa.</h3>
+        <p>Centralizá cobros y pagos internacionales, dá accesos a tu equipo con permisos y protegé el valor de tu caja con USD y USDC.</p></div>
+        <ul class="checks"><li>Multiusuario con roles y aprobaciones</li><li>Reportes y exportación contable</li><li>Financiamiento para comercio exterior</li></ul>
+      </div>
+      <div class="vis">
+        <div class="ui">
+          <div class="ui-card">
+            <div class="row"><small>Flujo mensual · USD</small><span class="badge">+18%</span></div>
+            <div class="big" style="margin-top:6px">US$ 184.250</div>
+            <div class="bars" aria-hidden="true"><i style="--h:38%"></i><i style="--h:52%"></i><i style="--h:44%"></i><i style="--h:66%"></i><i style="--h:58%"></i><i style="--h:74%"></i><i class="l" style="--h:92%"></i></div>
+          </div>
+          <div class="ui-card">
+            <div class="row"><small>Aprobación pendiente</small><span class="badge w">2 de 3</span></div>
+            <div class="inv-line"><span>Pago · Hamburg Logistics</span><span>€ 12.400</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRODUCTO (BENTO) ============ -->
+<section class="sec" id="producto">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">Producto</span>
+      <h2 class="h2">Todo lo que tu dinero necesita para cruzar fronteras.</h2>
+      <p class="sub">Simplificamos el comercio transfronterizo para que te enfoques en crecer, no en papeleo.</p>
+    </div>
+
+    <div class="bento">
+      <article class="cell blue w3 rv" id="convCell">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M7 7h11l-3-3M17 17H6l3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Conversión instantánea</h3>
+        <p>Pasá entre ARS, USD y USDC en segundos, con la cotización a la vista antes de confirmar.</p>
+        <div class="conv">
+          <div class="cbox">
+            <div class="grow"><label for="cFrom">Enviás</label><input id="cFrom" inputmode="decimal" value="1.000" autocomplete="off"></div>
+            <div class="cur" data-side="from"><button aria-pressed="true" data-c="USD">USD</button><button aria-pressed="false" data-c="USDC">USDC</button><button aria-pressed="false" data-c="ARS">ARS</button></div>
+          </div>
+          <button class="swap" id="swap" aria-label="Invertir monedas"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M8 4v16m0 0l-4-4m4 4l4-4M16 20V4m0 0l-4 4m4-4l4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="cbox">
+            <div class="grow"><label for="cTo">Recibís</label><input id="cTo" readonly tabindex="-1" aria-live="polite"></div>
+            <div class="cur" data-side="to"><button aria-pressed="false" data-c="USD">USD</button><button aria-pressed="false" data-c="USDC">USDC</button><button aria-pressed="true" data-c="ARS">ARS</button></div>
+          </div>
+          <div class="conv-foot"><span id="rateTxt">1 USD = 1.235,40 ARS</span><span>Cotización de referencia</span></div>
+        </div>
+      </article>
+
+      <article class="cell w3 rv d1" id="tlCell">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Confirmación en el mismo día</h3>
+        <p>Tus operaciones se procesan y confirman en horas, no en días. Sabés en todo momento dónde está tu dinero.</p>
+        <div class="tl">
+          <div><i></i>Pago enviado desde el exterior<span>09:30</span></div>
+          <div><i></i>Validación y cumplimiento<span>09:42</span></div>
+          <div><i></i>Acreditado en tu cuenta Loula<span>14:05</span></div>
+        </div>
+      </article>
+
+      <article class="cell w4 rv">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <h3>Pagos a proveedores globales</h3>
+        <p>Enviá dinero a más de 40 países desde una sola cuenta, con seguimiento en tiempo real y comprobantes automáticos.</p>
+        <svg class="globe" viewBox="0 0 330 330" aria-hidden="true">
+          <defs><radialGradient id="gg" cx=".4" cy=".35"><stop offset="0" stop-color="#1617d0" stop-opacity=".55"/><stop offset="1" stop-color="#1617d0" stop-opacity="0"/></radialGradient></defs>
+          <circle cx="165" cy="165" r="160" fill="url(#gg)"/>
+          <g fill="none" stroke="rgba(255,255,255,.14)"><circle cx="165" cy="165" r="150"/><ellipse cx="165" cy="165" rx="70" ry="150"/><ellipse cx="165" cy="165" rx="120" ry="150"/><ellipse cx="165" cy="165" rx="150" ry="55"/><ellipse cx="165" cy="165" rx="150" ry="110"/><line x1="15" y1="165" x2="315" y2="165"/></g>
+          <path d="M95 215 Q 150 90 230 120" fill="none" stroke="#c5f124" stroke-width="1.6" stroke-dasharray="4 5"/>
+          <path d="M95 215 Q 120 140 205 225" fill="none" stroke="#a99bf6" stroke-width="1.4" stroke-dasharray="4 5"/>
+          <circle cx="95" cy="215" r="5" fill="#c5f124"/><circle class="pulse" cx="95" cy="215" r="5" fill="none" stroke="#c5f124"/>
+          <circle cx="230" cy="120" r="4" fill="#fff"/><circle class="pulse" cx="230" cy="120" r="4" fill="none" stroke="#fff" style="animation-delay:.8s"/>
+          <circle cx="205" cy="225" r="4" fill="#fff"/><circle class="pulse" cx="205" cy="225" r="4" fill="none" stroke="#fff" style="animation-delay:1.6s"/>
+        </svg>
+      </article>
+
+      <article class="cell lime w2 rv d1">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Seguridad que no descansa</h3>
+        <p>Cifrado, verificación en dos pasos y monitoreo permanente de cada operación.</p>
+      </article>
+
+      <article class="cell w2 rv">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M4 7h16v10H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Cuenta en USD</h3>
+        <p>Datos propios para recibir transferencias internacionales a tu nombre.</p>
+      </article>
+      <article class="cell w2 rv d1">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 12h6M12 9v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>USDC integrado</h3>
+        <p>Mové valor en stablecoin y convertí a USD o ARS cuando quieras.</p>
+      </article>
+      <article class="cell w2 rv d2">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M4 19V9m6 10V5m6 14v-7m4 7H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Trade finance</h3>
+        <p>Financiamiento pensado para importadores y exportadores que necesitan escalar.</p>
+      </article>
+    </div>
+
+    <div class="vals">
+      <div class="val rv"><b data-count="40" data-prefix="+">+40</b><span>países para enviar y recibir pagos</span></div>
+      <div class="val rv d1"><b data-count="3">3</b><span>monedas en una misma cuenta: ARS, USD y USDC</span></div>
+      <div class="val rv d2"><b data-count="24" data-suffix="h">24h</b><span>como máximo para confirmar tus operaciones</span></div>
+      <div class="val rv d3"><b data-count="0" data-prefix="$">$0</b><span>de costo de apertura y mantenimiento</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CÓMO FUNCIONA ============ -->
+<section class="sec light" id="como-funciona">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">Cómo funciona</span>
+      <h2 class="h2">Empezá a operar en tres pasos.</h2>
+      <p class="sub">Sin sucursales, sin papeles impresos. Todo desde la app o la web.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv">
+        <span class="n">01</span>
+        <h3>Creá tu cuenta</h3>
+        <p>Registrate con tu email y validá tu identidad en minutos.</p>
+        <div class="mini"><div class="f">Email <b>martina@estudio.com</b></div><div class="f">Identidad <b>✓ Verificada</b></div><div class="prog"><i></i></div></div>
+      </div>
+      <div class="step rv d1">
+        <span class="n">02</span>
+        <h3>Compartí tus datos</h3>
+        <p>Enviá tus datos de cobro en USD a clientes o recibí USDC en tu wallet.</p>
+        <div class="mini"><div class="f">Moneda <b>USD</b></div><div class="f">Cuenta <b>•••• 4821</b></div><div class="go">Compartir datos</div></div>
+      </div>
+      <div class="step rv d2">
+        <span class="n">03</span>
+        <h3>Recibí y convertí</h3>
+        <p>Tu dinero llega en el día. Convertilo, pagá o guardalo en dólares.</p>
+        <div class="mini"><div class="f">Recibido <b style="color:#4d6b00">+US$ 2.400</b></div><div class="f">Convertir a <b>ARS</b></div><div class="go" style="background:var(--lima);color:var(--tinta)">Confirmar</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="sec light" id="faq" style="padding-top:0">
+  <div class="wrap faq">
+    <div class="rv">
+      <span class="eyebrow">Preguntas frecuentes</span>
+      <h2 class="h2">Lo que más nos preguntan.</h2>
+      <p class="sub">¿Tenés otra duda? Escribinos y te respondemos en el día.</p>
+      <a class="btn btn-azul" href="#" style="margin-top:26px">Hablar con el equipo <span class="arr" aria-hidden="true">→</span></a>
+    </div>
+    <div class="rv d1">
+      <details open><summary>¿Quién puede abrir una cuenta en Loula?<i aria-hidden="true"></i></summary><div class="ans"><p>Freelancers, profesionales independientes, importadores, exportadores y empresas que necesiten cobrar o pagar al exterior.</p></div></details>
+      <details><summary>¿Cuánto tarda en acreditarse un pago?<i aria-hidden="true"></i></summary><div class="ans"><p>Las operaciones se procesan con confirmación en el mismo día hábil. Podés seguir el estado de cada pago en tiempo real desde la app.</p></div></details>
+      <details><summary>¿Puedo convertir mis dólares a pesos?<i aria-hidden="true"></i></summary><div class="ans"><p>Sí. Convertís entre ARS, USD y USDC al instante y ves la cotización antes de confirmar cada operación.</p></div></details>
+      <details><summary>¿Qué es USDC y por qué usarlo?<i aria-hidden="true"></i></summary><div class="ans"><p>USDC es una stablecoin respaldada 1 a 1 por dólares. Te permite mover valor rápido entre wallets y convertirlo a USD o ARS cuando lo necesites.</p></div></details>
+      <details><summary>¿Tiene costo abrir o mantener la cuenta?<i aria-hidden="true"></i></summary><div class="ans"><p>La apertura y el mantenimiento no tienen costo. Solo pagás una comisión transparente por operación, que ves antes de confirmar.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="light" style="padding-bottom:clamp(80px,10vw,140px)" id="empezar">
+  <div class="cta rv">
+    <div>
+      <h2>Tu próximo paso, sin fronteras.</h2>
+      <p>Abrí tu cuenta en minutos y empezá a cobrar, convertir y pagar en dólares hoy mismo.</p>
+      <div class="stores">
+        <a class="btn btn-lima" href="#top" style="height:52px">Abrir cuenta gratis <span class="arr" aria-hidden="true">→</span></a>
+        <a class="store" href="#"><svg width="20" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.5 1.3-2.6-.1 0-2.5-.9-2.5-3.7zM14.1 5.8c.6-.8 1.1-1.8 1-2.8-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.7-1 2.7 1 .1 2-.5 2.7-1.3z"/></svg><span><small>Descargala en</small><b>App Store</b></span></a>
+        <a class="store" href="#"><svg width="20" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#c5f124" d="M4 2.5l10.5 9.5L4 21.5c-.4-.2-.6-.6-.6-1.1V3.6c0-.5.2-.9.6-1.1z"/><path fill="#fff" d="M17.8 9l-3.3 3 3.3 3 2.7-1.5c.8-.5.8-1.5 0-2z"/><path fill="#a99bf6" d="M4 2.5l10.5 9.5 3.3-3L6.2 2.4c-.8-.4-1.6-.4-2.2.1z"/><path fill="#6f70ff" d="M4 21.5l10.5-9.5 3.3 3L6.2 21.6c-.8.4-1.6.4-2.2-.1z"/></svg><span><small>Disponible en</small><b>Google Play</b></span></a>
+      </div>
+    </div>
+      <div class="wscene" aria-hidden="true">
+      <span class="coin c1">$</span><span class="coin c2">$</span>
+      <i class="spark4 s1"></i><i class="spark4 s2"></i><i class="spark4 s3"></i>
+      <div class="w-shadow"></div>
+      <div class="wallet">
+        <div class="w-back"></div>
+        <div class="bill b1"></div><div class="bill b2"></div>
+        <div class="w-body"></div>
+        <div class="w-strap"><span class="w-btn"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <img class="word" src="img/loula-blanco.png" alt="Loula" width="96" height="22">
+        <p>Simplificando el comercio transfronterizo para personas y empresas de Latinoamérica.</p>
+      </div>
+      <div><h4>Producto</h4><a href="#producto">Cuenta en USD</a><a href="#producto">Conversión</a><a href="#producto">Pagos globales</a><a href="#producto">Trade finance</a></div>
+      <div><h4>Para</h4><a href="#para-quien">Freelancers</a><a href="#para-quien">Importadores</a><a href="#para-quien">Empresas</a></div>
+      <div><h4>Loula</h4><a href="#">Nosotros</a><a href="#faq">Ayuda</a><a href="#">Contacto</a><a href="#">Términos y privacidad</a></div>
+    </div>
+    <div class="fbot"><span>© 2026 Loula · EE. UU. | Argentina</span><span>Diseño y desarrollo · Adrián Birnbaun</span></div>
+    <p class="disc">Concepto de diseño para portfolio. Las cifras, cotizaciones, nombres y pantallas son ilustrativos y no representan información oficial de Loula.</p>
+  </div>
+</footer>
+
+<script>
+/* ESC / close = one step back inside the portfolio (fallback: projects) */
+let abInSite=false;try{abInSite=sessionStorage.getItem('ab-nav')==='1'}catch(_){}
+const abBack=(fallback)=>{location.href=fallback;return;
+  if(history.length>1&&abInSite){let left=false;addEventListener('pagehide',()=>left=true,{once:true});history.back();setTimeout(()=>{if(!left)location.href=fallback},1500)}else location.href=fallback};
+try{sessionStorage.setItem('ab-nav','1')}catch(_){}
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt=(n,d=2)=>n.toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+/* Nav */
+const nav=$('#nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>10),{passive:true});
+$('#burger').onclick=()=>{const o=nav.classList.toggle('open');$('#burger').setAttribute('aria-expanded',o);$('#burger').setAttribute('aria-label',o?'Cerrar menú':'Abrir menú')};
+$$('#mmenu a').forEach(a=>a.onclick=()=>{nav.classList.remove('open');$('#burger').setAttribute('aria-expanded',false)});
+addEventListener('keydown',e=>{if(e.key==='Escape'){if(nav.classList.contains('open')){nav.classList.remove('open')}else if(!document.activeElement.matches('input'))abBack('../../../projects.html')}});
+
+/* Signup */
+$('#signup').onsubmit=e=>{e.preventDefault();const m=$('#formMsg'),v=$('#email').value.trim();
+  if(!/^\S+@\S+\.\S+$/.test(v)){m.className='form-msg err';m.textContent='Ingresá un email válido para continuar.';$('#email').focus();return}
+  m.className='form-msg ok';m.textContent='✓ Listo. Te enviamos un link a '+v+' para terminar el alta.';e.target.reset();};
+
+/* Hero balance */
+const RATES={USD:1,USDC:1,ARS:1235.40};
+const BAL=12480.50;
+let cur='USD';
+function renderBal(target,animate){
+  const el=$('#bal'),sym={USD:'US$',USDC:'USDC',ARS:'$'}[cur];$('#balSym').textContent=sym;
+  $('#balDelta').textContent=cur==='ARS'?'+$ '+fmt(2400*RATES.ARS,0)+' hoy':'+'+(cur==='USD'?'US$ ':'')+'2.400'+(cur==='USDC'?' USDC':'')+' hoy';
+  const d=cur==='ARS'?0:2;
+  if(!animate||reduce){el.textContent=fmt(target,d);return}
+  const t0=performance.now(),from=0;
+  (function step(t){const p=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-p,3);el.textContent=fmt(from+(target-from)*e,d);if(p<1)requestAnimationFrame(step)})(t0);
+}
+$$('#seg button').forEach(b=>b.onclick=()=>{$$('#seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));cur=b.dataset.c;renderBal(BAL*RATES[cur],true)});
+setTimeout(()=>renderBal(BAL,true),500);
+// rotación automática del selector (se detiene si el usuario interactúa)
+let auto=setInterval(()=>{const bs=$$('#seg button');const i=bs.findIndex(b=>b.getAttribute('aria-pressed')==='true');bs[(i+1)%3].click()},4200);
+$('#seg').addEventListener('pointerdown',()=>clearInterval(auto),{once:true});
+
+/* FX sparkline */
+let fx=1235.40,series=Array.from({length:24},(_,i)=>1228+Math.sin(i/3)*3+i*.3);
+function drawSpark(){
+  const mn=Math.min(...series),mx=Math.max(...series),w=180,h=38;
+  const pts=series.map((v,i)=>[i*(w/(series.length-1)),h-4-((v-mn)/(mx-mn||1))*(h-8)]);
+  const d='M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join('L');
+  $('#sparkL').setAttribute('d',d);$('#sparkA').setAttribute('d',d+`L${w} ${h}L0 ${h}Z`);
+  const chg=(series.at(-1)-series[0])/series[0]*100,el=$('#fxChg');
+  el.textContent=(chg>=0?'▲ ':'▼ ')+fmt(Math.abs(chg))+'%';el.classList.toggle('down',chg<0);
+  $('#fxVal').textContent=fmt(series.at(-1));
+}
+drawSpark();
+if(!reduce)setInterval(()=>{series.push(series.at(-1)+(Math.random()-.45)*1.6);series.shift();drawSpark()},2200);
+
+/* Marquee duplicate */
+const mq=$('#mq');mq.innerHTML+=mq.innerHTML;
+
+/* Tabs (con indicador deslizante y teclado) */
+const tabs=$$('#tabs [role=tab]'),ind=$('#tabs .ind');
+function moveInd(b){ind.style.width=b.offsetWidth+'px';ind.style.transform=`translateX(${b.offsetLeft-5}px)`}
+function selectTab(b,focus){
+  tabs.forEach(t=>{const on=t===b;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;const p=document.getElementById(t.getAttribute('aria-controls'));p.hidden=!on;p.classList.toggle('show',on);if(on)p.classList.add('rv','in')});
+  moveInd(b);if(focus)b.focus();
+}
+tabs.forEach((t,i)=>{t.onclick=()=>selectTab(t);t.onkeydown=e=>{if(e.key==='ArrowRight')selectTab(tabs[(i+1)%3],1);if(e.key==='ArrowLeft')selectTab(tabs[(i+2)%3],1)}});
+addEventListener('load',()=>moveInd(tabs[0]));addEventListener('resize',()=>moveInd(tabs.find(t=>t.getAttribute('aria-selected')==='true')));
+moveInd(tabs[0]);
+
+/* Copy buttons */
+$$('[data-copy]').forEach(b=>b.onclick=()=>{navigator.clipboard?.writeText(b.dataset.copy).catch(()=>{});const o=b.textContent;b.textContent='✓ Copiado';setTimeout(()=>b.textContent=o,1400)});
+
+/* Converter */
+let from='USD',to='ARS';const FEE=0.005;
+const parse=s=>parseFloat(String(s).replace(/\./g,'').replace(',','.'))||0;
+function convert(){
+  const amt=parse($('#cFrom').value);
+  const usd=amt/RATES[from];let out=usd*RATES[to];if(from!==to)out*=1-FEE;
+  $('#cTo').value=fmt(out,to==='ARS'?0:2);
+  $('#rateTxt').textContent=`1 ${from} = ${fmt(RATES[to]/RATES[from],to==='ARS'?2:4)} ${to} · comisión 0,5%`;
+}
+function setCur(side,c){
+  if(side==='from'){if(c===to)to=from;from=c}else{if(c===from)from=to;to=c}
+  $$('.cur').forEach(g=>g.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.c===(g.dataset.side==='from'?from:to))));
+  convert();
+}
+$$('.cur button').forEach(b=>b.onclick=()=>setCur(b.parentNode.dataset.side,b.dataset.c));
+$('#cFrom').addEventListener('input',e=>{const raw=e.target.value.replace(/[^\d,]/g,'');const [i,d]=raw.split(',');e.target.value=(i?Number(i).toLocaleString('es-AR'):'')+(d!==undefined?','+d.slice(0,2):'');convert()});
+$('#swap').onclick=()=>{[from,to]=[to,from];setCur('from',from)};
+convert();
+
+/* Reveal + counters */
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(!x.isIntersecting)return;x.target.classList.add('in');io.unobserve(x.target);
+  const c=x.target.querySelector('[data-count]');if(c&&!reduce){const n=+c.dataset.count,p=c.dataset.prefix||'',s=c.dataset.suffix||'',t0=performance.now();
+    (function st(t){const k=Math.min(1,(t-t0)/1200);c.textContent=p+Math.round(n*(1-Math.pow(1-k,3)))+s;if(k<1)requestAnimationFrame(st)})(t0)}
+}),{threshold:.18,rootMargin:'0px 0px -40px 0px'});
+$$('.rv,.cta').forEach(el=>io.observe(el));
+
+/* FAQ: solo uno abierto a la vez */
+$$('.faq details').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)$$('.faq details').forEach(o=>{if(o!==d)o.open=false})}));
+</script>
+</body>
+</html>

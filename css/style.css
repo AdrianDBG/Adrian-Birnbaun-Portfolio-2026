@@ -1,0 +1,1634 @@
+/* ==========================================================================
+  ADRIÁN BIRNBAUN — PORTFOLIO
+   Homepage hero + inner pages · v2
+
+   Sections
+     1. RESET
+     2. TOKENS
+     3. PAGE
+     4. GRAIN
+     5. GRID
+     6. HEADER
+     7. INNER PAGES (projects / about / contact)
+     8. MAIN NAVIGATION
+     9. HOVER INTERACTION
+    10. TICKER
+    11. RESPONSIVE
+    12. ACCESSIBILITY
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. RESET
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* ==========================================================================
+   2. TOKENS
+   Every visual decision lives here so the page can be re-tuned in one place.
+   ========================================================================== */
+
+:root {
+  /* Colour */
+  --bg-edge:    #050505;
+  --bg-center:  #0d0d0d;
+  --ink:        #f2f2f2;      /* large type — a hair off pure white, calmer */
+  --ink-mono:   #d9d9d9;      /* small technical labels */
+  --ink-ticker: #ffffff;      /* ticker is the ONE pure white on the page */
+  --grain-particle-color: 242, 242, 242;
+
+  /* Type */
+  --font-display: "Archivo", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --size-label:   0.75rem;                         /* 12px */
+  --size-ticker:  0.75rem;                         /* 12px */
+  --size-nav:     clamp(3.375rem, 9.5vw, 8.25rem); /* 54px → 132px */
+
+  --tracking-label:  0.08em;
+  --tracking-ticker: 0.06em;
+  --tracking-nav:   -0.035em;
+
+  /* Layout */
+  --margin: clamp(1.25rem, 3.2vw, 2.75rem);   /* outer page margin */
+  --gutter: clamp(1.25rem, 3vw, 2.5rem);      /* gap between footer links */
+
+  /* Hover interaction */
+  --word-hover-opacity: 0.13;
+  --word-hover-blur:    5px;
+  --ease:               cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-word:           420ms;
+  --dur-ticker:         320ms;
+
+  /* Ticker */
+  --ticker-speed:        20s;   /* one full loop */
+  --ticker-speed-hover:  14s;
+  --ticker-gap:          2.75em; /* space between repeats */
+  --ticker-optical-y:    -0.04em; /* nudges the line onto the cap-height centre */
+}
+
+
+/* ============================================================================
+   3. PAGE
+   ========================================================================== */
+
+html {
+  background: var(--bg-edge);
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100svh;
+  overflow-x: hidden;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-color: var(--bg-edge);
+  background-image: radial-gradient(
+    ellipse 70% 60% at 50% 50%,
+    var(--bg-center) 0%,
+    var(--bg-edge) 100%
+  );
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--bg-edge);
+}
+
+
+/* ============================================================================
+   4. GRAIN
+   Canvas particle layer behind the interface. Motion is handled in main.js.
+   ========================================================================== */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ============================================================================
+   5. GRID
+   One column, three rows. Margins come from padding, so the same value
+   governs left / right / top / bottom and every breakpoint.
+   ========================================================================== */
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header"
+    "main";
+  height: 100svh;
+  padding: var(--margin);
+  padding-top:    calc(var(--margin) + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(var(--margin) + env(safe-area-inset-bottom, 0px));
+}
+
+.site-header,
+.site-main {
+  position: relative;
+  z-index: 1;
+}
+
+.site-header { grid-area: header; }
+.site-main   { grid-area: main; }
+
+
+/* ==========================================================================
+   6. HEADER
+   ========================================================================== */
+
+.site-header {
+  display: flex;
+  justify-content: flex-start;   /* nothing on the right, on purpose */
+  align-items: flex-start;
+}
+
+.site-name {
+  display: inline-block;
+  padding-block: 0.15em;
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-mono);
+}
+
+.home-header .site-name {
+  font-size: 0.85rem;
+}
+
+
+/* ==========================================================================
+   7. INNER PAGES — SHARED FRAME
+   Projects, About and Contact share one frame: a three-column editorial
+   grid, a header row (title / intro / close) and a main area that owns
+   whatever height is left. On desktop the frame is locked to the viewport
+   and every image is sized from the height that remains, so the page never
+   scrolls at any common resolution (1366×768, 1440×900, 1920×1080).
+   ========================================================================== */
+
+.page {
+  --page-gap: clamp(2rem, 5vw, 6rem);       /* column gap */
+  --page-rule: rgba(18, 18, 18, 0.45);      /* hairline colour (light pages) */
+  --page-gap-y: clamp(1.25rem, 3.5vh, 2.5rem);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "header" "main";
+  height: auto;
+  min-height: 100svh;
+}
+
+.page-header {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--page-gap);
+  align-items: end;
+}
+
+.page-title {
+  grid-column: 1;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 0.82;
+  letter-spacing: -0.035em;
+  text-transform: none;
+}
+
+.page-intro {
+  grid-column: 2;
+  align-self: end;
+  max-width: 26ch;
+  padding-bottom: 0.15em;   /* optical: sits on the title baseline */
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.page-close {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: start;
+  justify-self: end;
+  padding-block: 0.15em;
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  transition: color 300ms var(--ease);
+}
+
+.page-close:hover,
+.page-close:focus-visible {
+  color: var(--ink);
+}
+
+.page-main {
+  position: relative;
+  z-index: 1;
+  grid-area: main;
+  width: 100%;
+  min-height: 0;
+}
+
+
+/* --------------------------------------------------------------------------
+   7a. PROJECTS
+   -------------------------------------------------------------------------- */
+
+.projects-page {
+  --bg-edge: #f1f0ec;
+  --bg-center: #faf9f5;
+  --ink: #121212;
+  --ink-mono: #242424;
+  --ink-ticker: #121212;
+  --grain-particle-color: 18, 18, 18;
+}
+
+.projects-title {
+  font-size: clamp(2.75rem, min(5.2vw, 11vh), 5.5rem);
+}
+
+.projects-main {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--page-gap-y);
+  border-top: 1px solid var(--page-rule);
+  padding-top: 0.7rem;
+}
+
+.projects-list__label {
+  color: var(--ink);
+  font-size: var(--size-label);
+  font-weight: 400;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* The field: a loose composition, not a grid. Each piece is placed with
+   --x / --y (% of the field) and sized with --s × --piece (see 7d). */
+.projects-field {
+  --piece: clamp(4rem, 13vh, 6.5rem);      /* size of an --s: 1 piece */
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 1rem;
+  list-style: none;
+}
+
+.piece {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: calc(var(--piece) * var(--s, 1));
+  touch-action: none;
+}
+
+.piece__link {
+  position: relative;
+  display: block;
+  color: var(--ink);
+  cursor: pointer;          /* it is a link first; the grab shows while dragging */
+}
+
+.piece.is-dragging .piece__link {
+  cursor: grabbing;
+}
+
+.piece__link img,
+.piece__empty {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 0.3rem;
+  background: #c8c6bf;
+  /* A soft drop below the piece — as if it were resting on the paper. */
+  box-shadow:
+    0 1px 2px rgba(18, 18, 18, 0.06),
+    0 8px 16px -8px rgba(18, 18, 18, 0.28);
+  filter: grayscale(1);
+  transition:
+    filter 400ms var(--ease),
+    transform 400ms var(--ease),
+    box-shadow 400ms var(--ease),
+    background-color 400ms var(--ease);
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.piece__link img {
+  background: transparent;
+}
+
+/* The name: mono, one line, revealed under the piece on hover / focus. */
+.piece__name {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  left: 0;
+  display: block;
+  width: 100%;                /* never wider than the piece: it wraps */
+  color: var(--ink);
+  font-size: var(--size-label);
+  line-height: 1.35;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(-0.2rem);
+  transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+  pointer-events: none;
+}
+
+.piece__link:hover img,
+.piece__link:hover .piece__empty,
+.piece__link:focus-visible img,
+.piece__link:focus-visible .piece__empty,
+.piece.is-dragging img,
+.piece.is-dragging .piece__empty {
+  filter: grayscale(0);
+  transform: translateY(-0.2rem);
+  box-shadow:
+    0 1px 2px rgba(18, 18, 18, 0.06),
+    0 14px 22px -10px rgba(18, 18, 18, 0.32);
+}
+
+.piece__link:hover .piece__empty,
+.piece__link:focus-visible .piece__empty {
+  background: #a5a39c;
+}
+
+.piece__link:hover .piece__name,
+.piece__link:focus-visible .piece__name,
+.piece.is-dragging .piece__name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.piece__link:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.35rem;
+}
+
+
+/* --------------------------------------------------------------------------
+   7b. ABOUT
+   -------------------------------------------------------------------------- */
+
+.about-page {
+  --bg-edge: #f1f0ec;
+  --bg-center: #faf9f5;
+  --ink: #121212;
+  --ink-mono: #242424;
+  --ink-ticker: #121212;
+  --grain-particle-color: 18, 18, 18;
+}
+
+.about-name {
+  font-size: clamp(2.5rem, min(4.4vw, 10vh), 4.5rem);
+}
+
+.about-main {
+  --about-cols: minmax(0, 0.7fr) minmax(0, 1.15fr) minmax(0, 1.15fr);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hero: empty space on the left, the portrait sits low in column 2,
+   just above the rule — the "breathing room" of the reference. */
+.about-hero {
+  display: grid;
+  grid-template-columns: var(--about-cols);
+  gap: var(--page-gap);
+  align-items: end;
+  padding-top: var(--page-gap-y);
+  padding-bottom: clamp(0.75rem, 2vh, 1.25rem);
+}
+
+.about-portrait {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: min(100%, 16.875rem);
+  aspect-ratio: 0.82;
+  overflow: hidden;
+  background: #d2d0c9;
+}
+
+.about-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(1);
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: var(--about-cols);
+  gap: var(--page-gap);
+  align-items: start;
+  border-top: 1px solid var(--page-rule);
+  padding-top: 0.7rem;
+}
+
+.about-section-label,
+.about-label {
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.about-column {
+  max-width: 40rem;
+  color: var(--ink);
+  font-size: var(--size-label);
+  font-weight: 400;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.about-column .about-label {
+  margin-bottom: 0.8rem;
+  color: var(--ink);
+}
+
+.about-column p + p {
+  margin-top: 1em;
+}
+
+
+/* --------------------------------------------------------------------------
+   7c. CONTACT
+   -------------------------------------------------------------------------- */
+
+.contact-page {
+  --page-rule: rgba(242, 242, 242, 0.28);
+}
+
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.contact-header .site-name {
+  color: var(--ink-mono);
+}
+
+.contact-main {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--page-gap-y);
+}
+
+.contact-kicker,
+.contact-label,
+.contact-image figcaption {
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.contact-kicker {
+  margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
+}
+
+/* Section labels — "Index /", "About me /", "Contact /" — share one voice. */
+.projects-list__label,
+.about-section-label,
+.contact-kicker {
+  color: var(--ink);
+  font-size: var(--size-label);
+  font-weight: 400;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.contact-intro h1 {
+  max-width: none;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, min(4.4vw, 10vh), 4.5rem);   /* same scale as the About / Projects titles */
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: var(--tracking-nav);
+  text-transform: uppercase;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--page-gap);
+  align-items: start;
+  padding-top: clamp(1.5rem, 4.5vh, 3.5rem);
+}
+
+.contact-copy {
+  max-width: 18rem;
+}
+
+.contact-description {
+  max-width: 28ch;
+  margin-top: 1.1rem;
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  font-weight: 700;
+  line-height: 1.65;
+  text-transform: uppercase;
+}
+
+.contact-details {
+  display: grid;
+  align-content: start;
+  gap: clamp(1.5rem, 4.5vh, 4.5rem);
+}
+
+.contact-link {
+  display: block;
+  width: fit-content;
+  margin-top: 0.65rem;
+  border-bottom: 1px solid transparent;
+  color: var(--ink);
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: border-color 300ms var(--ease), color 300ms var(--ease);
+}
+
+.contact-link + .contact-link {
+  margin-top: 0.8rem;
+}
+
+.contact-link:hover,
+.contact-link:focus-visible {
+  border-bottom-color: currentColor;
+  color: var(--ink-ticker);
+}
+
+.contact-link span {
+  display: inline-block;
+  margin-left: 0.25em;
+  transition: transform 300ms var(--ease);
+}
+
+.contact-link:hover span,
+.contact-link:focus-visible span {
+  transform: translate(0.12em, -0.12em);
+}
+
+.contact-image {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-self: end;
+  width: 100%;
+  min-height: 0;
+}
+
+.contact-image__placeholder {
+  width: min(100%, 15rem);
+  aspect-ratio: 0.82;
+  background:
+    linear-gradient(135deg, rgba(242, 242, 242, 0.16), transparent 34%),
+    linear-gradient(155deg, #383838 0%, #171717 46%, #080808 100%);
+}
+
+.contact-image__photo {
+  display: block;
+  width: min(100%, 15rem);
+  aspect-ratio: 0.82;
+  height: auto;
+  object-fit: cover;
+  object-position: 50% 45%;
+}
+
+.contact-image figcaption {
+  margin-top: 0.8rem;
+}
+
+.contact-footer {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-top: var(--page-gap-y);
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--page-rule);
+}
+
+.contact-footer__links {
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.contact-mark {
+  display: flex;
+  align-items: center;
+  gap: 0.08em;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, min(6vw, 9vh), 5.5rem);
+  font-weight: 900;
+  line-height: 0.7;
+  letter-spacing: -0.04em;
+}
+
+.contact-mark span {
+  font-size: 1.1em;
+}
+
+/* © 26 — bottom-right corner of the home */
+.home-mark {
+  position: fixed;
+  right: var(--margin);
+  bottom: calc(var(--margin) + env(safe-area-inset-bottom, 0px));
+  z-index: 2;
+  margin: 0;
+  pointer-events: none;
+}
+
+
+
+/* --------------------------------------------------------------------------
+   7e. CASE STUDY (project pages)
+   The one inner page that scrolls. Same frame, same voice: header row,
+   rule, then editorial spreads — a 12-column composition per campaign.
+   -------------------------------------------------------------------------- */
+
+.case-page {
+  --bg-edge: #f1f0ec;
+  --bg-center: #faf9f5;
+  --ink: #121212;
+  --ink-mono: #242424;
+  --ink-ticker: #121212;
+  --grain-particle-color: 18, 18, 18;
+  --case-gap: clamp(1rem, 2vw, 2rem);         /* gap inside compositions */
+  --case-block: clamp(3rem, 8vh, 6rem);        /* space between sections */
+}
+
+.case-title {
+  font-size: clamp(2.5rem, min(4.4vw, 10vh), 4.5rem);
+}
+
+.case-main {
+  display: block;
+  margin-top: var(--page-gap-y);
+  border-top: 1px solid var(--page-rule);
+  padding-top: 0.7rem;
+}
+
+/* About: label / paragraph / paragraph — the About page's own grid. */
+.case-about {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.15fr) minmax(0, 1.15fr);
+  gap: var(--page-gap);
+  align-items: start;
+}
+
+.case-column {
+  max-width: 40rem;
+  color: var(--ink);
+  font-size: var(--size-label);
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* Meta strip: five small columns under a hairline. */
+.case-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr));
+  gap: var(--page-gap);
+  margin: var(--case-block) 0 0;
+  border-top: 1px solid var(--page-rule);
+  padding-top: 0.7rem;
+}
+
+.case-meta dt {
+  margin-bottom: 0.9rem;
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.case-meta dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--size-label);
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.case-meta dd + dd {
+  margin-top: 0.15rem;
+}
+
+.case-meta a {
+  border-bottom: 1px solid transparent;
+  transition: border-color 300ms var(--ease);
+}
+
+.case-meta a:hover,
+.case-meta a:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+/* Sections */
+.case-section {
+  margin-top: var(--case-block);
+  border-top: 1px solid var(--page-rule);
+  padding-top: 0.7rem;
+}
+
+.case-section__head {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.15fr) minmax(0, 1.15fr);
+  gap: var(--page-gap);
+  align-items: baseline;
+  margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.case-section__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  grid-column: 1 / 3;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
+.case-section__title span {
+  font-family: var(--font-mono);
+  font-size: var(--size-label);
+  font-weight: 400;
+  letter-spacing: var(--tracking-label);
+  color: var(--ink-mono);
+}
+
+.case-section__tags {
+  grid-column: 3;
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* The composition: 12 columns, rows sized by their images. */
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(2rem, 5vh, 3.5rem) var(--case-gap);
+  align-items: start;
+}
+
+.case-figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.case-figure__button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.case-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.3rem;
+  box-shadow:
+    0 1px 2px rgba(18, 18, 18, 0.06),
+    0 8px 16px -8px rgba(18, 18, 18, 0.28);
+  transition: transform 400ms var(--ease), box-shadow 400ms var(--ease);
+}
+
+.case-figure__button:hover img,
+.case-figure__button:focus-visible img {
+  transform: translateY(-0.2rem);
+  box-shadow:
+    0 1px 2px rgba(18, 18, 18, 0.06),
+    0 14px 22px -10px rgba(18, 18, 18, 0.32);
+}
+
+.case-figure__button:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.35rem;
+  border-radius: 0.3rem;
+}
+
+.case-figure figcaption {
+  margin-top: 0.7rem;
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* Footer */
+.case-footer {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-top: var(--case-block);
+  border-top: 1px solid var(--page-rule);
+  padding: 0.8rem 0 0;
+}
+
+.case-footer__back {
+  padding-block: 0.15em;
+  color: var(--ink-mono);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  transition: color 300ms var(--ease);
+}
+
+.case-footer__back:hover,
+.case-footer__back:focus-visible {
+  color: var(--ink);
+}
+
+.case-footer__mark {
+  display: flex;
+  align-items: center;
+  gap: 0.08em;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, min(6vw, 9vh), 5.5rem);
+  font-weight: 900;
+  line-height: 0.7;
+  letter-spacing: -0.04em;
+}
+
+.case-footer__mark span {
+  font-size: 1.1em;
+}
+
+
+/* Back to top — a small pill resting on the page, bottom-right, that
+   appears once the header has scrolled away. */
+.to-top {
+  position: fixed;
+  right: var(--margin);
+  bottom: calc(var(--margin) + env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding: 0 1rem 0 0.85rem;
+  border: 1px solid rgba(18, 18, 18, 0.10);
+  border-radius: 999px;
+  background: #d3d1cb;                 /* light grey, clearly below the paper */
+  color: var(--ink);
+  overflow: hidden;                    /* clips the sheen */
+  isolation: isolate;
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow:
+    0 1px 2px rgba(18, 18, 18, 0.06),
+    0 10px 20px -8px rgba(18, 18, 18, 0.32);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 300ms var(--ease),
+    visibility 0s linear 300ms,
+    transform 300ms var(--ease),
+    box-shadow 300ms var(--ease);
+}
+
+.to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+
+/* The sheen: a soft diagonal highlight that sweeps across every few
+   seconds, like light catching a surface. Sits above the background,
+   below the text. */
+.to-top::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 34%,
+    rgba(255, 255, 255, 0.35) 42%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.35) 58%,
+    transparent 66%,
+    transparent 100%
+  );
+  background-size: 250% 100%;
+  background-repeat: no-repeat;
+  background-position: 120% 0;
+  pointer-events: none;
+}
+
+.to-top.is-visible::before {
+  animation: to-top-sheen 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes to-top-sheen {
+  0%   { background-position: 120% 0; }
+  55%  { background-position: -20% 0; }
+  100% { background-position: -20% 0; }   /* rest, then sweep again */
+}
+
+.to-top span {
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 300ms var(--ease);
+}
+
+.to-top:hover,
+.to-top:focus-visible {
+  box-shadow:
+    0 1px 2px rgba(18, 18, 18, 0.06),
+    0 16px 26px -10px rgba(18, 18, 18, 0.36);
+}
+
+.to-top:hover span,
+.to-top:focus-visible span {
+  transform: translateY(-0.15em);
+}
+
+.to-top:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.25rem;
+}
+
+/* Lightbox — the dark page, borrowed: near-black, one image, mono captions. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: var(--margin);
+  border: 0;
+  background: #050505;
+  color: #f2f2f2;
+}
+
+.lightbox::backdrop {
+  background: #050505;
+}
+
+.lightbox[open] {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.lightbox__close {
+  justify-self: end;
+  padding: 0.15em 0;
+  border: 0;
+  background: none;
+  color: #d9d9d9;
+  font: inherit;
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 300ms var(--ease);
+}
+
+.lightbox__close:hover,
+.lightbox__close:focus-visible {
+  color: #ffffff;
+}
+
+.lightbox__figure {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 1rem;
+  min-height: 0;
+  margin: 0;
+  padding-top: var(--page-gap-y);
+}
+
+.lightbox__image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  justify-self: center;
+  align-self: center;
+  border-radius: 0.3rem;
+  min-height: 0;
+  object-fit: contain;
+}
+
+.lightbox__caption {
+  display: flex;
+  gap: 1.5rem;
+  color: #d9d9d9;
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.lightbox__arrow {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 0;
+  background: none;
+  color: #f2f2f2;
+  font: inherit;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: opacity 300ms var(--ease);
+}
+
+.lightbox__arrow--prev { left: calc(var(--margin) - 1rem); }
+.lightbox__arrow--next { right: calc(var(--margin) - 1rem); }
+
+.lightbox__arrow:hover,
+.lightbox__arrow:focus-visible {
+  opacity: 0.6;
+}
+
+.lightbox__arrow:focus-visible,
+.lightbox__close:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   7d. DESKTOP LOCK — the page owns the viewport, nothing scrolls.
+   Images take the height that is left instead of a fixed width, so the
+   composition closes exactly at the bottom margin on any screen.
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 64rem) and (min-height: 36rem) {
+  .page {
+    height: 100svh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Case studies are the exception: they scroll. */
+  html:has(.case-page),
+  .case-page {
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+  }
+
+  .case-column,
+  .case-meta dd {
+    font-size: 0.8125rem;
+  }
+
+  .page-main {
+    min-height: 0;
+    max-height: 100%;
+  }
+
+  /* Slightly larger reading sizes; the mono is small by design. */
+  .page-intro,
+  .projects-list__label,
+  .about-section-label,
+  .about-label,
+  .contact-kicker {
+    font-size: 0.8125rem;
+  }
+
+  .about-column {
+    font-size: clamp(0.75rem, 1.4vh, 0.875rem);
+    line-height: 1.45;
+  }
+
+  .contact-label,
+  .contact-image figcaption {
+    font-size: 1rem;
+  }
+
+  .contact-description,
+  .contact-link {
+    font-size: 1.125rem;
+  }
+
+  /* Projects: the field owns the height left under the rule, and pieces
+     are clipped to it so a dragged piece never leaves the composition. */
+  .projects-main {
+    height: 100%;
+  }
+
+  .projects-field {
+    overflow: hidden;
+  }
+
+  /* About: the hero takes whatever height the text leaves; the portrait
+     grows from that height, anchored to the rule. */
+  .about-main {
+    height: 100%;
+  }
+
+  .about-hero {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .about-portrait {
+    height: 100%;
+    max-height: 22rem;      /* keeps the portrait modest on tall screens */
+    width: auto;
+    max-width: 100%;
+    min-height: 0;
+  }
+
+  .about-content {
+    flex: 0 0 auto;
+  }
+
+  /* Contact: the grid takes the leftover height; footer sits on the margin. */
+  .contact-main {
+    height: 100%;
+  }
+
+  .contact-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .contact-image {
+    height: 100%;
+  }
+
+  .contact-image__placeholder {
+    flex: 1 1 auto;
+    width: auto;
+    max-width: 100%;
+    min-height: 0;
+  }
+
+  .contact-footer {
+    flex: 0 0 auto;
+    margin-top: var(--page-gap-y);
+  }
+}
+
+
+/* ==========================================================================
+   7. MAIN NAVIGATION
+   ========================================================================== */
+
+.site-main {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.nav {
+  width: 100%;
+}
+
+.nav__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Optical: heavy caps sit slightly high in their box; pull rows closer. */
+  gap: 0;
+}
+
+.nav__item {
+  position: relative;   /* ticker positions against this */
+}
+
+.nav__link {
+  position: relative;
+  display: block;
+  text-align: center;
+}
+
+.word {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--size-nav);
+  line-height: 0.92;
+  letter-spacing: var(--tracking-nav);
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+  transition:
+    opacity var(--dur-word) var(--ease),
+    filter  var(--dur-word) var(--ease);
+  will-change: opacity, filter;
+}
+
+
+/* ==========================================================================
+   8. HOVER INTERACTION
+   Only the hovered item changes. Blur and opacity are applied to .word
+   ONLY — never to .nav__item / .nav__link — so the ticker is unaffected.
+   Same state on keyboard focus.
+   ========================================================================== */
+
+@media (hover: hover) {
+  .nav__link:hover .word {
+    opacity: var(--word-hover-opacity);
+    filter: blur(var(--word-hover-blur));
+  }
+
+  .nav__link:hover .ticker {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav__link:hover .ticker__track {
+    animation-duration: var(--ticker-speed-hover);
+    animation-play-state: running;
+  }
+}
+
+.nav__link:focus-visible {
+  outline: none;
+}
+
+.nav__link:focus-visible .word {
+  opacity: var(--word-hover-opacity);
+  filter: blur(var(--word-hover-blur));
+}
+
+.nav__link:focus-visible .ticker {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nav__link:focus-visible .ticker__track {
+  animation-play-state: running;
+}
+
+
+/* ==========================================================================
+   9. TICKER
+   A line of small white type crossing the optical centre of the word.
+   No background, no border, no container — just moving typography.
+   Full-viewport wide, clipped by its own overflow so the page never scrolls.
+   ========================================================================== */
+
+.ticker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  transform: translate(-50%, -50%) translateY(var(--ticker-optical-y));
+  overflow: hidden;
+  pointer-events: none;   /* the link itself receives the hover */
+
+  font-family: var(--font-mono);
+  font-size: var(--size-ticker);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--tracking-ticker);
+  text-transform: uppercase;
+  color: var(--ink-ticker);
+  white-space: nowrap;
+
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur-ticker) var(--ease),
+    visibility 0s linear var(--dur-ticker),
+    font-size var(--dur-ticker) var(--ease);
+}
+
+.nav__link:hover .ticker,
+.nav__link:focus-visible .ticker {
+  font-size: 0.9rem;
+  transition:
+    opacity var(--dur-ticker) var(--ease),
+    visibility 0s,
+    font-size var(--dur-ticker) var(--ease);
+}
+
+.ticker__track {
+  display: inline-flex;
+  width: max-content;
+  animation: ticker var(--ticker-speed) linear infinite;
+  animation-play-state: paused;
+  will-change: transform;
+}
+
+/* JS duplicates .ticker__group so the track holds two identical halves.
+   Translating by exactly -50% therefore loops with no visible jump. */
+.ticker__group {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.ticker__group > span {
+  padding-inline-end: var(--ticker-gap);
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+
+/* ==========================================================================
+   10. RESPONSIVE
+   Desktop is the art direction; smaller screens get their own type scale
+   rather than a scaled-down desktop.
+   ========================================================================== */
+
+/* Desktop / laptop: the hero owns the viewport, no scroll. */
+@media (min-width: 64rem) and (min-height: 36rem) {
+  html, body {
+    overflow: hidden;
+  }
+}
+
+/* Tablet */
+@media (max-width: 64rem) {
+  :root {
+    --size-nav: clamp(3rem, 11vw, 6.5rem);
+  }
+}
+
+/* Mobile */
+@media (max-width: 40rem) {
+  :root {
+    --size-nav:     clamp(2.75rem, 15vw, 3.75rem);
+    --size-label:   0.625rem;   /* 10px */
+    --size-ticker:  0.625rem;   /* 10px */
+    --ticker-gap:   2.25em;
+    --margin:       1.25rem;
+  }
+
+  .word {
+    line-height: 1;
+  }
+
+  .page-header {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .page-title,
+  .page-intro,
+  .page-close {
+    grid-column: 1;
+  }
+
+  .page-close {
+    grid-row: 1;
+    justify-self: start;
+    margin-bottom: 1.5rem;
+  }
+
+  .page-title { grid-row: 2; }
+  .page-intro { grid-row: 3; max-width: 30ch; }
+
+  .projects-title,
+  .about-name {
+    font-size: clamp(2.5rem, 11vw, 4rem);
+  }
+
+  .projects-main {
+    margin-top: 2.5rem;
+  }
+
+  .projects-main,
+  .about-main {
+    padding-bottom: 2rem;
+  }
+
+  /* No field on small screens: a plain two-column grid, names visible. */
+  .projects-field {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 1.25rem;
+    margin-top: 1.25rem;
+  }
+
+  .piece {
+    position: static;
+    width: auto;
+    touch-action: auto;
+  }
+
+  .piece__link {
+    cursor: pointer;
+  }
+
+  .piece__name {
+    position: static;
+    margin-top: 0.7rem;
+    opacity: 1;
+    transform: none;
+  }
+
+  .about-hero,
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* Case study: everything stacks; compositions become simple columns. */
+  .case-about,
+  .case-section__head {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .case-section__title,
+  .case-section__tags {
+    grid-column: 1;
+  }
+
+  .case-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1.25rem;
+  }
+
+  .case-meta__item--services {
+    grid-column: 1 / -1;
+  }
+
+  .case-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1rem;
+  }
+
+  .case-figure {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  .case-figure--wide {
+    grid-column: 1 / -1 !important;
+  }
+
+  .case-footer {
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .lightbox__arrow {
+    top: auto;
+    bottom: var(--margin);
+    transform: none;
+  }
+
+  .about-hero {
+    padding-top: 2rem;
+  }
+
+  .about-portrait {
+    grid-column: 1;
+    width: min(100%, 15rem);
+  }
+
+  .contact-main {
+    padding-block: 3rem 2rem;
+  }
+
+  .contact-kicker {
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-intro h1 {
+    font-size: clamp(2.5rem, 11vw, 4rem);
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding-top: 3rem;
+  }
+
+  .contact-image {
+    align-items: flex-start;
+    justify-self: start;
+  }
+
+  .contact-footer {
+    align-items: flex-start;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .contact-mark {
+    font-size: clamp(3.5rem, 17vw, 5rem);
+  }
+}
+
+/* Very short landscape viewports (phones rotated): give the nav room. */
+@media (max-height: 30rem) {
+  :root {
+    --size-nav: clamp(2.25rem, 9vh, 4rem);
+  }
+}
+
+
+/* ==========================================================================
+  11. ACCESSIBILITY
+   ========================================================================== */
+
+/* Visible focus on the small links; the large nav links use the hover state
+  as their focus state (see 8.), which is far more visible than an outline. */
+/* Reduced motion: grain freezes, ticker sits still, transitions shorten. */
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track {
+    animation: none;
+    transform: translateX(0);
+  }
+
+  .word,
+  .ticker,
+  .piece__name,
+  .to-top {
+    transition-duration: 120ms;
+  }
+
+  .to-top {
+    transform: none;
+  }
+
+  .to-top::before {
+    animation: none;
+  }
+}
+
+/* Touch / no-hover devices: the words stay clean and simply act as links. */
+@media (hover: none) {
+  .ticker {
+    display: none;
+  }
+}

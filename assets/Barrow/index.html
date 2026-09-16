@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Barrow — Environmental reports, simplified & accelerated</title>
+<meta name="description" content="Barrow drafts full-length environmental reports from raw site assessment data, starting with Phase I ESAs. Web concept by Adrián Birnbaun.">
+<meta name="theme-color" content="#f4f3ee">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4f3ee; --paper-2:#ebeae3; --ink:#0f1a14; --ink-2:#56605a; --ink-3:#8b928d;
+  --green:#2c905a; --green-d:#1f6e43; --forest:#0d2419; --sage:#dfe9e1; --line:#d9d8d0;
+  --sans:"Instrument Sans", system-ui, sans-serif;
+  --mono:"Geist Mono", ui-monospace, monospace;
+  --pad:clamp(18px,3.4vw,48px); --max:1400px;
+  --ease:cubic-bezier(.22,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.mono{font:400 12px/1.4 var(--mono);letter-spacing:.02em;text-transform:uppercase}
+.idx{font:400 12px var(--mono);color:var(--ink-3)}
+.dim{color:var(--ink-3)}
+::selection{background:var(--green);color:#fff}
+
+/* Portfolio frame */
+.pf{background:var(--ink);color:#b9c0bb;display:flex;justify-content:space-between;gap:16px;padding:9px var(--pad);font:400 10.5px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.pf a:hover{color:#fff}.pf span{opacity:.55}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 20px;border-radius:999px;font:500 15px var(--sans);white-space:nowrap;position:relative;overflow:hidden;isolation:isolate;transition:color .35s var(--ease),border-color .35s}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;transform:translateY(101%);transition:transform .45s var(--ease)}
+.btn:hover::before{transform:none}
+.btn-dark{background:var(--ink);color:#fff}.btn-dark::before{background:var(--green)}
+.btn-line{border:1px solid var(--ink)}.btn-line::before{background:var(--ink)}.btn-line:hover{color:#fff}
+.btn-green{background:var(--green);color:#fff}.btn-green::before{background:var(--ink)}
+.btn .ar{display:inline-block;transition:transform .35s var(--ease)}
+.btn:hover .ar{transform:translate(2px,-2px)}
+
+/* Header */
+.hdr{position:sticky;top:0;z-index:30;background:rgba(244,243,238,.82);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .3s}
+.hdr.scrolled{border-color:var(--line)}
+.hdr .wrap{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:10px;font:600 17px var(--sans);letter-spacing:.14em}
+.brand svg{width:40px;height:32px;color:var(--green);transition:transform .5s var(--ease)}
+.brand:hover svg{transform:translateX(4px) rotate(-4deg)}
+.menu{display:flex;gap:4px;list-style:none;padding:4px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.5)}
+.menu a{display:block;padding:7px 14px;border-radius:999px;font-size:14px;color:var(--ink-2);transition:background .25s,color .25s}
+.menu a:hover,.menu a.on{background:var(--ink);color:#fff}
+.hdr .act{display:flex;align-items:center;gap:14px}
+.hdr .act .signin{font-size:14.5px;color:var(--ink-2)}
+.hdr .act .signin:hover{color:var(--ink)}
+.hdr .btn{height:40px;font-size:14px;padding:0 16px}
+.burger{display:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);place-items:center}
+.burger i{display:block;width:16px;height:1.5px;background:var(--ink);box-shadow:0 5px 0 var(--ink),0 -5px 0 var(--ink);transition:.3s}
+.hdr.open .burger i{box-shadow:none;transform:rotate(45deg)}
+.hdr.open .burger i::after{content:"";display:block;width:16px;height:1.5px;background:var(--ink);transform:rotate(90deg)}
+.drawer{display:none}
+
+/* Hero */
+.hero{padding:clamp(48px,7vw,110px) 0 0}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:clamp(26px,3vw,40px)}
+.avail{display:inline-flex;align-items:center;gap:8px;font:400 12px var(--mono);text-transform:uppercase;color:var(--ink-2)}
+.avail i{width:8px;height:8px;border-radius:50%;background:var(--green);position:relative}
+.avail i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--green);animation:ping 2.2s var(--ease) infinite}
+@keyframes ping{0%{transform:scale(.5);opacity:1}100%{transform:scale(1.8);opacity:0}}
+.h1{font:400 clamp(44px,7.6vw,124px)/.98 var(--sans);letter-spacing:-.045em}
+.h1 b{font-weight:600}
+.h1 em{font-style:italic;color:var(--green)}
+.line{display:block;overflow:hidden;padding-bottom:.06em}
+.line > span{display:inline-block;transform:translateY(105%);transition:transform 1.1s var(--ease)}
+.ready .line > span{transform:none}
+.line:nth-child(2) > span{transition-delay:.1s}.line:nth-child(3) > span{transition-delay:.2s}
+.hero-sub{display:grid;grid-template-columns:1fr 1fr;gap:var(--pad);align-items:end;margin-top:clamp(28px,3.5vw,48px)}
+.hero-sub p{font-size:clamp(17px,1.45vw,21px);line-height:1.45;max-width:36ch;color:var(--ink-2)}
+.hero-sub p b{color:var(--ink);font-weight:500}
+.hero-cta{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.fade{opacity:0;transform:translateY(14px);transition:opacity 1s var(--ease) .45s,transform 1s var(--ease) .45s}
+.ready .fade{opacity:1;transform:none}
+
+/* Product window */
+.stage{margin-top:clamp(40px,5vw,72px);border-radius:clamp(18px,2vw,28px);background:var(--forest);padding:clamp(18px,3.4vw,56px);position:relative;overflow:hidden;opacity:0;transform:translateY(30px) scale(.985);transition:opacity 1.2s var(--ease) .55s,transform 1.2s var(--ease) .55s}
+.ready .stage.nope{opacity:1}
+.stage::before{content:"";position:absolute;inset:0;background:radial-gradient(50% 70% at 85% 0%,rgba(44,144,90,.45),transparent 70%),radial-gradient(40% 60% at 0% 100%,rgba(44,144,90,.22),transparent 70%)}
+.stage::after{content:"";position:absolute;inset:0;opacity:.35;background-image:radial-gradient(rgba(255,255,255,.12) 1px,transparent 1px);background-size:22px 22px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 80%);mask-image:linear-gradient(180deg,#000,transparent 80%)}
+.stage-label{position:relative;z-index:1;display:flex;justify-content:space-between;color:#9fb8a8;margin-bottom:18px}
+.app{position:relative;z-index:1;background:#fbfbf8;border-radius:16px;box-shadow:0 40px 80px -30px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);overflow:hidden;display:grid;grid-template-columns:250px 1fr 280px;min-height:500px}
+.bar{grid-column:1/-1;display:flex;align-items:center;gap:14px;height:48px;padding:0 16px;border-bottom:1px solid #ebeae4;font-size:13px}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:#e2e1da}
+.crumb{color:var(--ink-3)}.crumb b{color:var(--ink);font-weight:500}
+.bar .st{margin-left:auto;display:flex;align-items:center;gap:8px;font:400 11px var(--mono);text-transform:uppercase;color:var(--green)}
+.spin{width:12px;height:12px;border-radius:50%;border:2px solid var(--sage);border-top-color:var(--green);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.side{border-right:1px solid #ebeae4;padding:16px}
+.side h4,.meta h4{font:400 11px var(--mono);text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.file{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:13px;opacity:.3;transition:opacity .5s,background .5s}
+.file.in{opacity:1}
+.file.cur{background:var(--sage)}
+.file .ic{width:28px;height:32px;border-radius:5px;background:#eef0ec;display:grid;place-items:center;font:500 8.5px var(--mono);color:var(--ink-2);flex:none;position:relative}
+.file .ic::after{content:"";position:absolute;right:0;top:0;border-width:0 8px 8px 0;border-style:solid;border-color:#fbfbf8 #d9dcd5}
+.file small{display:block;color:var(--ink-3);font-size:11px}
+.file .ok{margin-left:auto;width:16px;height:16px;border-radius:50%;background:var(--green);display:grid;place-items:center;transform:scale(0);transition:transform .4s var(--ease)}
+.file.in .ok{transform:scale(1)}
+.drop{margin-top:12px;border:1px dashed #cfd3cc;border-radius:10px;padding:12px;text-align:center;font-size:12px;color:var(--ink-3)}
+.drop b{color:var(--ink);font-weight:500}
+.doc{padding:28px clamp(18px,3vw,44px);background:#fff;position:relative;overflow:hidden}
+.doc .dh{display:flex;justify-content:space-between;align-items:start;border-bottom:1px solid #ebeae4;padding-bottom:14px;margin-bottom:18px}
+.doc .dh h3{font:600 20px/1.2 var(--sans);letter-spacing:-.01em}
+.doc .dh small{display:block;color:var(--ink-3);font-size:12px;margin-top:4px}
+.astm{white-space:nowrap;flex:none;font:400 10.5px var(--mono);border:1px solid var(--line);border-radius:6px;padding:4px 7px;color:var(--ink-2)}
+.sec{margin-bottom:16px;opacity:.25;transition:opacity .5s}
+.sec.on{opacity:1}
+.sec h5{font:500 13px var(--sans);display:flex;gap:10px;margin-bottom:8px}
+.sec h5 span{font:400 12px var(--mono);color:var(--ink-3)}
+.ln{height:7px;border-radius:4px;background:#eceee9;margin-bottom:6px;position:relative;overflow:hidden}
+.ln::after{content:"";position:absolute;inset:0;background:#c9d6cd;transform-origin:left;transform:scaleX(0)}
+.sec.on .ln::after{transform:scaleX(1);transition:transform .9s var(--ease)}
+.sec.on .ln:nth-child(3)::after{transition-delay:.15s}.sec.on .ln:nth-child(4)::after{transition-delay:.3s}.sec.on .ln:nth-child(5)::after{transition-delay:.45s}
+.rec{display:inline-flex;gap:6px;align-items:center;font:500 11px var(--sans);background:#fff3df;color:#8a5a00;border-radius:6px;padding:3px 7px;margin:2px 0 6px;opacity:0;transform:translateY(4px);transition:.5s var(--ease) .6s}
+.sec.on .rec{opacity:1;transform:none}
+.caret{position:absolute;width:2px;height:14px;background:var(--green);animation:blink 1s steps(1) infinite;transition:top .5s var(--ease),left .5s var(--ease)}
+@keyframes blink{50%{opacity:0}}
+.meta{border-left:1px solid #ebeae4;padding:16px;display:flex;flex-direction:column;gap:16px}
+.prog{background:#f2f1ec;border-radius:12px;padding:14px}
+.prog .row{display:flex;justify-content:space-between;align-items:baseline}
+.prog b{font:600 30px var(--sans);letter-spacing:-.03em}
+.track{height:6px;border-radius:6px;background:#e3e2da;margin-top:10px;overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--green);border-radius:6px;transition:width .6s var(--ease)}
+.check{display:flex;gap:10px;align-items:center;font-size:12.5px;padding:6px 0;color:var(--ink-3);transition:color .4s}
+.check i{width:16px;height:16px;border-radius:50%;border:1.5px solid #cfd3cc;flex:none;transition:.4s var(--ease)}
+.check.on{color:var(--ink)}
+.check.on i{background:var(--green);border-color:var(--green);box-shadow:inset 0 0 0 3px #fff}
+.time{display:flex;gap:10px;align-items:center;border-top:1px solid #ebeae4;padding-top:14px;margin-top:auto;font-size:12.5px}
+.time s{color:var(--ink-3)}
+.time b{color:var(--green);font-weight:600}
+
+
+/* ── HERO (dark, punch) ── */
+.hdr.dark{background:rgba(6,14,10,.55);border-color:rgba(255,255,255,.07);color:#fff}
+.hdr.dark .brand svg{color:#5fd08f}
+.hdr.dark .menu{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+.hdr.dark .menu a{color:#aab8af}
+.hdr.dark .menu a:hover{background:#fff;color:var(--ink)}
+.hdr.dark .act .signin{color:#aab8af}.hdr.dark .act .signin:hover{color:#fff}
+.hdr.dark .btn-dark{background:#fff;color:var(--ink)}.hdr.dark .btn-dark:hover{color:#fff}
+.hdr.dark .burger{border-color:rgba(255,255,255,.2)}
+.hdr.dark .burger i,.hdr.dark .burger i::after{background:#fff;box-shadow:0 5px 0 #fff,0 -5px 0 #fff}
+.hdr.dark.open .burger i{box-shadow:none}
+.hdr{margin-bottom:-73px}
+.xhero{position:relative;background:#050d09;color:#fff;min-height:max(660px,calc(100svh - 33px));padding:calc(73px + clamp(28px,4.5vh,60px)) 0 0;overflow:hidden;isolation:isolate;display:flex;flex-direction:column}
+.xhero::before{content:"";position:absolute;inset:0;z-index:-2;background:
+  radial-gradient(45% 60% at 72% 45%,rgba(44,144,90,.28),transparent 70%),
+  radial-gradient(30% 40% at 10% 100%,rgba(44,144,90,.12),transparent 70%)}
+.xgrid{position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);
+  background-size:calc((100% - var(--pad)*2)/12) 96px;background-position:var(--pad) 0;
+  -webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);mask-image:linear-gradient(180deg,#000 55%,transparent)}
+.xgrid::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px)}
+#terrain{position:absolute;z-index:0;right:-4%;top:6%;width:68%;height:88%;opacity:0;transition:opacity 1.6s var(--ease) .3s}
+.ready #terrain{opacity:1}
+.xhero .wrap{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;width:100%}
+.hud{position:absolute;z-index:1;font:400 10.5px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#7fd6a3;pointer-events:none}
+.hud.tl{right:var(--pad);top:calc(73px + clamp(90px,10vw,130px));text-align:right}
+.hud .chip{display:inline-block;background:rgba(95,208,143,.12);border:1px solid rgba(95,208,143,.35);padding:4px 8px;margin-bottom:6px}
+.hud .dim2{color:#4f7a61}
+.hud.rec{left:0;top:0;width:max-content;opacity:0;transition:opacity .4s;white-space:nowrap;color:#ffcf7a;background:rgba(5,13,9,.78);border:1px solid rgba(255,207,122,.35);padding:6px 9px;backdrop-filter:blur(4px)}
+.hud.rec b{display:block;color:#fff;font-weight:500}
+
+.xhero .hero-top .avail{color:#aab8af}
+.xhero .hero-top .avail i{background:#5fd08f}.xhero .hero-top .avail i::after{border-color:#5fd08f}
+.xhero .h1{font-size:clamp(46px,min(7.6vw,12.5svh),132px);max-width:11.5ch;text-shadow:0 2px 40px rgba(5,13,9,.6)}
+.xhero .h1 em{color:#5fd08f}
+.xhero .h1 .stroke{color:#7d8f84;font-weight:400}
+.xhero .hero-sub{grid-template-columns:minmax(0,520px) auto;justify-content:space-between;margin:clamp(20px,3vh,40px) 0 clamp(28px,4.5vh,56px)}
+.xhero .hero-top{margin-bottom:clamp(18px,3vh,36px)}
+.xhero .hero-sub p{color:#9fb0a6}
+.xhero .hero-sub p b{color:#fff}
+.btn-glow{background:#5fd08f;color:#04120a;box-shadow:0 0 0 1px rgba(95,208,143,.4),0 10px 40px -8px rgba(95,208,143,.55)}
+.btn-glow::before{background:#fff}
+.btn-ghost-w{border:1px solid rgba(255,255,255,.28);color:#fff}
+.btn-ghost-w::before{background:#fff}.btn-ghost-w:hover{color:var(--ink)}
+.xstats{margin-top:auto;display:grid;grid-template-columns:1.3fr repeat(3,1fr);border-top:1px solid rgba(255,255,255,.1);position:relative;z-index:1;background:rgba(5,13,9,.55);backdrop-filter:blur(6px)}
+.xstats > div{padding:18px var(--pad) 20px;border-right:1px solid rgba(255,255,255,.1)}
+.xstats > div:last-child{border-right:0}
+.xstats small{display:block;font:400 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#6f8a7b;margin-bottom:8px}
+.xstats b{font:500 clamp(26px,2.6vw,38px)/1 var(--sans);letter-spacing:-.03em}
+.xstats b s{color:#6f8a7b;text-decoration-color:#c85d4b;margin-right:8px;font-weight:400}
+.xstats b::after{content:"_";color:#5fd08f;margin-left:3px;animation:blink 1s steps(1) infinite}
+.xstats .lead{display:flex;align-items:center;gap:12px;color:#aab8af;font-size:14px;line-height:1.35}
+.xstats .lead svg{width:34px;height:28px;color:#5fd08f;flex:none}
+.cross{position:absolute;z-index:1;width:13px;height:13px;pointer-events:none}
+.cross::before,.cross::after{content:"";position:absolute;background:rgba(255,255,255,.45)}
+.cross::before{left:6px;top:0;width:1px;height:13px}.cross::after{top:6px;left:0;height:1px;width:13px}
+.scrollcue{display:inline-flex;align-items:center;gap:8px;font:400 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#aab8af}
+.scrollcue i{display:block;width:1px;height:26px;background:rgba(255,255,255,.2);position:relative;overflow:hidden}
+.scrollcue i::after{content:"";position:absolute;left:0;top:-40%;width:1px;height:40%;background:#5fd08f;animation:cue 1.8s var(--ease) infinite}
+@keyframes cue{to{top:110%}}
+.preview{padding-top:clamp(60px,7vw,100px)}
+.preview .stage{margin-top:0}
+.stage.in{opacity:1;transform:none}
+@media (max-width:980px){
+  #terrain{width:120%;right:-30%;top:auto;bottom:90px;height:60%;opacity:.55!important}
+  .xstats{grid-template-columns:1fr 1fr}
+  .xstats .lead{grid-column:1/-1;border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}
+  .xstats > div:nth-child(3){border-right:0}
+  .xstats > div:nth-child(4){grid-column:1/-1;border-top:1px solid rgba(255,255,255,.1)}
+  .hud.tl,.hud.rec{display:none}
+  #terrain{opacity:.4!important}
+  .xhero .hero-sub{grid-template-columns:1fr}
+}
+
+/* Marquee */
+.firms{padding:clamp(56px,7vw,96px) 0 0}
+.firms .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.mq{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq .t{display:flex;width:max-content;animation:mq 45s linear infinite}
+.mq:hover .t{animation-play-state:paused}
+.mq span{padding:22px 34px;font:500 clamp(20px,2.2vw,30px) var(--sans);letter-spacing:-.02em;color:#a6aba6;white-space:nowrap;transition:color .3s}
+.mq span:hover{color:var(--ink)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* Section scaffolding */
+.block{padding:clamp(90px,11vw,170px) 0}
+.shead{display:grid;grid-template-columns:.9fr 2fr;gap:var(--pad);margin-bottom:clamp(40px,5vw,72px);align-items:start}
+.shead .mono{display:flex;gap:10px;color:var(--ink-2);padding-top:.7em}
+.h2{font:400 clamp(34px,4.6vw,72px)/1.02 var(--sans);letter-spacing:-.04em}
+.h2 b{font-weight:600}
+.h2 .dim{color:var(--ink-3)}
+.rv{opacity:0;transform:translateY(24px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
+
+/* Problem / solution */
+.ps{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.card{border-radius:22px;padding:clamp(24px,3vw,44px);min-height:420px;display:flex;flex-direction:column;justify-content:space-between;gap:30px}
+.card.pr{background:var(--paper-2)}
+.card.so{background:var(--forest);color:#fff}
+.card h3{font:500 clamp(22px,2vw,30px)/1.2 var(--sans);letter-spacing:-.02em;max-width:22ch}
+.card p{color:var(--ink-2);max-width:44ch}
+.card.so p{color:#a9c1b2}
+.card .top{display:flex;justify-content:space-between;align-items:center}
+.tag{font:400 11px var(--mono);text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:4px 10px;opacity:.7}
+.cmp{display:flex;align-items:baseline;gap:14px;font:500 clamp(46px,5.6vw,84px)/1 var(--sans);letter-spacing:-.05em}
+.cmp s{color:var(--ink-3);text-decoration-thickness:3px;text-decoration-color:#c85d4b}
+.cmp b{color:#7fd6a3;font-weight:500}
+.cmp small{font:400 12px var(--mono);letter-spacing:0;text-transform:uppercase;color:inherit;opacity:.6}
+.pains{display:flex;flex-wrap:wrap;gap:8px}
+.pains span{font-size:13.5px;border:1px solid #cfcec5;border-radius:999px;padding:6px 12px;color:var(--ink-2)}
+
+/* Reports list */
+.list{border-top:1px solid var(--ink)}
+.row{display:grid;grid-template-columns:70px 1.3fr 1fr .8fr 40px;align-items:center;gap:20px;padding:26px 6px;border-bottom:1px solid var(--line);position:relative;cursor:default;transition:padding .45s var(--ease)}
+.row::before{content:"";position:absolute;inset:0;background:var(--sage);transform:scaleY(0);transform-origin:bottom;transition:transform .45s var(--ease);z-index:-1;border-radius:4px}
+.row:hover::before,.row:focus-within::before{transform:scaleY(1)}
+.row:hover{padding-left:18px;padding-right:18px}
+.row h3{font:500 clamp(22px,2.3vw,34px)/1.1 var(--sans);letter-spacing:-.03em}
+.row .std{font:400 13px var(--mono);color:var(--ink-2)}
+.row .desc{grid-column:2/5;max-height:0;overflow:hidden;color:var(--ink-2);transition:max-height .5s var(--ease),margin .5s var(--ease);font-size:15px;max-width:60ch}
+.row:hover .desc,.row:focus-within .desc{max-height:80px;margin-top:-8px}
+.status{justify-self:start;display:inline-flex;align-items:center;gap:8px;font:400 11.5px var(--mono);text-transform:uppercase;border-radius:999px;padding:5px 11px;background:#fff;border:1px solid var(--line);color:var(--ink-2)}
+.status i{width:7px;height:7px;border-radius:50%;background:#c5c9c3}
+.status.live{background:var(--green);border-color:var(--green);color:#fff}
+.status.live i{background:#fff;animation:pulse 1.8s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.row .go{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:.35s var(--ease)}
+.row:hover .go{background:var(--ink);color:#fff;border-color:var(--ink);transform:rotate(-45deg)}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
+.step .vis{height:220px;background:var(--paper-2);position:relative;overflow:hidden;display:grid;place-items:center;border-bottom:1px solid var(--line)}
+.step .txt{padding:26px 26px 30px}
+.step .txt .idx{display:block;margin-bottom:14px}
+.step h3{font:500 24px/1.15 var(--sans);letter-spacing:-.02em;margin-bottom:10px}
+.step p{color:var(--ink-2);font-size:15px}
+/* step visuals */
+.v-new{width:78%;background:#fff;border-radius:12px;box-shadow:0 12px 30px -14px rgba(0,0,0,.25);padding:14px;font-size:12px;display:grid;gap:8px}
+.v-new .fld{border:1px solid var(--line);border-radius:8px;padding:7px 10px;display:flex;justify-content:space-between;color:var(--ink-3)}
+.v-new .fld b{color:var(--ink);font-weight:500}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chips span{font:400 10px var(--mono);background:var(--sage);color:var(--green-d);border-radius:5px;padding:3px 6px;opacity:0;transform:translateY(6px);transition:.5s var(--ease)}
+.step.in .chips span{opacity:1;transform:none}
+.step.in .chips span:nth-child(2){transition-delay:.15s}.step.in .chips span:nth-child(3){transition-delay:.3s}.step.in .chips span:nth-child(4){transition-delay:.45s}.step.in .chips span:nth-child(5){transition-delay:.6s}
+.v-ai{position:relative;width:150px;height:150px}
+.v-ai .core{position:absolute;inset:44px;border-radius:50%;background:var(--forest);display:grid;place-items:center;color:#7fd6a3;box-shadow:0 0 0 8px rgba(44,144,90,.12)}
+.v-ai .core svg{width:40px;height:32px}
+.v-ai .orb{position:absolute;inset:0;border:1px dashed #b9c6bd;border-radius:50%;animation:spin 18s linear infinite}
+.v-ai .orb i{position:absolute;top:-5px;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--green)}
+.v-ai .orb.o2{inset:-22px;animation-duration:28s;animation-direction:reverse}
+.v-ai .orb.o2 i{background:#c5c9c3;top:auto;bottom:-5px}
+.v-dl{display:flex;gap:12px;align-items:end}
+.page{width:96px;height:124px;background:#fff;border-radius:8px;box-shadow:0 12px 30px -14px rgba(0,0,0,.3);padding:12px 10px;display:grid;gap:5px;align-content:start;transition:transform .6s var(--ease)}
+.page i{height:5px;border-radius:3px;background:#e6e8e3}
+.page i.g{background:#c9d6cd;width:60%}
+.page:nth-child(1){transform:rotate(-8deg) translateY(8px)}
+.page:nth-child(3){transform:rotate(8deg) translateY(8px)}
+.step:hover .page:nth-child(1){transform:rotate(-12deg) translate(-8px,4px)}
+.step:hover .page:nth-child(3){transform:rotate(12deg) translate(8px,4px)}
+.pdf{position:absolute;right:22%;bottom:30px;font:500 10px var(--mono);background:var(--ink);color:#fff;padding:5px 8px;border-radius:6px}
+
+/* Example */
+.ex{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;align-items:stretch}
+.quote{background:var(--green);color:#fff;border-radius:22px;padding:clamp(28px,4vw,60px);display:flex;flex-direction:column;justify-content:space-between;gap:40px;position:relative;overflow:hidden}
+.quote svg.bg{position:absolute;right:-40px;bottom:-40px;width:320px;height:250px;color:rgba(255,255,255,.08)}
+.quote blockquote{font:400 clamp(22px,2.2vw,32px)/1.3 var(--sans);letter-spacing:-.02em;position:relative}
+.quote blockquote::before{content:"“";display:block;font:500 80px/0.6 var(--sans);opacity:.5;margin-bottom:18px}
+.who{display:flex;align-items:center;gap:14px;position:relative}
+.who .av{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-weight:600}
+.who small{display:block;opacity:.75}
+.report{background:#fff;border:1px solid var(--line);border-radius:22px;padding:clamp(22px,3vw,36px);display:flex;flex-direction:column;gap:18px}
+.report .rp{flex:1;border-radius:14px;background:var(--paper-2);padding:18px;position:relative;overflow:hidden;min-height:240px}
+.rp .sheet{background:#fff;border-radius:6px;box-shadow:0 10px 30px -12px rgba(0,0,0,.25);padding:18px;width:78%;margin:0 auto;transform:translateY(12px);transition:transform .6s var(--ease)}
+.report:hover .sheet{transform:translateY(0)}
+.sheet h6{font:600 11px var(--sans);margin-bottom:2px}
+.sheet small{display:block;font:400 9px var(--mono);color:var(--ink-3);margin-bottom:12px}
+.sheet i{display:block;height:5px;border-radius:3px;background:#eceee9;margin-bottom:5px}
+.sheet i.s{width:55%}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kv div{border-top:1px solid var(--line);padding-top:10px}
+.kv small{display:block;font:400 11px var(--mono);text-transform:uppercase;color:var(--ink-3)}
+.report .btns{display:flex;gap:10px;flex-wrap:wrap}
+
+/* FAQ */
+.faq{display:grid;grid-template-columns:.9fr 2fr;gap:var(--pad)}
+.faq aside p{color:var(--ink-2);max-width:30ch;margin:14px 0 22px}
+.qa{border-top:1px solid var(--ink)}
+.qa details{border-bottom:1px solid var(--line)}
+.qa summary{list-style:none;display:grid;grid-template-columns:48px 1fr 28px;align-items:center;gap:10px;padding:22px 0;cursor:pointer;font:500 clamp(17px,1.5vw,21px) var(--sans);letter-spacing:-.01em;transition:color .25s}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary:hover{color:var(--green)}
+.qa summary .pm{width:28px;height:28px;position:relative}
+.qa summary .pm::before,.qa summary .pm::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:1.5px;background:currentColor;transform:translate(-50%,-50%);transition:transform .4s var(--ease)}
+.qa summary .pm::after{transform:translate(-50%,-50%) rotate(90deg)}
+.qa details[open] .pm::after{transform:translate(-50%,-50%) rotate(0)}
+.qa .ans{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.qa details[open] .ans{grid-template-rows:1fr}
+.qa .ans > div{overflow:hidden}
+.qa .ans p{padding:0 38px 24px 58px;color:var(--ink-2);max-width:72ch}
+
+/* Contact */
+.contact{background:var(--forest);color:#fff;border-radius:clamp(22px,2.6vw,36px);padding:clamp(40px,7vw,110px) clamp(24px,5vw,80px);position:relative;overflow:hidden}
+.contact::before{content:"";position:absolute;inset:0;background:radial-gradient(50% 80% at 100% 100%,rgba(44,144,90,.5),transparent 70%)}
+.contact > *{position:relative}
+.contact .mono{color:#9fb8a8}
+.contact h2{font:400 clamp(44px,7.5vw,120px)/.95 var(--sans);letter-spacing:-.05em;margin:22px 0 40px}
+.contact h2 b{font-weight:600}
+.contact h2 em{font-style:italic;color:#7fd6a3}
+.mail{display:inline-flex;align-items:center;gap:16px;font:500 clamp(22px,2.6vw,38px) var(--sans);letter-spacing:-.03em;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:8px;transition:border-color .3s,gap .4s var(--ease)}
+.mail:hover{border-color:#fff;gap:24px}
+.cgrid{display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap}
+.cmeta{display:grid;grid-template-columns:auto auto;gap:6px 30px;font-size:14px;color:#a9c1b2}
+.cmeta b{color:#fff;font-weight:500}
+.contact svg.big{position:absolute;right:clamp(20px,5vw,80px);top:clamp(30px,5vw,70px);width:clamp(90px,12vw,170px);height:clamp(70px,9.4vw,133px);color:#7fd6a3;opacity:.9}
+
+/* Footer */
+footer{padding:clamp(60px,7vw,90px) 0 30px;overflow:hidden}
+.fg{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:30px}
+.fg h4{font:400 11px var(--mono);text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.fg a{display:block;line-height:2;font-size:15px;color:var(--ink-2);transition:color .2s}
+.fg a:hover{color:var(--green)}
+.wordmark{font:600 clamp(46px,15.5vw,250px)/.8 var(--sans);letter-spacing:-.06em;margin-top:clamp(50px,6vw,90px);display:flex;align-items:flex-end;gap:.08em;color:var(--ink)}
+.wordmark svg{width:.9em;height:.7em;color:var(--green);flex:none;margin-bottom:.02em}
+.fbot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font:400 12px var(--mono);text-transform:uppercase;color:var(--ink-3)}
+.disc{margin-top:10px;font-size:12px;color:var(--ink-3);max-width:90ch}
+
+/* To top */
+.totop{position:fixed;right:20px;bottom:20px;z-index:20;width:46px;height:46px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;opacity:0;transform:translateY(10px);pointer-events:none;transition:.35s var(--ease)}
+.totop.show{opacity:1;transform:none;pointer-events:auto}
+.totop:hover{background:var(--green)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv,.fade,.stage{opacity:1;transform:none}
+  .line>span{transform:none}
+}
+
+@media (max-width:1180px){
+  .app{grid-template-columns:220px 1fr}
+  .meta{display:none}
+}
+@media (max-width:980px){
+  .menu,.hdr .act .signin{display:none}
+  .burger{display:grid}
+  .drawer{display:block;position:fixed;left:0;right:0;top:72px;background:var(--paper);border-bottom:1px solid var(--line);padding:8px var(--pad) 24px;opacity:0;transform:translateY(-8px);pointer-events:none;transition:.35s var(--ease)}
+  .hdr.open .drawer{opacity:1;transform:none;pointer-events:auto}
+  .drawer a{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-size:20px;letter-spacing:-.02em}
+  .hero-sub,.shead,.faq,.ex,.ps{grid-template-columns:1fr}
+  .hero-cta{justify-content:flex-start}
+  .steps{grid-template-columns:1fr}
+  .row{grid-template-columns:44px 1fr auto}
+  .row .std{grid-column:2/3;margin-top:-14px}
+  .row .status{grid-column:3;grid-row:1}
+  .row .go{display:none}
+  .row .desc{grid-column:2/4;max-height:none;margin-top:-6px}
+  .fg{grid-template-columns:1fr 1fr}
+}
+@media (max-width:700px){
+  .app{grid-template-columns:1fr}
+  .side{border-right:0;border-bottom:1px solid #ebeae4}
+  .side .file:nth-child(n+4),.drop{display:none}
+  .bar .crumb{display:none}
+  .pf span{display:none}
+  .hdr .btn{display:none}
+  .qa .ans p{padding:0 10px 22px 58px}
+  .contact svg.big{display:none}
+  .astm{display:none}
+  html,body{overflow-x:clip}
+}
+
+/* ── Mobile polish ── */
+@media (max-width:600px){
+  .pf{font-size:9.5px;padding:8px 16px}
+  .pf a:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:68%}
+  .hdr .wrap{height:64px}
+  .hdr{margin-bottom:-65px}
+  .xhero{padding-top:calc(65px + 26px);min-height:auto}
+  .xhero .h1{font-size:clamp(40px,12.4vw,56px)}
+  .xhero .hero-sub{margin:18px 0 28px}
+  .hero-cta{flex-direction:column;align-items:stretch;width:100%}
+  .hero-cta .btn{justify-content:center;height:50px}
+  .xstats > div{padding:14px 16px 16px}
+  .xstats b{font-size:26px}
+  .preview{padding-top:44px}
+  .stage{padding:14px;border-radius:18px}
+  .stage-label{font-size:10px;margin-bottom:12px}
+  .doc{padding:20px 18px}
+  .doc .dh h3{font-size:17px}
+  .block{padding:72px 0}
+  .shead{margin-bottom:30px;gap:12px}
+  .h2{font-size:clamp(32px,9.6vw,42px)}
+  .ps{gap:12px}
+  .card{min-height:0;padding:24px 22px;gap:24px;border-radius:18px}
+  .cmp{font-size:clamp(38px,12vw,52px);flex-wrap:wrap;gap:10px}
+  .row{grid-template-columns:36px 1fr;gap:6px 12px;padding:20px 2px}
+  .row:hover{padding-left:2px;padding-right:2px}
+  .row h3{font-size:22px;grid-column:2}
+  .row .std{grid-column:2;margin-top:0}
+  .row .status{grid-column:2;grid-row:auto;margin-top:6px}
+  .row .desc{grid-column:2;margin-top:4px;font-size:14.5px}
+  .row .idx{align-self:start;padding-top:6px}
+  .step .vis{height:180px}
+  .step .txt{padding:22px}
+  .quote{padding:28px 24px;border-radius:18px}
+  .quote blockquote{font-size:20px}
+  .quote svg.bg{width:200px;height:160px}
+  .report{padding:20px;border-radius:18px}
+  .report .btns .btn{flex:1;justify-content:center}
+  .qa summary{grid-template-columns:34px 1fr 24px;font-size:16px;padding:18px 0}
+  .qa .ans p{padding:0 4px 20px 44px}
+  .contact{padding:40px 24px;border-radius:20px}
+  .contact h2{font-size:clamp(40px,12vw,54px);margin:16px 0 28px}
+  .mail{font-size:22px}
+  .fg{grid-template-columns:1fr 1fr;gap:26px 20px}
+  .fg > div:first-child{grid-column:1/-1}
+  .wordmark{font-size:19vw}
+  .fbot{flex-direction:column;gap:8px}
+  .totop{right:14px;bottom:14px;width:44px;height:44px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="logo" viewBox="320 430 1190 930"><g transform="translate(0,1800) scale(0.1,-0.1)" fill="currentColor"><path d="M10167 13445 c-38 -7 -78 -17 -90 -22 -12 -6 -42 -19 -67 -29 -62 -25 -177 -112 -238 -180 -53 -60 -112 -161 -112 -192 0 -10 -5 -23 -12 -30 -28 -28 -44 -205 -29 -314 13 -90 48 -208 62 -208 5 0 9 -8 9 -19 0 -10 7 -24 15 -31 8 -7 15 -19 15 -26 0 -34 236 -244 274 -244 6 0 17 -5 24 -12 47 -47 363 -69 474 -33 29 9 66 23 81 31 16 8 32 14 37 14 13 0 181 -197 233 -274 l47 -68 0 -682 c0 -374 -4 -687 -8 -694 -7 -9 -52 -12 -193 -10 l-184 3 -6 120 c-6 111 -18 168 -49 236 -10 23 -188 185 -320 294 -21 17 -101 85 -178 151 -78 67 -153 131 -168 143 -25 19 -29 32 -40 119 -28 221 -81 331 -223 464 -170 159 -366 213 -611 169 -102 -18 -219 -73 -295 -137 -106 -90 -158 -170 -226 -344 -8 -22 -15 -90 -17 -188 -2 -125 0 -156 13 -174 8 -12 15 -33 15 -46 0 -13 6 -36 14 -50 41 -82 53 -102 92 -152 23 -30 59 -71 81 -90 74 -67 195 -140 231 -140 9 0 31 -7 47 -16 23 -13 64 -16 186 -17 161 -1 182 3 271 49 14 8 31 14 36 14 19 0 113 68 178 129 36 33 72 61 79 61 8 0 22 -8 32 -18 10 -10 113 -100 228 -199 116 -99 218 -190 229 -201 20 -23 30 -134 14 -165 -8 -16 -89 -17 -1541 -17 -843 -1 -1552 -5 -1575 -9 -64 -13 -124 -74 -140 -144 -6 -29 -12 -64 -12 -77 1 -30 21 -103 40 -145 7 -16 26 -58 42 -93 15 -34 28 -67 28 -73 0 -6 6 -23 13 -37 8 -15 21 -43 29 -62 8 -19 22 -51 30 -70 9 -19 37 -87 63 -150 26 -63 60 -143 76 -177 16 -35 29 -68 29 -74 0 -6 6 -23 14 -37 8 -15 49 -110 91 -212 72 -174 88 -212 120 -285 8 -16 21 -48 30 -70 42 -101 62 -149 94 -216 11 -25 21 -51 21 -57 0 -5 11 -32 24 -59 13 -26 45 -100 71 -163 26 -63 53 -128 60 -145 41 -95 49 -113 61 -138 8 -16 14 -34 14 -42 0 -7 7 -18 15 -25 8 -7 15 -19 15 -28 0 -23 89 -161 130 -203 39 -39 99 -85 145 -111 42 -23 183 -48 269 -48 39 0 103 -7 141 -15 39 -8 104 -15 146 -15 42 0 120 -7 175 -15 54 -8 131 -15 169 -15 39 0 105 -7 148 -15 43 -8 109 -15 146 -15 37 0 112 -7 167 -15 54 -8 142 -15 194 -15 52 0 136 -7 185 -15 50 -8 122 -15 160 -15 39 0 99 -5 135 -10 36 -6 137 -14 225 -19 88 -6 173 -14 188 -20 36 -14 285 -14 402 0 50 6 124 14 165 18 41 5 88 14 103 20 16 6 41 11 56 11 38 0 150 42 208 77 27 16 71 40 98 53 28 13 86 45 130 71 44 25 107 61 140 78 33 18 87 48 120 67 33 19 69 39 80 44 11 6 38 21 60 33 48 28 134 76 213 118 563 308 688 406 1062 834 91 103 176 200 189 214 12 14 46 53 75 85 60 70 144 165 195 220 20 22 45 52 56 66 18 24 141 164 172 195 6 6 35 41 64 76 29 35 76 89 105 119 29 30 74 82 101 114 26 33 69 83 94 110 64 72 122 152 135 186 3 8 12 28 20 43 22 44 18 97 -12 142 -40 60 -74 94 -124 123 -45 27 -45 27 -1265 32 l-1220 5 -3 167 -2 167 62 68 c35 37 85 93 112 123 27 30 77 84 110 120 160 171 188 205 218 268 33 67 33 67 36 348 3 280 3 280 31 297 16 9 35 17 41 17 7 0 40 17 74 37 155 93 264 229 322 403 28 84 26 322 -3 405 -45 126 -89 197 -180 292 -92 96 -246 169 -388 184 -230 25 -420 -38 -575 -191 -42 -41 -88 -93 -101 -115 -72 -117 -120 -302 -105 -411 20 -160 36 -220 75 -285 12 -19 25 -44 30 -56 11 -25 188 -203 202 -203 5 0 27 -11 48 -24 21 -14 56 -29 77 -35 21 -6 49 -18 62 -26 22 -16 22 -19 22 -245 0 -255 6 -230 -85 -325 -16 -17 -43 -48 -60 -67 -43 -52 -203 -224 -251 -272 -60 -59 -129 -165 -139 -211 -4 -22 -11 -128 -14 -235 l-6 -195 -149 -3 c-97 -2 -153 1 -162 8 -10 9 -13 151 -16 749 -3 682 -4 739 -20 764 -10 14 -18 32 -18 39 0 15 -61 97 -213 287 -59 74 -107 141 -107 148 0 8 11 31 25 51 14 20 25 47 25 60 0 12 7 39 16 60 24 54 24 331 0 367 -9 13 -16 31 -16 40 0 21 -34 94 -70 153 -41 64 -169 183 -233 216 -29 15 -59 31 -67 36 -8 4 -40 15 -70 23 -140 40 -218 45 -343 22z m263 -473 c35 -23 70 -55 70 -66 0 -5 7 -18 17 -28 12 -14 16 -38 16 -103 0 -65 -4 -89 -16 -103 -10 -10 -17 -23 -17 -29 0 -11 -74 -73 -88 -73 -5 0 -15 -7 -22 -15 -9 -11 -32 -15 -80 -15 -48 0 -71 4 -80 15 -7 8 -20 15 -28 15 -22 0 -92 70 -92 91 0 9 -7 22 -15 29 -23 19 -20 124 6 177 27 56 98 116 147 124 54 10 153 -1 182 -19z m1980 -117 c7 -8 18 -15 24 -15 6 0 25 -13 41 -30 70 -70 70 -68 70 -165 0 -107 -18 -145 -93 -196 -42 -29 -55 -32 -122 -33 -111 -1 -165 34 -222 144 -23 44 -25 155 -3 164 8 3 15 14 15 24 0 22 54 76 101 101 45 24 171 28 189 6z m-3242 -1202 c48 -29 102 -86 102 -108 1 -11 7 -31 15 -45 22 -39 18 -87 -15 -155 -26 -55 -36 -65 -89 -93 -48 -26 -70 -32 -122 -32 -55 0 -72 5 -116 33 -65 41 -88 71 -97 127 -9 56 -9 64 0 120 10 59 30 91 85 134 42 33 48 35 127 35 61 1 90 -3 110 -16z M3727 11341 c-31 -16 -65 -35 -75 -43 -9 -9 -23 -17 -29 -19 -19 -6 -103 -121 -109 -149 -3 -14 -12 -40 -20 -58 -8 -19 -14 -64 -14 -105 0 -163 82 -297 232 -378 l63 -34 725 -3 c399 -2 749 0 777 3 45 5 59 13 97 51 46 46 75 55 96 29 7 -8 19 -15 27 -15 22 0 173 -156 173 -179 0 -11 4 -22 8 -25 5 -3 41 -69 81 -148 40 -79 128 -251 197 -383 68 -132 126 -247 130 -255 3 -8 9 -22 14 -31 4 -8 56 -110 116 -225 59 -115 139 -271 178 -347 39 -76 88 -173 109 -215 21 -42 42 -84 47 -92 5 -8 51 -98 102 -200 52 -102 159 -311 237 -465 254 -495 361 -705 487 -953 l124 -244 0 -785 c0 -760 1 -788 21 -872 11 -47 25 -90 30 -95 5 -6 9 -16 9 -24 0 -30 79 -141 151 -212 71 -70 208 -160 243 -160 7 0 31 -7 52 -16 29 -12 73 -16 174 -17 149 -1 208 11 317 65 85 41 263 184 263 211 0 5 9 19 19 31 11 11 53 61 93 111 40 49 80 97 88 105 8 8 33 38 55 65 55 69 201 245 229 275 12 14 64 77 116 140 52 63 97 117 100 120 8 8 300 356 355 425 28 34 69 84 92 111 23 27 67 79 98 116 31 37 65 70 75 73 10 3 37 1 61 -4 24 -6 67 -11 96 -11 28 0 87 -7 130 -15 43 -8 98 -15 123 -15 25 -1 74 -7 110 -15 36 -8 85 -14 109 -15 25 0 86 -7 135 -15 114 -18 246 -35 356 -46 47 -5 105 -13 130 -18 25 -6 68 -10 96 -11 29 0 56 -6 62 -12 6 -8 10 -70 11 -143 0 -71 5 -154 11 -184 5 -29 10 -72 10 -95 0 -22 6 -61 14 -86 8 -25 19 -65 26 -90 27 -109 44 -156 84 -240 122 -258 308 -483 535 -650 213 -157 398 -238 651 -284 193 -34 517 -28 690 14 148 36 154 38 190 50 19 7 67 28 106 46 39 19 74 34 77 34 28 0 286 185 367 262 91 87 237 265 295 359 12 21 115 227 126 254 21 52 49 141 49 158 0 11 6 40 14 66 43 136 59 444 31 582 -8 42 -15 91 -15 110 -1 19 -7 45 -15 59 -8 14 -14 41 -15 60 0 19 -7 48 -15 64 -8 15 -15 34 -15 42 0 27 -106 250 -154 324 -65 99 -150 203 -248 302 -143 144 -271 238 -423 311 -44 21 -92 45 -107 53 -14 8 -35 14 -45 14 -10 0 -24 5 -30 11 -6 6 -29 15 -50 20 -21 4 -87 20 -148 34 -103 25 -126 27 -350 27 -163 1 -254 -3 -285 -12 -25 -7 -67 -16 -95 -20 -49 -8 -89 -20 -153 -46 -18 -8 -43 -14 -56 -14 -13 0 -29 -7 -36 -15 -7 -8 -19 -15 -26 -15 -18 0 -188 -88 -243 -125 -242 -167 -489 -455 -612 -712 -24 -51 -49 -93 -55 -93 -7 0 -48 7 -91 15 -43 8 -94 15 -113 15 -19 0 -78 6 -130 14 -187 29 -315 46 -345 46 -16 0 -72 6 -125 14 -52 8 -151 22 -220 31 -69 8 -174 22 -235 30 -280 36 -311 39 -362 25 -106 -29 -171 -74 -251 -174 -66 -83 -354 -429 -362 -436 -3 -3 -131 -156 -284 -340 -153 -184 -290 -348 -305 -365 -14 -16 -42 -50 -61 -75 -79 -104 -329 -392 -370 -426 -15 -13 -35 -24 -44 -24 -10 0 -30 -7 -46 -15 -27 -14 -36 -14 -93 1 -49 12 -77 27 -116 61 -93 82 -85 -1 -91 933 -5 825 -5 825 -29 894 -14 38 -41 101 -62 140 -20 39 -90 175 -154 301 -64 127 -121 237 -125 245 -4 8 -25 49 -45 90 -49 96 -56 112 -66 130 -5 8 -40 78 -79 155 -39 77 -127 248 -194 380 -68 132 -184 359 -258 505 -75 146 -191 373 -258 505 -179 351 -391 768 -482 948 -44 86 -84 160 -89 163 -5 3 -9 13 -9 23 0 10 -7 24 -15 31 -8 7 -15 18 -15 25 0 25 -110 173 -169 228 -107 99 -290 208 -386 231 -54 13 -48 1 -71 126 -9 44 -45 88 -96 118 -40 22 -40 22 -797 22 -756 -1 -756 -1 -814 -29z m9587 -4426 c11 -8 34 -15 52 -15 34 0 93 -26 107 -47 4 -7 19 -13 32 -13 14 0 25 -4 25 -10 0 -5 15 -16 33 -23 39 -17 148 -131 198 -207 67 -103 88 -155 99 -251 5 -37 14 -85 21 -107 9 -31 9 -51 1 -85 -7 -24 -15 -76 -18 -116 -4 -40 -13 -76 -20 -82 -8 -6 -14 -20 -14 -31 0 -43 -119 -221 -189 -283 -19 -16 -55 -43 -81 -60 -26 -16 -55 -36 -66 -43 -10 -6 -29 -16 -41 -21 -11 -6 -24 -15 -28 -20 -3 -6 -18 -11 -33 -11 -15 0 -36 -6 -47 -14 -27 -18 -219 -28 -320 -17 -100 12 -158 29 -210 61 -60 38 -78 48 -101 59 -29 13 -172 158 -202 206 -15 22 -35 58 -45 80 -10 22 -25 53 -33 68 -8 16 -14 37 -14 47 0 9 -7 34 -15 53 -17 40 -21 192 -6 202 5 3 31 1 57 -5 26 -6 94 -15 152 -21 57 -5 113 -14 122 -19 12 -7 19 -25 23 -57 8 -90 55 -170 143 -243 59 -49 102 -70 142 -70 17 0 43 -5 58 -11 35 -13 151 5 209 32 43 20 155 125 173 162 21 43 52 166 52 204 0 42 -35 142 -69 197 -28 45 -105 114 -146 132 -18 7 -36 18 -40 24 -3 5 -21 10 -38 10 -18 0 -54 7 -81 15 -27 8 -77 15 -110 15 -34 0 -99 6 -146 15 -47 8 -125 19 -175 25 -111 14 -138 17 -147 19 -21 3 -1 33 58 87 92 82 217 154 271 154 17 0 36 7 43 15 18 22 336 21 364 0z"/></g></symbol></defs></svg>
+
+<div class="pf">
+  <a href="../../projects.html" onclick="event.preventDefault();abBack('../../projects.html')">[ ESC / CLOSE ] ← Adrián Birnbaun / Projects</a>
+  <span>Barrow — Web redesign concept · UX/UI + Front-end</span>
+  <a href="https://www.barrow.site/" target="_blank" rel="noopener">barrow.site ↗</a>
+</div>
+
+<header class="hdr" id="hdr">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Barrow, home"><svg aria-hidden="true"><use href="#logo"/></svg>BARROW</a>
+    <nav aria-label="Main">
+      <ul class="menu" id="menu">
+        <li><a href="#solution">Solution</a></li>
+        <li><a href="#reports">Reports</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#example">Example</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <div class="act">
+      <a class="signin" href="#">Sign in</a>
+      <a class="btn btn-dark" href="#contact"><span>Create account</span></a>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><i></i></button>
+    </div>
+  </div>
+  <div class="drawer" id="drawer">
+    <a href="#solution">Solution <span>→</span></a><a href="#reports">Reports <span>→</span></a><a href="#how">How it works <span>→</span></a><a href="#example">Example <span>→</span></a><a href="#faq">FAQ <span>→</span></a><a href="#">Sign in <span>→</span></a>
+  </div>
+</header>
+
+<main id="top">
+<!-- ============ HERO ============ -->
+<section class="xhero" id="hero">
+  <div class="xgrid" aria-hidden="true"></div>
+  <canvas id="terrain" aria-hidden="true"></canvas>
+  <div class="hud tl" aria-hidden="true"><span class="chip">● Site scan active</span><br>Parcel 1420 · Brooklyn, NY<br><span class="dim2">40.6782° N · 74.0120° W</span><br><span class="dim2" id="hudPts">Sampling 0 pts</span></div>
+  <div class="hud rec" id="recTag" aria-hidden="true"><span style="display:block">● REC identified</span><span style="display:block;color:#fff">Former dry cleaner · 1952–78</span></div>
+  <div class="wrap">
+    <div class="hero-top fade">
+      <span class="avail"><i></i>Phase I ESA · Available now</span>
+      <span class="mono" style="color:#6f8a7b">ASTM E1527-21</span>
+    </div>
+    <h1 class="h1">
+      <span class="line"><span>Environmental</span></span>
+      <span class="line"><span><span class="stroke">reports,</span> <b>simplified</b></span></span>
+      <span class="line"><span>&amp; <em>accelerated.</em></span></span>
+    </h1>
+    <div class="hero-sub">
+      <p class="fade">Barrow drafts <b>full-length environmental reports</b> from raw site assessment data — starting with <b>Phase I ESAs</b> and expanding into broader environmental due diligence.</p>
+      <div class="hero-cta fade">
+        <a class="btn btn-ghost-w" href="#preview"><span>See it draft</span></a>
+        <a class="btn btn-glow" href="#contact"><span>Create a report today</span><span class="ar">↗</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="xstats fade">
+    <div class="lead"><svg aria-hidden="true"><use href="#logo"/></svg><span>Purpose-built for<br>environmental professionals</span></div>
+    <div><small>Drafting time</small><b><s>Weeks</s>Hours</b></div>
+    <div><small>Report types</small><b data-n="7">7</b></div>
+    <div><small>Standard</small><b>E1527-21</b></div>
+  </div>
+</section>
+
+<section class="preview" id="preview">
+  <div class="wrap">
+    <div class="stage rv" aria-label="Animated preview: Barrow drafting a Phase I ESA report">
+      <div class="stage-label mono"><span>[ Live preview ]</span><span>From raw data to draft</span></div>
+      <div class="app" aria-hidden="true">
+        <div class="bar">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <span class="crumb">Projects / <b>1420 Harbor Ave — Brooklyn, NY</b></span>
+          <span class="st"><i class="spin"></i><span id="stTxt">Drafting</span></span>
+        </div>
+        <div class="side">
+          <h4>Source documents</h4>
+          <div class="file" data-f="0"><span class="ic">PDF</span><div>EDR Radius Report<small>142 pages</small></div><span class="ok"><svg width="9" height="9" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.5"/></svg></span></div>
+          <div class="file" data-f="1"><span class="ic">IMG</span><div>Historical aerials<small>1938 – 2022 · 9 files</small></div><span class="ok"><svg width="9" height="9" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.5"/></svg></span></div>
+          <div class="file" data-f="2"><span class="ic">MAP</span><div>Sanborn maps<small>1887 – 1951</small></div><span class="ok"><svg width="9" height="9" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.5"/></svg></span></div>
+          <div class="file" data-f="3"><span class="ic">JPG</span><div>Site photos<small>36 photos</small></div><span class="ok"><svg width="9" height="9" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.5"/></svg></span></div>
+          <div class="file" data-f="4"><span class="ic">DOC</span><div>Interview notes<small>Owner &amp; occupants</small></div><span class="ok"><svg width="9" height="9" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.5"/></svg></span></div>
+          <div class="drop"><b>Drop files</b> or connect Google Drive · OneDrive</div>
+        </div>
+        <div class="doc" id="doc">
+          <div class="dh"><div><h3>Phase I Environmental Site Assessment</h3><small>1420 Harbor Ave, Brooklyn, NY 11231 · Draft v1</small></div><span class="astm">ASTM E1527-21</span></div>
+          <div class="sec" data-s="0"><h5><span>1.0</span>Executive Summary</h5><div class="ln" style="width:96%"></div><div class="ln" style="width:88%"></div><div class="ln" style="width:62%"></div></div>
+          <div class="sec" data-s="1"><h5><span>2.0</span>Site Description</h5><div class="ln" style="width:92%"></div><div class="ln" style="width:74%"></div></div>
+          <div class="sec" data-s="2"><h5><span>5.0</span>Records Review</h5><div class="ln" style="width:98%"></div><div class="ln" style="width:90%"></div><div class="ln" style="width:56%"></div></div>
+          <div class="sec" data-s="3"><h5><span>8.0</span>Findings &amp; Opinions</h5><span class="rec">● 1 REC identified — former dry cleaner (1952–1978)</span><div class="ln" style="width:84%"></div></div>
+          <i class="caret" id="caret"></i>
+        </div>
+        <div class="meta">
+          <div class="prog"><h4>Draft progress</h4><div class="row"><b id="pct">0%</b><span class="mono dim">Phase I ESA</span></div><div class="track"><i id="bar"></i></div></div>
+          <div><h4>Consistency checks</h4>
+            <div class="check" data-c="0"><i></i>Site address & parcel ID</div>
+            <div class="check" data-c="1"><i></i>Historical use timeline</div>
+            <div class="check" data-c="2"><i></i>Database findings cited</div>
+            <div class="check" data-c="3"><i></i>REC language per ASTM</div>
+          </div>
+          <div class="time"><span>Drafting time</span><span style="margin-left:auto"><s>~3 weeks</s> → <b id="hrs">hours</b></span></div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- ============ FIRMS ============ -->
+<section class="firms">
+  <div class="wrap">
+    <div class="head rv"><span class="mono">Designed by minds from</span><span class="mono dim">15 firms</span></div>
+  </div>
+  <div class="mq rv" aria-label="Dewberry, Ramboll, Lightsource BP, McCarthy, Atlas, Arcadis, Tetra Tech, TRC, B&C, NRG, WSP, GEI, Aerotek, CTL, JP Lange Consulting">
+    <div class="t" id="mq" aria-hidden="true"><span>Dewberry</span><span>Ramboll</span><span>Lightsource BP</span><span>McCarthy</span><span>Atlas</span><span>Arcadis</span><span>Tetra Tech</span><span>TRC</span><span>B&amp;C</span><span>NRG</span><span>WSP</span><span>GEI</span><span>Aerotek</span><span>CTL</span><span>JP Lange Consulting</span></div>
+  </div>
+</section>
+
+<!-- ============ PROBLEM / SOLUTION ============ -->
+<section class="block" id="solution">
+  <div class="wrap">
+    <div class="shead">
+      <span class="mono rv"><span class="idx">[001]</span> The problem &amp; the fix</span>
+      <h2 class="h2 rv d1">Environmental reports are essential. <span class="dim">Writing them shouldn’t take</span> <b>weeks.</b></h2>
+    </div>
+    <div class="ps">
+      <article class="card pr rv">
+        <div class="top"><span class="tag">Problem</span><span class="idx">Today</span></div>
+        <div>
+          <h3>Phase I ESA report writing is notoriously time-consuming and tedious.</h3>
+          <p style="margin-top:14px">Slow, repetitive processes drain engineers from valuable work, leading to delays and rising costs. Manual reports often take weeks and cost thousands.</p>
+        </div>
+        <div class="pains"><span>Repetitive drafting</span><span>Delayed closings</span><span>Rising costs</span><span>Inconsistent facts</span></div>
+      </article>
+      <article class="card so rv d1">
+        <div class="top"><span class="tag">Solution</span><span class="idx" style="color:#7fd6a3">With Barrow</span></div>
+        <div>
+          <h3>Barrow’s AI drafts high-quality Phase I ESA reports from your site assessment data.</h3>
+          <p style="margin-top:14px">Purpose-built for environmental reporting, with industry-specific features designed around ASTM methodology.</p>
+        </div>
+        <div class="cmp"><s>Weeks</s><span style="color:#5f8a70;font-size:.6em">→</span><b id="cmpNum">Hours</b></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REPORTS ============ -->
+<section class="block" id="reports" style="padding-top:0">
+  <div class="wrap">
+    <div class="shead">
+      <span class="mono rv"><span class="idx">[002]</span> Reports</span>
+      <h2 class="h2 rv d1">Starting with Phase I. <span class="dim">Expanding into</span> <b>full environmental due diligence.</b></h2>
+    </div>
+    <div class="list">
+      <div class="row rv" tabindex="0"><span class="idx">001</span><h3>Phase I ESA</h3><span class="std">ASTM E1527-21</span><span class="status live"><i></i>Available now</span><span class="go" aria-hidden="true">→</span><p class="desc">Full-length site assessment drafts from raw data, arranged into your company’s template.</p></div>
+      <div class="row rv" tabindex="0"><span class="idx">002</span><h3>CEQA Air Quality &amp; GHG</h3><span class="std">CalEEMod · district thresholds</span><span class="status"><i></i>In development</span><span class="go" aria-hidden="true">→</span><p class="desc">Technical reports for California development review.</p></div>
+      <div class="row rv" tabindex="0"><span class="idx">003</span><h3>Transaction Screen</h3><span class="std">ASTM E1528</span><span class="status"><i></i>In development</span><span class="go" aria-hidden="true">→</span><p class="desc">Lighter environmental screening for lower-risk transactions.</p></div>
+      <div class="row rv" tabindex="0"><span class="idx">004</span><h3>Phase II ESA</h3><span class="std">Subsurface investigation</span><span class="status"><i></i>In development</span><span class="go" aria-hidden="true">→</span><p class="desc">Subsurface investigation planning and reporting.</p></div>
+      <div class="row rv" tabindex="0"><span class="idx">005</span><h3>Property Condition Assessment</h3><span class="std">ASTM E2018</span><span class="status"><i></i>In development</span><span class="go" aria-hidden="true">→</span><p class="desc">Real estate due diligence reporting.</p></div>
+      <div class="row rv" tabindex="0"><span class="idx">006</span><h3>NEPA Documents</h3><span class="std">Federal review</span><span class="status"><i></i>In development</span><span class="go" aria-hidden="true">→</span><p class="desc">Federal environmental review documentation.</p></div>
+      <div class="row rv" tabindex="0"><span class="idx">007</span><h3>Remediation Reports</h3><span class="std">Site cleanup</span><span class="status"><i></i>In development</span><span class="go" aria-hidden="true">→</span><p class="desc">Site cleanup documentation.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="block" id="how" style="padding-top:0">
+  <div class="wrap">
+    <div class="shead">
+      <span class="mono rv"><span class="idx">[003]</span> How it works</span>
+      <h2 class="h2 rv d1">Three steps. <span class="dim">From a folder of sources to a</span> <b>reviewable draft.</b></h2>
+    </div>
+    <div class="steps">
+      <article class="step rv">
+        <div class="vis"><div class="v-new">
+          <div class="fld">Project <b>1420 Harbor Ave</b></div>
+          <div class="fld">Template <b>Phase I · Company form</b></div>
+          <div class="chips"><span>EDR</span><span>AERIALS</span><span>SANBORN</span><span>PHOTOS</span><span>DRIVE</span></div>
+        </div></div>
+        <div class="txt"><span class="idx">[01]</span><h3>Create project</h3><p>Start a new project in seconds. Name it, choose your report template and upload source documents: EDR reports, historical aerials, Sanborn maps, site photos and assessment materials — or connect Google Drive and OneDrive.</p></div>
+      </article>
+      <article class="step rv d1">
+        <div class="vis"><div class="v-ai"><div class="orb"><i></i></div><div class="orb o2"><i></i></div><div class="core"><svg aria-hidden="true"><use href="#logo"/></svg></div></div></div>
+        <div class="txt"><span class="idx">[02]</span><h3>AI drafts report</h3><p>Barrow reads every source, keeps facts consistent across sections and drafts the full report following ASTM methodology.</p></div>
+      </article>
+      <article class="step rv d2">
+        <div class="vis"><div class="v-dl"><div class="page"><i></i><i></i><i class="g"></i><i></i></div><div class="page" style="height:140px"><i class="g"></i><i></i><i></i><i></i><i class="g"></i><i></i></div><div class="page"><i></i><i class="g"></i><i></i></div></div><span class="pdf">.PDF · .DOCX</span></div>
+        <div class="txt"><span class="idx">[03]</span><h3>Download &amp; review</h3><p>Export the draft, review it with your Environmental Professional and deliver — in hours instead of weeks.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXAMPLE ============ -->
+<section class="block" id="example" style="padding-top:0">
+  <div class="wrap">
+    <div class="shead">
+      <span class="mono rv"><span class="idx">[004]</span> Example</span>
+      <h2 class="h2 rv d1">Real reports, <span class="dim">in the forms</span> <b>your clients already know.</b></h2>
+    </div>
+    <div class="ex">
+      <figure class="quote rv">
+        <svg class="bg" aria-hidden="true"><use href="#logo"/></svg>
+        <blockquote>The platform has been very useful in terms of organizing and manipulating input. Having Phase I reporting completed and arranged into our company forms allows us to provide the local jurisdictions with accurate information in a recognizable manner.</blockquote>
+        <figcaption class="who"><span class="av">JL</span><span><b>Jeff Lange</b><small>JP Lange Consulting</small></span></figcaption>
+      </figure>
+      <article class="report rv d1">
+        <div class="rp"><div class="sheet"><h6>Phase I Environmental Site Assessment</h6><small>JP Lange Consulting · Sample</small><i></i><i></i><i class="s"></i><i></i><i></i><i></i><i class="s"></i><i></i><i class="s"></i></div></div>
+        <div class="kv"><div><small>Report</small>Phase I ESA</div><div><small>Standard</small>ASTM E1527-21</div></div>
+        <div class="btns"><a class="btn btn-dark" href="#"><span>View full report</span><span class="ar">↗</span></a><a class="btn btn-line" href="#"><span>Download PDF</span></a></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="block" id="faq" style="padding-top:0">
+  <div class="wrap faq">
+    <aside class="rv">
+      <span class="mono" style="display:flex;gap:10px;color:var(--ink-2)"><span class="idx">[005]</span> FAQ</span>
+      <h2 class="h2" style="margin-top:18px">Questions, <b>answered.</b></h2>
+      <p>Everything about how Barrow drafts, checks and keeps your data safe. Still curious?</p>
+      <a class="btn btn-line" href="#contact"><span>Reach out</span><span class="ar">↗</span></a>
+    </aside>
+    <div class="qa rv d1" id="qa">
+      <details><summary><span class="idx">01</span>What is Barrow?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>An AI platform built for environmental professionals that drafts full-length environmental reports from raw site assessment data, starting with Phase I ESAs.</p></div></div></details>
+      <details><summary><span class="idx">02</span>What’s a Phase I ESA?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>A Phase I Environmental Site Assessment evaluates a property for potential contamination and recognized environmental conditions (RECs), following the ASTM E1527-21 standard. It’s a core part of real estate due diligence.</p></div></div></details>
+      <details><summary><span class="idx">03</span>What documents do I need to upload?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Your usual source materials: EDR reports, historical aerials, Sanborn maps, site photos and assessment notes. Upload them directly or connect Google Drive or OneDrive.</p></div></div></details>
+      <details><summary><span class="idx">04</span>How long does a draft report take?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Work that usually takes weeks is drafted in hours, depending on the volume of source documents.</p></div></div></details>
+      <details><summary><span class="idx">05</span>How much does it cost?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Pricing depends on your report volume and team. Reach out and we’ll put together a plan that fits your workflow.</p></div></div></details>
+      <details><summary><span class="idx">06</span>Are the draft reports industry compliant?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Drafts are structured around ASTM methodology. As with any draft, your Environmental Professional reviews and finalizes the report.</p></div></div></details>
+      <details><summary><span class="idx">07</span>Can I use my own template?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Yes. Reports can be arranged into your company’s forms so clients and jurisdictions receive a format they recognize.</p></div></div></details>
+      <details><summary><span class="idx">08</span>Do I still need an Environmental Professional?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Yes. Barrow drafts; the EP reviews, applies professional judgment and signs off. The drafts are not final reports.</p></div></div></details>
+      <details><summary><span class="idx">09</span>What about data security?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Project files stay private to your account. Reach out for details on how your data is stored and handled.</p></div></div></details>
+      <details><summary><span class="idx">10</span>Why not just use ChatGPT?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Barrow is purpose-built for environmental reporting: it works with your source documents, follows ASTM structure and keeps facts consistent across a full-length report.</p></div></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="contact rv">
+      <svg class="big" aria-hidden="true"><use href="#logo"/></svg>
+      <span class="mono">[006] Contact</span>
+      <h2>Create a report<br><b>today</b> — <em>not in weeks.</em></h2>
+      <div class="cgrid">
+        <a class="mail" href="mailto:info@barrow.site">info@barrow.site <span aria-hidden="true">↗</span></a>
+        <div class="cmeta"><span>Location</span><b>New York, NY</b><span>Available</span><b>Phase I ESA</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fg">
+      <div><p style="max-width:34ch;color:var(--ink-2)">Environmental reports, simplified &amp; accelerated. Built with professionals from across the environmental consulting industry.</p></div>
+      <div><h4>Product</h4><a href="#solution">Solution</a><a href="#reports">Reports</a><a href="#how">How it works</a><a href="#example">Example</a></div>
+      <div><h4>Resources</h4><a href="#faq">FAQ</a><a href="#">EP Handbook</a><a href="#">Our team</a></div>
+      <div><h4>Account</h4><a href="#">Sign in</a><a href="#contact">Create account</a><a href="mailto:info@barrow.site">Contact us</a></div>
+    </div>
+    <div class="wordmark rv" aria-hidden="true"><svg><use href="#logo"/></svg>BARROW</div>
+    <div class="fbot"><span>© 2026 Barrow AI, Inc.</span><span><a href="#">Terms &amp; Conditions</a> · <a href="#">Privacy Policy</a></span><span>Design &amp; development — Adrián Birnbaun</span></div>
+    <p class="disc">Independent redesign concept for portfolio purposes. Copy adapted from barrow.site; project names, figures and interface screens are illustrative.</p>
+  </div>
+</footer>
+
+<a class="totop" id="totop" href="#top" aria-label="Back to top">↑</a>
+
+<script>
+/* ESC / close = one step back inside the portfolio (fallback: projects) */
+let abInSite=false;try{abInSite=sessionStorage.getItem('ab-nav')==='1'}catch(_){}
+const abBack=(fallback)=>{location.href=fallback;return;
+  if(history.length>1&&abInSite){let left=false;addEventListener('pagehide',()=>left=true,{once:true});history.back();setTimeout(()=>{if(!left)location.href=fallback},1500)}else location.href=fallback};
+try{sessionStorage.setItem('ab-nav','1')}catch(_){}
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* entrance */
+requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('ready')));
+
+/* header */
+const hdr=$('#hdr'),totop=$('#totop');
+addEventListener('scroll',()=>{hdr.classList.toggle('scrolled',scrollY>8);totop.classList.toggle('show',scrollY>900)},{passive:true});
+$('#burger').onclick=()=>{const o=hdr.classList.toggle('open');$('#burger').setAttribute('aria-expanded',o)};
+$$('#drawer a').forEach(a=>a.onclick=()=>hdr.classList.remove('open'));
+addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(hdr.classList.contains('open'))hdr.classList.remove('open');else abBack('../../projects.html')});
+
+/* active menu link */
+const secs=['solution','reports','how','example','faq'].map(id=>document.getElementById(id));
+const spy=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting)$$('#menu a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+x.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>spy.observe(s));
+
+/* marquee */
+const mq=$('#mq');mq.innerHTML+=mq.innerHTML;
+
+/* reveal */
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.14,rootMargin:'0px 0px -40px 0px'});
+$$('.rv').forEach(el=>io.observe(el));
+
+/* FAQ: one open at a time */
+$$('#qa details').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)$$('#qa details').forEach(o=>{if(o!==d)o.open=false})}));
+
+/* Drafting loop */
+(function(){
+  const files=$$('.file'),secsD=$$('.sec'),checks=$$('.check'),caret=$('#caret'),doc=$('#doc'),pct=$('#pct'),bar=$('#bar'),st=$('#stTxt');
+  let t=null,running=false;
+  function setPct(v){pct.textContent=v+'%';bar.style.width=v+'%'}
+  function place(i){const s=secsD[i];if(!s)return;const r=s.getBoundingClientRect(),d=doc.getBoundingClientRect();const lines=s.querySelectorAll('.ln');const last=lines[lines.length-1].getBoundingClientRect();caret.style.top=(last.top-d.top-4)+'px';caret.style.left=(last.right-d.left+4)+'px'}
+  function reset(){files.forEach(f=>f.classList.remove('in','cur'));secsD.forEach(s=>s.classList.remove('on'));checks.forEach(c=>c.classList.remove('on'));setPct(0);st.textContent='Reading sources';caret.style.opacity=0}
+  function run(){
+    if(running)return;running=true;reset();
+    const seq=[];let time=300;
+    files.forEach((f,i)=>{seq.push([time,()=>{files.forEach(x=>x.classList.remove('cur'));f.classList.add('in','cur');setPct(Math.round((i+1)*6))}]);time+=450});
+    seq.push([time,()=>{files.forEach(x=>x.classList.remove('cur'));st.textContent='Drafting';caret.style.opacity=1}]);time+=300;
+    secsD.forEach((s,i)=>{seq.push([time,()=>{s.classList.add('on');place(i);setPct(30+Math.round((i+1)*15));if(checks[i])checks[i].classList.add('on')}]);time+=1100});
+    seq.push([time,()=>{setPct(100);st.textContent='Draft ready';caret.style.opacity=0}]);time+=3800;
+    seq.push([time,()=>{running=false;run()}]);
+    seq.forEach(([ms,fn])=>setTimeout(fn,ms));
+  }
+  if(reduce){files.forEach(f=>f.classList.add('in'));secsD.forEach(s=>s.classList.add('on'));checks.forEach(c=>c.classList.add('on'));setPct(100);st.textContent='Draft ready';caret.style.display='none';return}
+  const ob=new IntersectionObserver(es=>{if(es[0].isIntersecting){ob.disconnect();setTimeout(run,700)}},{threshold:.25});
+  ob.observe($('.app'));
+})();
+
+/* header over dark hero */
+(function(){const h=document.getElementById('hero');
+  const o=new IntersectionObserver(es=>hdr.classList.toggle('dark',es[0].isIntersecting),{rootMargin:'-72px 0px -99% 0px'});o.observe(h);hdr.classList.add('dark');})();
+
+/* Terrain point-cloud */
+(function(){
+  const cv=document.getElementById('terrain');if(!cv)return;
+  const ctx=cv.getContext('2d');const rec=document.getElementById('recTag'),hudPts=document.getElementById('hudPts');
+  let W,H,DPR=Math.min(devicePixelRatio||1,2);
+  function size(){const r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}
+  size();addEventListener('resize',size);
+  // value noise
+  const P=[];for(let i=0;i<512;i++)P.push(Math.random());
+  const hash=(x,y)=>P[((x*73856093)^(y*19349663))>>>0&511];
+  const sm=t=>t*t*(3-2*t);
+  function noise(x,y){const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi;
+    const a=hash(xi,yi),b=hash(xi+1,yi),c=hash(xi,yi+1),d=hash(xi+1,yi+1);
+    return a+(b-a)*sm(xf)+(c-a)*sm(yf)+(a-b-c+d)*sm(xf)*sm(yf)}
+  const N=84,pts=[];
+  for(let i=0;i<N;i++)for(let j=0;j<N;j++){
+    const x=i/(N-1)-.5,z=j/(N-1)-.5;
+    let h=noise(i*.07,j*.07)*.55+noise(i*.16+7,j*.16+3)*.25;
+    const d=Math.hypot(x+.12,z-.08);h+=Math.max(0,.35-d)*1.1; // hill
+    // parcel plateau (building pad)
+    const inPad=Math.abs(x-.14)<.09&&Math.abs(z+.12)<.07;
+    if(inPad)h=.34;
+    pts.push({x,z,h,pad:inPad});
+  }
+  const recPt={x:.14,z:-.12,h:.34};
+  let t0=performance.now(),mx=0,my=0,tx=0,ty=0;
+  addEventListener('pointermove',e=>{tx=(e.clientX/innerWidth-.5);ty=(e.clientY/innerHeight-.5)},{passive:true});
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let visible=true;new IntersectionObserver(es=>visible=es[0].isIntersecting).observe(cv);
+  function proj(x,y,z,yaw,pitch){
+    const cy=Math.cos(yaw),sy=Math.sin(yaw);let X=x*cy-z*sy,Z=x*sy+z*cy;
+    const cp=Math.cos(pitch),sp=Math.sin(pitch);let Y=y*cp-Z*sp;Z=y*sp+Z*cp;
+    const f=1.9/(1.9+Z);return [W*.58+X*f*Math.min(W,H*1.5)*.78,H*.54-Y*f*Math.min(W,H*1.5)*.78,f,Z]}
+  function frame(now){
+    requestAnimationFrame(frame);if(!visible)return;
+    const t=(now-t0)/1000;mx+=(tx-mx)*.04;my+=(ty-my)*.04;
+    const yaw=(reduce?0.6:t*.07)+mx*.5+.6, pitch=.62+my*.15;
+    ctx.clearRect(0,0,W,H);
+    const scan=((t*.28)%1.4)-.7; // sweep across x
+    let drawn=0;
+    for(const p of pts){
+      const [sx,sy,f,Z]=proj(p.x,p.h*.42,p.z,yaw,pitch);
+      const near=Math.max(0,1-Math.abs(p.x-scan)*9);
+      const depth=Math.min(1,Math.max(.15,(1.2-Z)*.8));
+      const r=(p.pad?1.6:1.1)*f;
+      let a=(.18+p.h*.6)*depth+near*.7;
+      ctx.fillStyle=p.pad?`rgba(255,207,122,${Math.min(1,a+.2)})`:near>.05?`rgba(190,255,215,${Math.min(1,a)})`:`rgba(95,208,143,${Math.min(1,a)})`;
+      ctx.fillRect(sx-r,sy-r,r*2,r*2);drawn++;
+    }
+    // scan plane line
+    const s1=proj(scan,0,-.5,yaw,pitch),s2=proj(scan,0,.5,yaw,pitch);
+    ctx.strokeStyle='rgba(95,208,143,.35)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(s1[0],s1[1]);ctx.lineTo(s2[0],s2[1]);ctx.stroke();
+    // REC marker
+    const [rx,ry]=proj(recPt.x,recPt.h*.42,recPt.z,yaw,pitch);
+    const pul=(t%1.8)/1.8;
+    ctx.strokeStyle=`rgba(255,207,122,${1-pul})`;ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(rx,ry,6+pul*26,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#ffcf7a';ctx.beginPath();ctx.arc(rx,ry,3.5,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(255,207,122,.6)';ctx.beginPath();ctx.moveTo(rx,ry);ctx.lineTo(rx,ry-70);ctx.stroke();
+    const cr=cv.getBoundingClientRect(),hr=cv.parentNode.getBoundingClientRect();
+    let lx=cr.left-hr.left+rx+10;const tw=rec.offsetWidth;if(lx+tw>hr.width-16)lx=cr.left-hr.left+rx-tw-10;rec.style.transform=`translate(${lx}px,${cr.top-hr.top+ry-104}px)`;
+    rec.style.opacity=t>1.5?1:0;
+    hudPts.textContent='Sampling '+Math.min(drawn,Math.floor(t*2600)).toLocaleString('en-US')+' pts';
+  }
+  requestAnimationFrame(frame);
+})();
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Projects — Adrián Birnbaun</title>
+  <meta name="description" content="Selected projects by Adrián Birnbaun, graphic, digital, web and UX/UI designer.">
+  <meta name="theme-color" content="#f1f0ec">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@900&family=JetBrains+Mono:wght@400&display=swap">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="projects-page page">
+  <header class="site-header page-header projects-header">
+    <h1 class="page-title projects-title">Projects</h1>
+    <p class="page-intro projects-intro">Selected work across identity, digital, web and UX/UI.</p>
+    <a class="page-close projects-close" href="index.html" aria-label="Close projects page and return to home">[ ESC / CLOSE ]</a>
+  </header>
+
+  <main class="page-main projects-main" id="main">
+    <p class="projects-list__label projects-field__label">My children /</p>
+
+    <!-- The field. Every piece carries its own position and size:
+           --x / --y  : top-left corner, as % of the field
+           --s        : size multiplier (1 = small, 1.25, 1.5 = large)
+         Move a piece by changing two numbers. On desktop pieces can also be
+         dragged around; the numbers here are where they start. -->
+    <ul class="projects-field" aria-label="Projects">
+      <li class="piece" style="--x: 4%;  --y: 24%; --s: 1.5">
+        <a href="assets/Orest/index.html" class="piece__link">
+          <img src="assets/logoorest.jpg" alt="" width="600" height="600">
+          <span class="piece__name">OREST</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 20%; --y: 52%; --s: 1.25">
+        <a href="assets/Loula/site/index.html" class="piece__link">
+          <img src="assets/logoloula.jpg" alt="" width="600" height="600">
+          <span class="piece__name">Loula</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 31%; --y: 10%; --s: 1">
+        <a href="hipodromo.html" class="piece__link">
+          <img src="assets/logopalermo.jpg" alt="" width="600" height="600">
+          <span class="piece__name">Hipódromo de Palermo</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 42%; --y: 44%; --s: 1.5">
+        <a href="assets/OLGA/site/index.html" class="piece__link">
+          <img src="assets/logoolga.jpg" alt="" width="600" height="600">
+          <span class="piece__name">OLGA</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 53%; --y: 14%; --s: 1">
+        <a href="assets/Barrow/index.html" class="piece__link">
+          <img src="assets/logobarrow.jpg" alt="" width="600" height="600">
+          <span class="piece__name">BARROW</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 64%; --y: 4%; --s: 1.25">
+        <a href="undici.html" class="piece__link">
+          <img src="assets/logoundici.jpg" alt="" width="600" height="600">
+          <span class="piece__name">Undici Hotels</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 71%; --y: 52%; --s: 1">
+        <a class="piece__link" aria-disabled="true">
+          <span class="piece__empty" aria-hidden="true"></span>
+          <span class="piece__name">Coming soon</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 81%; --y: 20%; --s: 1.5">
+        <a href="assets/Art%20gallery/index.html" class="piece__link">
+          <img src="assets/logogallery.jpg" alt="" width="600" height="600">
+          <span class="piece__name">Side B</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 11%; --y: 68%; --s: 1">
+        <a class="piece__link" aria-disabled="true">
+          <span class="piece__empty" aria-hidden="true"></span>
+          <span class="piece__name">Coming soon</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 34%; --y: 70%; --s: 1">
+        <a class="piece__link" aria-disabled="true">
+          <span class="piece__empty" aria-hidden="true"></span>
+          <span class="piece__name">Coming soon</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 60%; --y: 72%; --s: 1">
+        <a class="piece__link" aria-disabled="true">
+          <span class="piece__empty" aria-hidden="true"></span>
+          <span class="piece__name">Coming soon</span>
+        </a>
+      </li>
+      <li class="piece" style="--x: 90%; --y: 64%; --s: 1">
+        <a class="piece__link" aria-disabled="true">
+          <span class="piece__empty" aria-hidden="true"></span>
+          <span class="piece__name">Coming soon</span>
+        </a>
+      </li>
+    </ul>
+  </main>
+
+  <canvas class="grain" aria-hidden="true"></canvas>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>

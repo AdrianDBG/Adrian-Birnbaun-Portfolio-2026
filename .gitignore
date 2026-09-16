@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────────────────────
+#  Portfolio · qué NO se sube a GitHub
+#  Son originales pesados y archivos de trabajo que la web no usa.
+#  Quedan en tu compu; solo se excluyen del repositorio.
+# ─────────────────────────────────────────────────────────────
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+.vscode/
+
+# Salidas y papelera de trabajo
+Claude outputs/
+**/_to_delete/
+**/_sheet.jpg
+**/meta.json
+
+# Originales sin usar (proyectos de otros sitios)
+assets/otherproyects/
+
+# Hipódromo: la web usa solo HIP/web
+assets/HIP/*
+!assets/HIP/web/
+
+# Loula: la web usa Loula/web y Loula/site
+assets/Loula/*
+!assets/Loula/web/
+!assets/Loula/site/
+
+# OLGA: la web usa solo OLGA/site
+assets/OLGA/*
+!assets/OLGA/site/
+
+# Side B (Art gallery): la web usa index.html + web/
+assets/Art gallery/*
+!assets/Art gallery/index.html
+!assets/Art gallery/web/
+
+# Undici: la web usa solo placas undici/web
+assets/placas undici/*
+!assets/placas undici/web/
+
+# Copia limpia para subir por la web de GitHub
+_subir-a-github/

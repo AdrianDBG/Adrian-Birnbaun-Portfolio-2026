@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OREST — Outdoor & Streetwear · Case study</title>
+<meta name="description" content="OREST, outdoor & streetwear de Buenos Aires. Concepto de tienda one page — identidad y diseño UX/UI por Adrian Birnbaun.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=JetBrains+Mono:wght@400;500&family=Work+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --negro:#000; --gris:#6d6d6d; --blanco:#fff;
+  --papel:#f3f3f3; --linea:#cfcfcf; --tinta:#111;
+  --display:"Big Shoulders Display", Impact, sans-serif;
+  --sans:"Work Sans", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, monospace;
+  --pad:clamp(16px,2.2vw,32px);
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--papel);color:var(--tinta);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--negro);outline-offset:3px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.ulink{position:relative;padding-bottom:3px}
+.ulink::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform-origin:left;transition:transform .4s var(--ease)}
+.ulink:hover::after{transform:scaleX(.35)}
+
+/* ── Portfolio frame (Adrian) ── */
+.pf{background:#080808;color:#e9e9e9;display:flex;justify-content:space-between;align-items:center;padding:10px var(--pad);font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+.pf a{opacity:.7;transition:opacity .2s}.pf a:hover{opacity:1}
+.pf span{opacity:.45}
+
+/* ── Nav ── */
+.nav{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px var(--pad);background:rgba(243,243,243,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--linea)}
+.nav ul{display:flex;gap:26px;list-style:none;font-size:14px}
+.nav ul:last-child{justify-content:flex-end;align-items:center}
+.icon-btn{display:grid;place-items:center;width:32px;height:32px;margin:-7px 0;transition:opacity .2s}
+.icon-btn:hover{opacity:.55}
+.nav .brand svg{height:22px;width:auto;display:block;color:var(--negro)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.cart{position:relative}
+.cart b{position:absolute;top:-2px;right:-9px;border:2px solid var(--papel);box-sizing:content-box;display:inline-grid;place-items:center;min-width:14px;height:14px;line-height:1;background:var(--negro);color:#fff;font:500 9px var(--mono);border-radius:9px;padding:0 3px;transition:transform .3s var(--ease)}
+.cart b.bump{transform:scale(1.35)}
+.cart b.empty{transform:scale(0)}
+
+/* ── Season band ── */
+.band{display:grid;grid-template-columns:auto 1fr;align-items:center;border-bottom:1px solid var(--linea);background:#e9e9e9}
+.band .back{padding:14px var(--pad);border-right:1px solid var(--linea);white-space:nowrap}
+.ticker{overflow:hidden;white-space:nowrap}
+.ticker div{display:inline-block;animation:tick 38s linear infinite;font:800 30px/1 var(--display);letter-spacing:.02em;text-transform:uppercase;padding:10px 0}
+.ticker i{font-style:normal;color:var(--gris);margin:0 26px}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ── Product hero ── */
+.pdp{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,1.6fr) minmax(200px,.8fr);min-height:calc(100vh - 150px);border-bottom:1px solid var(--linea);position:relative}
+.info{padding:var(--pad);display:flex;flex-direction:column;justify-content:space-between;gap:32px}
+.info .tag{color:var(--gris)}
+.info h1{font:900 clamp(40px,4.4vw,70px)/.88 var(--display);text-transform:uppercase;margin:14px 0 10px;letter-spacing:-.005em}
+.info .price{font:500 15px var(--mono)}
+.info p.desc{max-width:34ch;font-size:14.5px;line-height:1.55;color:#3a3a3a;margin:22px 0 18px}
+.specs{list-style:none;border-top:1px solid var(--linea);max-width:320px}
+.specs li{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--linea)}
+.specs li span:last-child{color:var(--gris)}
+.thumbs{display:flex;border:1px solid var(--linea);width:max-content}
+.thumbs button{width:88px;height:104px;display:grid;place-items:center;background:var(--papel);position:relative;transition:background .25s}
+.thumbs button+button{border-left:1px solid var(--linea)}
+.thumbs button svg{width:70px;height:80px}
+.thumbs button[aria-current="true"]{background:#fff}
+.thumbs button[aria-current="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--negro)}
+
+.stage{position:relative;display:grid;place-items:center;overflow:hidden;min-height:640px;border-left:1px solid var(--linea);border-right:1px solid var(--linea);background:
+  radial-gradient(ellipse 55% 42% at 50% 54%, #fff 0%, rgba(255,255,255,0) 70%), var(--papel)}
+.stage .idx{position:absolute;z-index:2;top:var(--pad);left:var(--pad);color:var(--gris)}
+.stage .ghost{display:none;z-index:0;position:absolute;right:-.04em;bottom:-.2em;font:900 clamp(120px,19vw,300px)/1 var(--display);color:transparent;-webkit-text-stroke:1px #d6d6d6;pointer-events:none;user-select:none;transition:opacity .5s}
+.garment{width:min(78%,470px);aspect-ratio:400/460;position:relative;z-index:1}
+.garment svg{width:100%;height:100%;display:block;filter:drop-shadow(0 30px 28px rgba(0,0,0,.12))}
+.garment.swap{animation:swap .55s var(--ease)}
+@keyframes swap{0%{opacity:0;transform:translateY(14px) scale(.985)}100%{opacity:1;transform:none}}
+.arrow{position:absolute;top:50%;z-index:2;width:52px;height:52px;border:1px solid var(--tinta);border-radius:50%;display:grid;place-items:center;transform:translateY(-50%);transition:background .25s,color .25s}
+.arrow:hover{background:var(--negro);color:#fff}
+.arrow.prev{left:var(--pad)}.arrow.next{right:var(--pad)}
+.stage .similar{position:absolute;right:var(--pad);bottom:var(--pad);font-size:13px;z-index:2}
+.hotspot{position:absolute;z-index:3;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid var(--negro);display:grid;place-items:center;font:500 11px var(--mono)}
+.hotspot::before{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid rgba(0,0,0,.35);animation:ping 2.4s var(--ease) infinite}
+@keyframes ping{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.hotspot span{position:absolute;left:30px;white-space:nowrap;background:var(--negro);color:#fff;padding:6px 9px;opacity:0;transform:translateX(-6px);transition:.25s var(--ease);pointer-events:none}
+.hotspot:hover span,.hotspot:focus-visible span{opacity:1;transform:none}
+
+.buy{padding:var(--pad);display:flex;flex-direction:column;gap:12px;justify-content:center}
+.icons{display:flex;border:1px solid var(--linea)}
+.icons button{flex:1;height:48px;display:grid;place-items:center;transition:background .2s}
+.icons button+button{border-left:1px solid var(--linea)}
+.icons button:hover{background:#fff}
+.icons button[aria-pressed="true"] svg path{fill:var(--negro)}
+.box{border:1px solid var(--tinta);padding:14px}
+.box .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px}
+.sizes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.sizes button{height:38px;border:1px solid var(--linea);font:500 12px var(--mono);transition:.2s}
+.sizes button:hover{border-color:var(--tinta)}
+.sizes button[aria-pressed="true"]{background:var(--negro);color:#fff;border-color:var(--negro)}
+.sizes button:disabled{color:#b5b5b5;text-decoration:line-through;cursor:not-allowed}
+.swatches{display:flex;gap:8px}
+.swatches button{width:26px;height:26px;border-radius:50%;border:1px solid var(--linea);position:relative}
+.swatches button[aria-pressed="true"]::after{content:"";position:absolute;inset:-5px;border:1px solid var(--negro);border-radius:50%}
+.add{--h:54px;height:var(--h);width:100%;background:var(--negro);color:#fff;position:relative;overflow:hidden;font:500 14px var(--sans);letter-spacing:.01em;transition:background .25s,transform .15s}
+.add::before{content:"";position:absolute;inset:0;background:#262626;transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+.add:hover::before{transform:scaleX(1)}
+.add:active{transform:scale(.985)}
+.add-track{position:relative;display:block;height:var(--h);transition:transform .45s var(--ease)}
+.add-state{height:var(--h);display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.add-idle svg{transition:transform .35s var(--ease)}
+.add:hover .add-idle svg{transform:translateX(3px)}
+.add.done .add-track{transform:translateY(calc(var(--h) * -1))}
+.add.done{background:#1c1c1c}
+.fly{position:fixed;z-index:50;width:10px;height:10px;border-radius:50%;background:var(--negro);pointer-events:none;box-shadow:0 0 0 3px var(--papel)}
+.add.hint{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.msg{min-height:16px;color:var(--gris)}
+.ship{border-top:1px solid var(--linea);padding-top:12px;color:var(--gris);line-height:1.9}
+
+/* ── Manifesto ── */
+.mani{background:var(--negro);color:#fff;position:relative;overflow:hidden;padding:clamp(64px,10vw,140px) var(--pad) 0}
+.mani .top{display:flex;justify-content:space-between;color:#8a8a8a;margin-bottom:28px}
+.mani h2{font:900 clamp(56px,11vw,190px)/.84 var(--display);text-transform:uppercase;letter-spacing:-.01em;max-width:12ch}
+.mani h2 em{font-style:normal;color:transparent;-webkit-text-stroke:1.5px #fff}
+.mani .sub{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:var(--pad);margin-top:48px;align-items:end}
+.mani .sub p{max-width:44ch;color:#bdbdbd;line-height:1.6;font-size:16px}
+.terr{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #2a2a2a}
+.terr div{padding:16px 0 18px;border-right:1px solid #2a2a2a;padding-left:14px}
+.terr div:first-child{padding-left:0}.terr div:last-child{border-right:0}
+.terr b{display:block;font:800 26px var(--display);text-transform:uppercase;margin-top:6px}
+.terr small{color:#8a8a8a}
+.skyline{display:block;width:100%;height:auto;margin-top:70px}
+
+
+/* ── Vidrio roto (manifiesto) ── */
+.mani .top,.mani h2{position:relative;z-index:2}
+.glass{position:absolute;z-index:1;right:0;top:clamp(90px,11vw,170px);width:min(56%,860px);aspect-ratio:1.35/1;cursor:crosshair;-webkit-tap-highlight-color:transparent}
+.glass svg{width:100%;height:100%;display:block;overflow:visible}
+.glass .ln{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.glass .shard{fill:#fff;opacity:0;transition:opacity 1.2s var(--ease)}
+.glass .flash{opacity:0}
+.glass .hit .ln{animation:crack .7s cubic-bezier(.15,.9,.25,1) forwards;animation-delay:var(--d)}
+.glass .hit .shard{opacity:var(--o)}
+.glass .hit .flash{animation:flash .9s ease-out forwards}
+@keyframes crack{to{stroke-dashoffset:0}}
+@keyframes flash{0%{opacity:.9}100%{opacity:0}}
+.mani.shake{animation:shake2 .32s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake2{20%{transform:translate(-3px,1px)}40%{transform:translate(3px,-2px)}60%{transform:translate(-2px,2px)}80%{transform:translate(1px,-1px)}}
+.glass-hint{position:absolute;right:var(--pad);bottom:4%;color:#5c5c5c;opacity:0;transition:opacity .6s}
+.glass.ready .glass-hint{opacity:1}
+@media (max-width:640px){.glass{width:92%;top:60px;opacity:.55;pointer-events:none}.glass-hint{display:none}}
+@media (prefers-reduced-motion:reduce){.glass .ln{stroke-dashoffset:0}}
+
+/* ── Related ── */
+.rel-head{display:flex;justify-content:space-between;align-items:end;padding:clamp(56px,7vw,100px) var(--pad) 22px}
+.rel-head h2{font:900 clamp(36px,5vw,72px)/.9 var(--display);text-transform:uppercase}
+.rel-nav{display:flex;gap:8px}
+.rel-nav button{width:40px;height:40px;border:1px solid var(--linea);display:grid;place-items:center;transition:.2s}
+.rel-nav button:hover{border-color:var(--tinta)}
+.grid{display:grid;grid-auto-flow:column;grid-auto-columns:25%;overflow-x:auto;scroll-snap-type:x mandatory;border-top:1px solid var(--tinta);border-bottom:1px solid var(--tinta);scrollbar-width:none}
+.grid::-webkit-scrollbar{display:none}
+.card{scroll-snap-align:start;border-right:1px solid var(--linea);padding:14px 16px 0;display:flex;flex-direction:column;background:var(--papel);transition:background .35s}
+.card:hover{background:#fff}
+.card header{display:flex;justify-content:space-between;align-items:start}
+.card h3{font:600 14px var(--sans);text-transform:uppercase;letter-spacing:.02em}
+.card .pr{font:400 12px var(--mono);color:var(--gris);margin-top:4px}
+.dots{display:flex;gap:4px}.dots i{width:8px;height:8px;display:block}
+.card figure{flex:1;display:grid;place-items:center;padding:24px 0;min-height:340px}
+.card figure svg{width:72%;max-height:300px;transition:transform .6s var(--ease)}
+.card:hover figure svg{transform:translateY(-8px) rotate(-1.5deg)}
+.card .quick{width:calc(100% + 32px);text-align:left;border-top:1px solid var(--linea);margin:0 -16px;padding:12px 16px;display:flex;justify-content:space-between;transform:translateY(0);color:var(--gris);transition:color .2s}
+.card:hover .quick{color:var(--tinta)}
+
+/* ── Footer ── */
+footer{background:#161616;color:#e8e8e8;margin-top:clamp(56px,7vw,100px);padding:var(--pad)}
+.giant{display:block;width:100%;height:auto;color:#fff;margin:6px 0 clamp(40px,5vw,72px)}
+.fgrid{display:grid;grid-template-columns:1.4fr .7fr .7fr .7fr;gap:var(--pad)}
+.news label{display:block;color:#9a9a9a;font-size:13px;margin-bottom:22px}
+.news .field{display:flex;border-bottom:1px solid #5a5a5a;max-width:380px}
+.news input{flex:1;background:none;border:0;color:#fff;font:400 14px var(--sans);padding:8px 0;outline:none}
+.news input::placeholder{color:#8a8a8a}
+.news button{padding:0 4px}
+.news .ok{margin-top:12px;min-height:14px;color:#9a9a9a}
+.check{display:flex;gap:10px;align-items:center;margin-top:14px;font-size:13px;color:#bdbdbd}
+.check input{accent-color:#fff;width:15px;height:15px}
+.fcol h4{color:#7d7d7d;margin-bottom:14px;font-weight:400}
+.fcol a{display:block;font-size:13px;text-transform:uppercase;letter-spacing:.03em;line-height:2;opacity:.85}
+.fcol a:hover{opacity:1}
+.fbottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:64px;padding-top:16px;border-top:1px solid #2e2e2e;color:#8a8a8a}
+
+/* ── Fotos ── */
+.ph{position:relative;background:var(--papel)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph.missing img{display:none}
+.ph.missing::after{content:attr(data-file);position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:12px;font:400 10px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a;background:repeating-linear-gradient(135deg,#ececec 0 10px,#e6e6e6 10px 20px)}
+.stage .shot{position:absolute;inset:0;z-index:1}
+.stage{background:#e8e8e6!important}
+.stage .shot{background:#e8e8e6}
+.stage .shot img{object-fit:cover;object-position:center 30%}
+.stage .shot.contain img{object-fit:contain}
+.stage .shot.swap{animation:swap .6s var(--ease)}
+.thumbs .ph{width:62px;height:80px}
+.thumbs .ph img{object-fit:cover}
+.thumbs{max-width:100%;overflow-x:auto}
+.info h1.long{font-size:clamp(34px,3.4vw,54px)}
+.card .ph{aspect-ratio:3/4;background:#e8e8e6;margin:14px -16px 0;overflow:hidden}
+.card .ph img{transition:transform .8s var(--ease)}
+.card:hover .ph img{transform:scale(1.04)}
+.skywrap{position:relative;margin-top:-80px;margin-left:calc(var(--pad)*-1);margin-right:calc(var(--pad)*-1);overflow:hidden;z-index:0}
+.skywrap img{width:100%;height:clamp(420px,60vw,880px);object-fit:cover;object-position:center 40%;display:block;filter:grayscale(1) contrast(1.06);transform:translateY(var(--py,0)) scale(1.1);will-change:transform}
+/* Degradés fijos (no se mueven con el parallax): funden la foto con el negro */
+.skywrap::before,.skywrap::after{content:"";position:absolute;left:0;right:0;z-index:1;pointer-events:none}
+.skywrap::before{top:0;height:48%;background:linear-gradient(to bottom,#000 0%,#000 14%,rgba(0,0,0,.85) 30%,rgba(0,0,0,.55) 52%,rgba(0,0,0,.22) 76%,rgba(0,0,0,0) 100%)}
+.skywrap::after{bottom:0;height:30%;background:linear-gradient(to top,#000 0%,rgba(0,0,0,.7) 40%,rgba(0,0,0,0) 100%)}
+.skywrap figcaption{z-index:2}
+.skywrap .skyline{display:none;margin:0}
+.skywrap.missing img{display:none}.skywrap.missing .skyline{display:block}
+.skywrap figcaption{z-index:2;position:absolute;left:var(--pad);bottom:var(--pad);color:#9a9a9a}
+
+/* ── Reveal ── */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.load>*{animation:up .9s var(--ease) both}
+.load>*:nth-child(2){animation-delay:.08s}.load>*:nth-child(3){animation-delay:.16s}
+@keyframes up{from{opacity:0;transform:translateY(18px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+
+/* ── Responsive ── */
+@media (max-width:1000px){
+  .pdp{grid-template-columns:1fr 1fr}
+  .stage{grid-column:1/-1;grid-row:1;min-height:70vh;border:0;border-bottom:1px solid var(--linea)}
+  .grid{grid-auto-columns:50%}
+  .fgrid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .nav{grid-template-columns:auto 1fr}
+  .nav ul:first-child{display:none}
+  .nav ul{gap:16px;font-size:13px}
+  .band .back{display:none}.band{grid-template-columns:1fr}
+  .pdp{grid-template-columns:1fr}
+  .stage{min-height:62vh}
+  .arrow{width:42px;height:42px}
+  .mani .sub{position:relative;z-index:1;grid-template-columns:1fr}
+  .terr{grid-template-columns:1fr 1fr}
+  .terr div:nth-child(3){padding-left:0}
+  .terr div:nth-child(2){border-right:0}
+  .grid{grid-auto-columns:82%}
+  .fgrid{grid-template-columns:1fr}
+  .pf span{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SÍMBOLOS DE MARCA (SVG oficiales OREST) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="iso" viewBox="5.2 3.4 27.4 26.4">
+      <path fill="currentColor" d="M26.06,3.67c-7.63-.8-18.21,7.66-20.35,16.08-1.79,7.04,2.530,10.4,8.21,9.62,2.86-.39,5.74-1.78,8.18-3.49,0,0,1.44-1,2.74-2.18,2.87-2.61,5.69-6.26,6.75-10.37,1.35-5.27-.74-9.15-5.53-9.67ZM28.1,12.93s-.13.17-.13.18c-1.6,1.52-2.55-1.36-2.55-1.36l-1.42,3.71-2-6.71c-.93,1.55-1.78,3.15-2.740,4.68-1.89,2.99-4.71,7.37-7.31,9.48-2.89,2.36-5.42,1.35-4.48-3.08,1.34-6.26,9.11-12.61,14.36-13.96,2.31-.59,6.19-.7,6.94,2.6.41,1.79-.24,3.84-.66,4.47Z"/>
+    </symbol>
+    <symbol id="logo" viewBox="2.3 12.3 34.1 9.6">
+      <g fill="currentColor">
+      <path d="M25.89,12.46c-.78,0-1.48.26-2,.8l.13-.8h-6.34l-.18,1.1c-.32-.71-1.05-1.1-2.07-1.1h-4.82l-.33,2.05c-.42-1.4-1.64-2.23-3.25-2.23-2.270,0-4.29,1.65-4.71,4.21-.43,2.66,1.06,4.22,3.33,4.22,1.61,0,3.09-.78,3.97-2.19l-.33,2.02h2.27l.48-2.88h1.55l.47,2.88h12.83c1.43,0,2.55-1.04,2.8-2.59.27-1.61-.54-2.490-1.97-2.49h-1.83c-.29,0-.52-.13-.46-.46.06-.35.32-.47.61-.47h3.21s2.14.01,2.14.01l-.98,6h2.46l.98-6h2.14l.34-2.08h-10.440ZM9.41,15.71c-.1.39-.27.77-.49,1.12-.31.53-.72.99-1.13,1.36-.31.28-.65.52-.65.52-.03.02-.06.04-.09.06-.1.07-.2.13-.31.19-.02.02-.05.04-.08.05-.47.27-.98.47-1.48.54-.44.06-.85.01-1.19-.15t-.02,0c-.67-.29-1.04-1.02-.75-2.14.01-.05.02-.09.04-.14h0c.32-1.05,1.15-2.08,2.13-2.79.87-.63,1.86-1.01,2.7-.92,1.14.12,1.64,1.05,1.32,2.31ZM14.31,15.87h-1.98l.22-1.34h1.98c.45,0,.73.17.65.66-.08.51-.42.68-.87.68ZM16.49,19.72l-.47-2.33c.38-.16.71-.41.97-.73l-.5,3.06ZM19.76,14.53h3.43c-.04.14-.07.29-.1.45-.02.16-.04.33-.05.48h-3.43l.15-.93ZM26.84,17.54c.4,0,.53.16.48.48-.05.28-.23.44-.62.44h-7.58l.15-.92h3.92l.14-.85c.33.56.95.85,1.73.85h1.78Z"/>
+      <path d="M35.93,19.23c-.07-.33-.33-.6-.65-.68l-.15-.03h-.14c-.44.03-.8.41-.82.84,0,.03,0,.07,0,.1l.02.14c.07.34.34.61.68.68l.14.02h.12l.17-.03c.32-.08.58-.36.65-.69l.02-.16v-.04l-.02-.16ZM35.68,19.84c-.29.43-.92.44-1.23.02-.36-.48-.03-1.160.56-1.2.62-.04,1.02.67.67,1.18Z"/>
+      <path d="M35.3,19.52s-.06-.07-.1-.09c0,0,0,0,0,0,.04-.02.08-.02.12-.05.12-.09.1-.32-.04-.38-.05-.02-.12-.03-.17-.03-.12,0-.25,0-.38,0v.82h.16v-.34h.08c.07,0,.11.08.15.13.05.07.09.14.14.21h.19l-.17-.27ZM35.11,19.32h-.2v-.21h.24s.03.01.04.01c.08.04.06.17-.03.19-.01,0-.04,0-.05,0Z"/>
+      <path d="M8.71,15.24c-.04.17-.09.3-.14.37,0,.01-.03.04-.03.04-.38.37-.61-.32-.61-.32l-.13.34-.21.54-.39-1.29-.09-.31c-.04.07-.09.15-.13.22-.17.3-.34.6-.52.9-.38.6-.92,1.43-1.44,1.98-.11.11-.21.21-.31.29-.64.52-1.21.35-1.120-.53.01-.07.03-.13.04-.21.08-.38.26-.75.5-1.11,0,0,0-.02.02-.03.51-.75,1.3-1.42,2.04-1.83.31-.18.61-.3.88-.37.55-.14,1.48-.17,1.66.62.06.24.03.5-.02.7Z"/>
+      </g>
+    </symbol>
+
+  </defs>
+</svg>
+
+<!-- Portfolio frame -->
+<div class="pf">
+  <a href="../../projects.html" onclick="event.preventDefault();abBack('../../projects.html')">[ ESC / CLOSE ] ← Adrián Birnbaun / Projects</a>
+  <span>OREST — Visual identity + UX/UI concept</span>
+  <a href="https://www.instagram.com/orest.ar/" target="_blank" rel="noopener">@orest.ar ↗</a>
+</div>
+
+<nav class="nav" aria-label="Principal">
+  <ul>
+    <li><a class="ulink" href="#producto">Nueva colección</a></li>
+    <li><a class="ulink" href="#relacionados">Prendas</a></li>
+  </ul>
+  <a class="brand" href="#top" aria-label="OREST inicio"><svg viewBox="2.3 12.3 34.1 9.6" role="img"><use href="#logo" x="2.3" y="12.3" width="34.1" height="9.6"/></svg></a>
+  <ul>
+    <li><a class="icon-btn" href="#" aria-label="Buscar"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg></a></li>
+    <li><a class="ulink" href="#">Ingresar</a></li>
+    <li><a class="cart icon-btn" href="#" aria-label="Carrito"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg><b id="cartCount" class="empty" aria-live="polite">0</b><span class="sr">productos en el carrito</span></a></li>
+  </ul>
+</nav>
+
+<div class="band" id="top">
+  <a class="back mono ulink" href="../../projects.html">← Volver a proyectos</a>
+  <div class="ticker" aria-label="Temporada 26/27">
+    <div>Temporada 26/27<i>✦</i>Del pico al asfalto<i>✦</i>Outdoor &amp; Streetwear<i>✦</i>Hecho en Buenos Aires<i>✦</i>Temporada 26/27<i>✦</i>Del pico al asfalto<i>✦</i>Outdoor &amp; Streetwear<i>✦</i>Hecho en Buenos Aires<i>✦</i></div>
+  </div>
+</div>
+
+<!-- ============ PRODUCTO ============ -->
+<main>
+<section class="pdp" id="producto">
+  <div class="info">
+    <div class="load">
+      <span class="mono tag" id="pTag">Nueva colección · Pieza 01</span>
+      <h1 id="pName">Campera<br>“Cumbre”</h1>
+      <span class="price" id="pPrice">$ 189.000</span>
+      <p class="desc" id="pDesc">Capa técnica de ripstop que corta el viento en la montaña y se banca la lluvia en la ciudad. Capucha ajustable, cierre central y bolsillos cargo para lo que haga falta.</p>
+      <ul class="specs mono" id="pSpecs"></ul>
+    </div>
+    <div class="thumbs" role="tablist" aria-label="Elegir prenda" id="thumbs"></div>
+  </div>
+
+  <div class="stage">
+    <span class="mono idx" id="pIdx">01 / 03</span>
+    <span class="ghost" aria-hidden="true" id="ghost">01</span>
+    <button class="arrow prev" aria-label="Prenda anterior" id="prev"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M11 3 5 9l6 6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+    <div class="ph shot" id="shot" data-file="img/cumbre.jpg"><img id="shotImg" src="img/cumbre.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></div>
+    <button class="arrow next" aria-label="Prenda siguiente" id="next"><svg width="18" height="18" viewBox="0 0 18 18"><path d="m7 3 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+    <a class="similar ulink" href="#relacionados">Ver similares</a>
+  </div>
+
+  <aside class="buy" aria-label="Compra">
+    <div class="icons">
+      <button aria-label="Agregar a favoritos" aria-pressed="false" id="fav"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" fill="transparent" stroke="#000" stroke-width="1.5"/></svg></button>
+      <button aria-label="Compartir"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 15V3m0 0L7 8m5-5 5 5M5 13v7h14v-7" fill="none" stroke="#000" stroke-width="1.5"/></svg></button>
+    </div>
+    <div class="box">
+      <div class="row"><span>Talle</span><a class="mono ulink" href="#" style="font-size:10px">Guía de talles</a></div>
+      <div class="sizes" id="sizes">
+        <button aria-pressed="false">S</button><button aria-pressed="false">M</button><button aria-pressed="false">L</button><button aria-pressed="false" disabled title="Sin stock">XL</button>
+      </div>
+    </div>
+    <div class="box">
+      <div class="row"><span>Color</span><span class="mono" id="colorName" style="font-size:10px"></span></div>
+      <div class="swatches" id="swatches"></div>
+    </div>
+    <button class="add" id="add" type="button">
+      <span class="add-track">
+        <span class="add-state add-idle"><span>Agregar al carrito</span><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.5 1.5 0 0 0 1.5 1.2h8.4a1.5 1.5 0 0 0 1.46-1.14L20.5 8H6.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round"/><circle cx="9.5" cy="19.5" r="1.4" fill="currentColor"/><circle cx="17" cy="19.5" r="1.4" fill="currentColor"/></svg></span>
+        <span class="add-state add-done" aria-hidden="true"><span>Agregado</span><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg></span>
+      </span>
+    </button>
+    <span class="mono msg" id="msg" aria-live="polite"></span>
+    <div class="mono ship">Envío gratis desde $150.000<br>3 cuotas sin interés<br>Cambios dentro de 30 días</div>
+  </aside>
+</section>
+
+<!-- ============ MANIFIESTO ============ -->
+<section class="mani">
+  <div class="glass" id="glass" role="img" aria-label="Efecto de vidrio roto">
+    <svg id="glassSvg" viewBox="0 0 1350 1000" preserveAspectRatio="xMidYMid meet">
+      <defs><radialGradient id="gflash"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".25" stop-color="#fff" stop-opacity=".25"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gcore"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+    </svg>
+  </div>
+  <div class="top mono rv"><span>OREST — Manifiesto</span><span>Buenos Aires · AR</span></div>
+  <h2 class="rv">Nacimos para <em>romper</em> las reglas.</h2>
+  <div class="sub rv">
+    <p>Una misma prenda pensada para acompañarte afuera de la ciudad, pero también adentro de ella. Funcionalidad, comodidad y diseño, sin elegir entre el sendero y la vereda.</p>
+    <div class="terr mono">
+      <div><small>01</small><b>Montaña</b></div>
+      <div><small>02</small><b>Ciudad</b></div>
+      <div><small>03</small><b>Viajes</b></div>
+      <div><small>04</small><b>Todos los días</b></div>
+    </div>
+  </div>
+  <figure class="skywrap" id="sky"><img src="img/montana-ciudad.jpg" alt="Ciudad y cordillera en un mismo horizonte" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="mono">Montaña y ciudad sin fronteras</figcaption>
+  <svg class="skyline" viewBox="0 0 1400 260" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+    <defs><pattern id="win" width="18" height="22" patternUnits="userSpaceOnUse"><rect x="5" y="6" width="7" height="9" fill="#141414"/></pattern></defs>
+    <g fill="#2b2b2b">
+      <rect x="0" y="150" width="70" height="110"/><rect x="80" y="90" width="76" height="170"/><rect x="166" y="160" width="58" height="100"/><rect x="234" y="112" width="96" height="148"/><rect x="340" y="140" width="60" height="120"/>
+      <rect x="1010" y="80" width="100" height="180"/><rect x="1120" y="170" width="66" height="90"/><rect x="1196" y="104" width="62" height="156"/><rect x="1268" y="150" width="58" height="110"/><rect x="1336" y="126" width="64" height="134"/>
+    </g>
+    <g fill="url(#win)">
+      <rect x="0" y="150" width="70" height="110"/><rect x="80" y="90" width="76" height="170"/><rect x="166" y="160" width="58" height="100"/><rect x="234" y="112" width="96" height="148"/><rect x="340" y="140" width="60" height="120"/>
+      <rect x="1010" y="80" width="100" height="180"/><rect x="1120" y="170" width="66" height="90"/><rect x="1196" y="104" width="62" height="156"/><rect x="1268" y="150" width="58" height="110"/><rect x="1336" y="126" width="64" height="134"/>
+    </g>
+    <path d="M360 260 L600 10 L760 150 L860 40 L1040 260 Z" fill="#6d6d6d"/>
+    <path d="M440 260 L640 70 L800 200 L960 60 L1130 260 Z" fill="#bdbdbd"/>
+    <path d="M640 70 L612 98 L636 92 L660 100 Z M960 60 L928 92 L956 86 L990 96 Z" fill="#fff"/>
+  </svg></figure>
+</section>
+
+<!-- ============ RELACIONADOS ============ -->
+<section id="relacionados">
+  <div class="rel-head rv">
+    <h2>También te<br>puede gustar</h2>
+    <div class="rel-nav"><button aria-label="Anterior" id="rp">‹</button><button aria-label="Siguiente" id="rn">›</button></div>
+  </div>
+  <div class="grid" id="grid">
+    <article class="card"><header><div><h3>Rompevientos “Cumbre”</h3><div class="pr">$ 189.000</div></div><div class="dots"><i style="background:#2f6b95;outline:1px solid #ccc"></i><i style="background:#e6e6df;outline:1px solid #ccc"></i></div></header>
+      <div class="ph" data-file="img/cumbre.jpg"><img src="img/cumbre.jpg" alt="Rompevientos “Cumbre” — OREST" loading="lazy" onerror="this.parentNode.classList.add('missing')"></div><button class="quick mono" data-go="0">Ver producto <span>↑</span></button></article>
+    <article class="card"><header><div><h3>Campera “Altura”</h3><div class="pr">$ 118.000</div></div><div class="dots"><i style="background:#5a5f63;outline:1px solid #ccc"></i><i style="background:#000;outline:1px solid #ccc"></i></div></header>
+      <div class="ph" data-file="img/altura.jpg"><img src="img/altura.jpg" alt="Campera “Altura” — OREST" loading="lazy" onerror="this.parentNode.classList.add('missing')"></div><button class="quick mono" data-go="1">Ver producto <span>↑</span></button></article>
+    <article class="card"><header><div><h3>Pantalón “Sendero”</h3><div class="pr">$ 124.000</div></div><div class="dots"><i style="background:#e6e2d6;outline:1px solid #ccc"></i><i style="background:#000;outline:1px solid #ccc"></i></div></header>
+      <div class="ph" data-file="img/sendero.jpg"><img src="img/sendero.jpg" alt="Pantalón “Sendero” — OREST" loading="lazy" onerror="this.parentNode.classList.add('missing')"></div><button class="quick mono" data-go="2">Ver producto <span>↑</span></button></article>
+    <article class="card"><header><div><h3>Set “Asfalto”</h3><div class="pr">$ 236.000</div></div><div class="dots"><i style="background:#5b4232;outline:1px solid #ccc"></i><i style="background:#000;outline:1px solid #ccc"></i></div></header>
+      <div class="ph" data-file="img/asfalto.jpg"><img src="img/asfalto.jpg" alt="Set “Asfalto” — OREST" loading="lazy" onerror="this.parentNode.classList.add('missing')"></div><button class="quick mono" data-go="3">Ver producto <span>↑</span></button></article>
+    <article class="card"><header><div><h3>Buzo “Refugio”</h3><div class="pr">$ 132.000</div></div><div class="dots"><i style="background:#6b6d5e;outline:1px solid #ccc"></i><i style="background:#3a3a3a;outline:1px solid #ccc"></i></div></header>
+      <div class="ph" data-file="img/refugio.jpg"><img src="img/refugio.jpg" alt="Buzo “Refugio” — OREST" loading="lazy" onerror="this.parentNode.classList.add('missing')"></div><button class="quick mono" data-go="4">Ver producto <span>↑</span></button></article>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <svg class="giant rv" viewBox="2.3 12.3 34.1 9.6" role="img" aria-label="OREST"><use href="#logo" x="2.3" y="12.3" width="34.1" height="9.6"/></svg>
+  <div class="fgrid">
+    <form class="news" id="news" novalidate>
+      <label for="email">Sumate para enterarte primero de lanzamientos, drops y salidas a la montaña.</label>
+      <div class="field"><input id="email" type="email" placeholder="E-mail" autocomplete="email" required><button aria-label="Suscribirme">↗</button></div>
+      <label class="check"><input type="checkbox" id="terms"> Acepto la política de privacidad</label>
+      <div class="ok mono" id="newsMsg" aria-live="polite"></div>
+    </form>
+    <div class="fcol"><h4 class="mono">Tienda</h4><a href="#">Nueva colección</a><a href="#">Sale</a><a href="#">Preventa</a></div>
+    <div class="fcol"><h4 class="mono">Categorías</h4><a href="#">Camperas</a><a href="#">Rompevientos</a><a href="#">Buzos</a><a href="#">Pantalones</a><a href="#">Accesorios</a></div>
+    <div class="fcol"><h4 class="mono">OREST</h4><a href="#">Nosotros</a><a href="#">Contacto</a><a href="https://www.instagram.com/orest.ar/" target="_blank" rel="noopener">Instagram ↗</a><a href="#">Ayuda</a></div>
+  </div>
+  <div class="fbottom mono"><span>© OREST 2026 · Buenos Aires, Argentina</span><span>Del pico al asfalto</span><span>Diseño · Adrian Birnbaun</span></div>
+</footer>
+
+<script>
+/* ESC / close = one step back inside the portfolio (fallback: projects) */
+let abInSite=false;try{abInSite=sessionStorage.getItem('ab-nav')==='1'}catch(_){}
+const abBack=(fallback)=>{location.href=fallback;return;
+  if(history.length>1&&abInSite){let left=false;addEventListener('pagehide',()=>left=true,{once:true});history.back();setTimeout(()=>{if(!left)location.href=fallback},1500)}else location.href=fallback};
+try{sessionStorage.setItem('ab-nav','1')}catch(_){}
+
+const products=[
+ {slug:'cumbre',tag:'Nueva colección · Pieza 01',name:'Rompevientos<br>“Cumbre”',price:'$ 189.000',
+  desc:'Capa técnica bicolor que corta el viento en la montaña y se banca la lluvia en la ciudad. Capucha ajustable, cierre central y bolsillo frontal con cierre.',
+  specs:[['Material','Nylon ripstop'],['Protección','Viento · Agua'],['Cierre','Central + bolsillos'],['Fit','Oversize']],
+  colors:[['Glaciar','#2f6b95'],['Niebla','#e6e6df']]},
+ {slug:'altura',tag:'Nueva colección · Pieza 02',name:'Campera<br>“Altura”',price:'$ 118.000',
+  desc:'Capa intermedia de tejido waffle técnico: abriga, respira y seca rápido. Mangas raglan, capucha ajustada y bolsillos canguro.',
+  specs:[['Material','Waffle técnico'],['Uso','Capa media'],['Cierre','Central'],['Fit','Regular']],
+  colors:[['Grafito','#5a5f63'],['Negro','#000']]},
+ {slug:'sendero',tag:'Nueva colección · Pieza 03',name:'Pantalón<br>“Sendero”',price:'$ 124.000',
+  desc:'Corderoy con paneles de nylon en rodillas y tiro trasero. Cinturón técnico con hebilla, argolla D y bolsillos con cierre.',
+  specs:[['Material','Corderoy + nylon'],['Refuerzos','Rodillas'],['Cintura','Cinturón técnico'],['Fit','Wide leg']],
+  colors:[['Hueso','#e6e2d6'],['Negro','#000']]},
+ {slug:'asfalto',tag:'Workwear · Pieza 04',name:'Set<br>“Asfalto”',price:'$ 236.000',
+  desc:'Campera y pantalón de lona pesada con costuras en contraste, cuello de corderoy y botones a presión. Del refugio al subte sin cambiarse.',
+  specs:[['Material','Lona 12 oz'],['Cuello','Corderoy'],['Incluye','Campera + pantalón']],
+  colors:[['Tierra','#5b4232'],['Negro','#000']]},
+ {slug:'refugio',tag:'Esenciales · Pieza 05',name:'Buzo<br>“Refugio”',price:'$ 132.000',fit:'contain',
+  desc:'Buzo acolchado de nylon satinado con mangas globo y bolsillo utilitario en la manga. Volumen para el frío, actitud para la ciudad.',
+  specs:[['Material','Nylon satinado'],['Relleno','Guata liviana'],['Bolsillo','Manga con cierre'],['Fit','Oversize']],
+  colors:[['Musgo','#6b6d5e'],['Carbón','#3a3a3a']]}
+];
+let i=0,size=null,cart=0;
+const $=s=>document.querySelector(s);
+const thumbs=$('#thumbs'),total=String(products.length).padStart(2,'0');
+products.forEach((p,k)=>{const b=document.createElement('button');b.setAttribute('role','tab');
+  b.setAttribute('aria-label',p.name.replace('<br>',' '));
+  b.innerHTML=`<div class="ph" data-file="${p.slug}"><img src="img/${p.slug}.jpg" alt="" loading="lazy" onerror="this.parentNode.classList.add('missing')"></div>`;
+  b.onclick=()=>show(k);thumbs.appendChild(b)});
+function pickColor(k){const p=products[i];
+  [...$('#swatches').children].forEach((x,j)=>x.setAttribute('aria-pressed',j===k));
+  $('#colorName').textContent=p.colors[k][0];}
+function show(k){
+  i=(k+products.length)%products.length;const p=products[i],box=$('#shot'),im=$('#shotImg');
+  box.classList.remove('missing','swap','contain');if(p.fit)box.classList.add('contain');
+  box.dataset.file=`img/${p.slug}.jpg`;void box.offsetWidth;box.classList.add('swap');
+  im.src=`img/${p.slug}.jpg`;im.alt=p.name.replace('<br>',' ')+' — OREST';
+  $('#pTag').textContent=p.tag;$('#pName').innerHTML=p.name;$('#pName').classList.toggle('long',p.name.split('<br>').some(w=>w.length>9));$('#pPrice').textContent=p.price;
+  $('#pDesc').textContent=p.desc;
+  $('#pSpecs').innerHTML=p.specs.map(s=>`<li><span>${s[0]}</span><span>${s[1]}</span></li>`).join('');
+  $('#pIdx').textContent=`${String(i+1).padStart(2,'0')} / ${total}`;
+  $('#swatches').innerHTML=p.colors.map(c=>`<button aria-label="${c[0]}" aria-pressed="false" style="background:${c[1]}"></button>`).join('');
+  [...$('#swatches').children].forEach((x,j)=>x.onclick=()=>pickColor(j));pickColor(0);
+  [...thumbs.children].forEach((t,j)=>t.setAttribute('aria-current',j===i));
+}
+$('#prev').onclick=()=>show(i-1);$('#next').onclick=()=>show(i+1);
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowLeft')show(i-1);if(e.key==='ArrowRight')show(i+1);
+  if(e.key==='Escape')abBack('../../projects.html')});
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{show(+b.dataset.go);$('#producto').scrollIntoView({behavior:'smooth'})});
+show(0);
+
+document.querySelectorAll('#sizes button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#sizes button').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');size=b.textContent;$('#msg').textContent='';
+});
+$('#add').onclick=()=>{
+  const a=$('#add'),m=$('#msg');
+  if(!size){a.classList.remove('hint');void a.offsetWidth;a.classList.add('hint');m.textContent='↑ Elegí un talle para continuar';$('#sizes').closest('.box').animate([{borderColor:'#000'},{borderColor:'#b00'},{borderColor:'#000'}],{duration:700});return}
+  if(a.classList.contains('done'))return;
+  const c=$('#cartCount'),from=a.getBoundingClientRect(),to=document.querySelector('.cart svg').getBoundingClientRect();
+  const dot=document.createElement('span');dot.className='fly';document.body.appendChild(dot);
+  const x0=from.right-38,y0=from.top+from.height/2-5,x1=to.left+to.width/2-5,y1=to.top+to.height/2-5;
+  const bump=()=>{cart++;c.classList.remove('empty');c.textContent=cart;c.classList.add('bump');setTimeout(()=>c.classList.remove('bump'),300)};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){dot.remove();bump()}
+  else dot.animate([
+    {transform:`translate(${x0}px,${y0}px) scale(1)`},
+    {transform:`translate(${(x0+x1)/2}px,${Math.max(12,Math.min(y0,y1)-60)}px) scale(1.2)`,offset:.5},
+    {transform:`translate(${x1}px,${y1}px) scale(.5)`,opacity:.6}
+  ],{duration:700,easing:'cubic-bezier(.5,0,.3,1)'}).onfinish=()=>{dot.remove();bump()};
+  dot.style.left=dot.style.top='0';
+  a.classList.add('done');a.setAttribute('aria-label','Agregado al carrito');
+  m.textContent=`✓ Talle ${size} · ${$('#colorName').textContent}`;
+  setTimeout(()=>{a.classList.remove('done');a.removeAttribute('aria-label')},1800);
+};
+$('#fav').onclick=e=>{const b=e.currentTarget;b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true')};
+
+const grid=$('#grid');
+$('#rn').onclick=()=>grid.scrollBy({left:grid.clientWidth/2,behavior:'smooth'});
+$('#rp').onclick=()=>grid.scrollBy({left:-grid.clientWidth/2,behavior:'smooth'});
+
+$('#news').onsubmit=e=>{e.preventDefault();const m=$('#newsMsg'),val=$('#email').value;
+  if(!/^\S+@\S+\.\S+$/.test(val)){m.textContent='Revisá el e-mail';return}
+  if(!$('#terms').checked){m.textContent='Aceptá la política para continuar';return}
+  m.textContent='✓ Listo. Nos vemos en la cumbre.';e.target.reset();
+};
+
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.15});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+// Parallax suave en la imagen montaña/ciudad
+const sky=document.querySelector('#sky img');
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  addEventListener('scroll',()=>{const r=sky.parentNode.getBoundingClientRect();
+    if(r.bottom>0&&r.top<innerHeight){sky.style.setProperty('--py',((r.top-innerHeight/2)*-0.08).toFixed(1)+'px')}},{passive:true});
+}
+
+// ── Vidrio roto: grietas generadas en SVG ──
+(()=>{
+  const wrap=document.getElementById('glass'),svg=document.getElementById('glassSvg');if(!wrap)return;
+  const NS='http://www.w3.org/2000/svg';
+  let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  const el=(t,a,parent)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);parent.appendChild(e);return e};
+  const pt=(cx,cy,a,r)=>[cx+Math.cos(a)*r,cy+Math.sin(a)*r];
+  function jag(x1,y1,x2,y2,steps,amp){ // línea quebrada
+    const p=[[x1,y1]];const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L;
+    for(let i=1;i<steps;i++){const t=i/steps,o=(rnd()-.5)*amp*L*.06;p.push([x1+dx*t+nx*o,y1+dy*t+ny*o])}
+    p.push([x2,y2]);return p;
+  }
+  const d=p=>'M'+p.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L');
+  function impact(cx,cy,R,delay=0){
+    const g=el('g',{},svg);
+    const n=11+Math.floor(rnd()*6),rays=[];
+    let a0=rnd()*Math.PI*2;
+    for(let i=0;i<n;i++){const a=a0+i*(Math.PI*2/n)+(rnd()-.5)*.35;rays.push({a,len:R*(.45+rnd()*.6)})}
+    // anillos: puntos a distintos radios sobre cada rayo
+    const rings=[.12,.3,.55].map(f=>rays.map(r=>{const rr=Math.min(r.len,R*f*(.85+rnd()*.3));return pt(cx,cy,r.a+(rnd()-.5)*.05,rr)}));
+    // facetas (reflejos del vidrio)
+    rings.forEach((ring,k)=>{const inner=k?rings[k-1]:rays.map(()=>[cx,cy]);
+      for(let i=0;i<n;i++){if(rnd()>.45)continue;const j=(i+1)%n;
+        const poly=[inner[i],ring[i],ring[j],inner[j]];
+        const sh=el('path',{class:'shard',d:d(poly)+'Z'},g);sh.style.setProperty('--o',(.012+rnd()*.04).toFixed(3));}
+    });
+    // rayos principales + ramas
+    rays.forEach(r=>{
+      const [x2,y2]=pt(cx,cy,r.a,r.len);const p=jag(cx,cy,x2,y2,7,1.2);
+      const w=(.7+rnd()*1.4).toFixed(2);
+      const ln=el('path',{class:'ln',d:d(p),pathLength:1,'stroke-width':w,'stroke-opacity':(.55+rnd()*.45).toFixed(2)},g);
+      ln.style.setProperty('--d',(delay+rnd()*.12).toFixed(2)+'s');
+      if(rnd()>.4){const k=2+Math.floor(rnd()*4),[bx,by]=p[k],ba=r.a+(rnd()>.5?1:-1)*(.35+rnd()*.5),bl=r.len*(.15+rnd()*.25);
+        const [ex,ey]=pt(bx,by,ba,bl);
+        const b=el('path',{class:'ln',d:d(jag(bx,by,ex,ey,4,1.5)),pathLength:1,'stroke-width':(.4+rnd()*.6).toFixed(2),'stroke-opacity':'.5'},g);
+        b.style.setProperty('--d',(delay+.18+rnd()*.15).toFixed(2)+'s');}
+    });
+    // anillos concéntricos incompletos
+    rings.forEach((ring,k)=>{for(let i=0;i<n;i++){if(rnd()>(k?.55:.9))continue;const j=(i+1)%n;
+      const s=el('path',{class:'ln',d:d(jag(ring[i][0],ring[i][1],ring[j][0],ring[j][1],3,2)),pathLength:1,'stroke-width':(.4+rnd()*.7).toFixed(2),'stroke-opacity':(.35+rnd()*.4).toFixed(2)},g);
+      s.style.setProperty('--d',(delay+.25+k*.12+rnd()*.1).toFixed(2)+'s');}});
+    // núcleo astillado
+    el('circle',{cx,cy,r:R*.09,fill:'url(#gcore)'},g);
+    for(let i=0;i<26;i++){const a=rnd()*Math.PI*2,r1=rnd()*R*.02,r2=r1+R*(.02+rnd()*.06);
+      const [x1,y1]=pt(cx,cy,a,r1),[x2,y2]=pt(cx,cy,a+(rnd()-.5)*.6,r2);
+      const m=el('path',{class:'ln',d:`M${x1.toFixed(1)} ${y1.toFixed(1)}L${x2.toFixed(1)} ${y2.toFixed(1)}`,pathLength:1,'stroke-width':'.6','stroke-opacity':'.8'},g);
+      m.style.setProperty('--d',delay.toFixed(2)+'s');}
+    el('circle',{class:'flash',cx,cy,r:R*.35,fill:'url(#gflash)'},g);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>g.classList.add('hit')));
+    return g;
+  }
+  const mani=document.querySelector('.mani');
+  function shake(){mani.classList.remove('shake');void mani.offsetWidth;mani.classList.add('shake')}
+  // primer impacto al entrar en pantalla
+  const ob=new IntersectionObserver(es=>{if(es[0].isIntersecting){ob.disconnect();
+    setTimeout(()=>{impact(760,460,560);shake();setTimeout(()=>wrap.classList.add('ready'),1400)},350)}},{threshold:.35});
+  ob.observe(wrap);
+  // click = nuevo impacto (máx. 6, luego se reinicia)
+  let hits=0;
+  wrap.addEventListener('click',e=>{
+    const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal,sc=Math.max(vb.width/r.width,vb.height/r.height);
+    const x=vb.width/2+(e.clientX-r.left-r.width/2)*sc,y=vb.height/2+(e.clientY-r.top-r.height/2)*sc;
+    if(++hits>6){svg.querySelectorAll('g').forEach(g=>g.remove());hits=1}
+    seed=Math.floor(Math.random()*1e6)+1;impact(x,y,260+Math.random()*180);shake();
+  });
+})();
+</script>
+</body>
+</html>
