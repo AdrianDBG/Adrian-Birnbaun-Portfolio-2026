@@ -253,6 +253,61 @@ footer{background:#161616;color:#e8e8e8;margin-top:clamp(56px,7vw,100px);padding
   .fgrid{grid-template-columns:1fr}
   .pf span{display:none}
 }
+
+/* ── Mobile polish ── */
+@media (max-width:1000px){
+  .pdp{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .pdp > *{min-width:0}
+}
+@media (max-width:640px){
+  html,body{overflow-x:clip}
+  .pf{font-size:9.5px;padding:8px 16px}
+  .pf a:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:64%}
+  .pf a:last-child{white-space:nowrap}
+  .nav{padding:12px 16px}
+  .nav .brand svg{height:19px}
+  .ticker div{font-size:22px;padding:8px 0}
+  .pdp{grid-template-columns:minmax(0,1fr)}
+  .stage{min-height:0;height:min(68svh,520px)}
+  .stage .shot img{object-position:center 22%}
+  .arrow{width:40px;height:40px;background:rgba(255,255,255,.85);border-color:transparent}
+  .arrow.prev{left:12px}.arrow.next{right:12px}
+  .stage .idx{top:12px;left:12px}
+  .info{padding:20px 16px;gap:20px}
+  .info h1{font-size:clamp(34px,10.5vw,44px)}
+  .info h1.long{font-size:clamp(30px,9vw,38px)}
+  .info p.desc{font-size:15px;margin:16px 0 14px}
+  .specs{max-width:none}
+  .thumbs{width:auto;max-width:100%;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .thumbs::-webkit-scrollbar{display:none}
+  .thumbs button{flex:none;width:64px;height:78px}
+  .thumbs .ph{width:52px;height:66px}
+  .buy{padding:0 16px 28px;gap:10px}
+  .icons button{height:44px}
+  .box{padding:12px}
+  .sizes button{height:44px}
+  .swatches button{width:30px;height:30px}
+  .add{--h:56px}
+  .ship{font-size:10px}
+  .mani{padding:64px 16px 0}
+  .mani h2{font-size:clamp(46px,14vw,64px)}
+  .mani .sub{margin-top:28px;gap:24px}
+  .mani .sub p{font-size:15px}
+  .terr b{font-size:21px}
+  .skywrap{margin-left:-16px;margin-right:-16px;margin-top:-40px}
+  .skywrap img{height:clamp(300px,90vw,420px)}
+  .rel-head{padding:56px 16px 18px;align-items:flex-end;gap:12px}
+  .rel-head h2{font-size:clamp(30px,9vw,40px)}
+  .rel-nav button{width:44px;height:44px}
+  .card .ph{margin-top:12px}
+  footer{padding:24px 16px}
+  .news .field{max-width:none}
+  .news input{font-size:16px}
+  .fgrid{gap:28px 16px;grid-template-columns:1fr 1fr}
+  .fgrid .news{grid-column:1/-1}
+  .fbottom{flex-direction:column;gap:6px;margin-top:40px}
+}
+@media (max-width:360px){.nav ul:last-child li:nth-child(2){display:none}}
 </style>
 </head>
 <body>

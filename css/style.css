@@ -1448,7 +1448,7 @@ body {
 
   .page-close {
     grid-row: 1;
-    justify-self: start;
+    justify-self: end;
     margin-bottom: 1.5rem;
   }
 
