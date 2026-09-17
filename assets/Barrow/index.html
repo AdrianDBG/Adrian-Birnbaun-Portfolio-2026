@@ -365,7 +365,7 @@ footer{padding:clamp(60px,7vw,90px) 0 30px;overflow:hidden}
 .fg h4{font:400 11px var(--mono);text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
 .fg a{display:block;line-height:2;font-size:15px;color:var(--ink-2);transition:color .2s}
 .fg a:hover{color:var(--green)}
-.wordmark{font:600 clamp(46px,15.5vw,250px)/.8 var(--sans);letter-spacing:-.06em;margin-top:clamp(50px,6vw,90px);display:flex;align-items:flex-end;gap:.08em;color:var(--ink)}
+.wordmark{font:600 clamp(40px,14vw,250px)/.8 var(--sans);white-space:nowrap;max-width:100%;overflow:visible;letter-spacing:-.06em;margin-top:clamp(50px,6vw,90px);display:flex;align-items:flex-end;gap:.08em;color:var(--ink)}
 .wordmark svg{width:.9em;height:.7em;color:var(--green);flex:none;margin-bottom:.02em}
 .fbot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font:400 12px var(--mono);text-transform:uppercase;color:var(--ink-3)}
 .disc{margin-top:10px;font-size:12px;color:var(--ink-3);max-width:90ch}
@@ -459,7 +459,7 @@ footer{padding:clamp(60px,7vw,90px) 0 30px;overflow:hidden}
   .mail{font-size:22px}
   .fg{grid-template-columns:1fr 1fr;gap:26px 20px}
   .fg > div:first-child{grid-column:1/-1}
-  .wordmark{font-size:19vw}
+  .wordmark{font-size:16.5vw}
   .fbot{flex-direction:column;gap:8px}
   .totop{right:14px;bottom:14px;width:44px;height:44px}
 }
@@ -726,7 +726,7 @@ footer{padding:clamp(60px,7vw,90px) 0 30px;overflow:hidden}
       <div><h4>Resources</h4><a href="#faq">FAQ</a><a href="#">EP Handbook</a><a href="#">Our team</a></div>
       <div><h4>Account</h4><a href="#">Sign in</a><a href="#contact">Create account</a><a href="mailto:info@barrow.site">Contact us</a></div>
     </div>
-    <div class="wordmark rv" aria-hidden="true"><svg><use href="#logo"/></svg>BARROW</div>
+    <div class="wordmark rv" aria-hidden="true"><svg><use href="#logo"/></svg><span class="wm-t">BARROW</span></div>
     <div class="fbot"><span>© 2026 Barrow AI, Inc.</span><span><a href="#">Terms &amp; Conditions</a> · <a href="#">Privacy Policy</a></span><span>Design &amp; development — Adrián Birnbaun</span></div>
     <p class="disc">Independent redesign concept for portfolio purposes. Copy adapted from barrow.site; project names, figures and interface screens are illustrative.</p>
   </div>
@@ -862,6 +862,18 @@ $$('#qa details').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)$$('#qa 
 })();
 
 
+
+// Wordmark del footer: ajusta el tamaño al ancho real del contenedor
+(()=>{const wm=document.querySelector('.wordmark');if(!wm)return;
+  const svg=wm.querySelector('svg'),t=wm.querySelector('.wm-t');
+  const fit=()=>{wm.style.fontSize='100px';
+    const gap=parseFloat(getComputedStyle(wm).columnGap)||0;
+    const w=svg.getBoundingClientRect().width+gap+t.getBoundingClientRect().width;
+    const avail=wm.parentElement.clientWidth-parseFloat(getComputedStyle(wm.parentElement).paddingLeft)-parseFloat(getComputedStyle(wm.parentElement).paddingRight);
+    wm.style.fontSize=Math.min(250,100*avail/w*.995)+'px'};
+  fit();(document.fonts&&document.fonts.ready||Promise.resolve()).then(fit);
+  addEventListener('resize',fit,{passive:true});addEventListener('load',fit);
+})();
 </script>
 </body>
 </html>
