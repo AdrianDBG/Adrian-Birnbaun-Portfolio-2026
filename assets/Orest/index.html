@@ -400,7 +400,8 @@ html.lock,html.lock body{overflow:hidden}
 .case-head h2{font:900 clamp(36px,5vw,72px)/.9 var(--display);text-transform:uppercase;margin-top:12px}
 .case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--tinta)}
 .case-grid div{padding:16px 16px 22px 0;border-bottom:1px solid var(--linea)}
-.case-grid .wide{grid-column:span 3;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px}
+.case-grid .wide{grid-column:span 3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.case-grid .wide dd{grid-column:span 2;max-width:60ch}
 .case-grid dt{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin-bottom:8px}
 .case-grid dd{font-size:15px;line-height:1.5}
 .case-grid .sol dd{font-weight:500}
@@ -412,6 +413,7 @@ html.lock,html.lock body{overflow:hidden}
   .case-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .case-grid div:nth-child(3){grid-column:span 2}
   .case-grid .wide{grid-column:span 2;grid-template-columns:minmax(0,1fr);gap:0}
+  .case-grid .wide dd{grid-column:auto}
   .nf button{padding:0 10px}
   .drawer h2{font-size:26px}
   .items li{padding:14px 16px;gap:12px;grid-template-columns:60px minmax(0,1fr) auto}
@@ -451,7 +453,7 @@ html.lock,html.lock body{overflow:hidden}
 <nav class="nav" aria-label="Principal">
   <ul>
     <li><a class="ulink" href="#manifiesto">Manifiesto</a></li>
-    <li><a class="ulink" href="#proyecto">El proyecto</a></li>
+    <li><a class="ulink" href="#proyecto">Case study</a></li>
   </ul>
   <a class="brand" href="#top" aria-label="OREST inicio"><svg viewBox="2.3 12.3 34.1 9.6" role="img"><use href="#logo" x="2.3" y="12.3" width="34.1" height="9.6"/></svg></a>
   <ul>
@@ -581,14 +583,14 @@ html.lock,html.lock body{overflow:hidden}
 </section>
 
 <!-- ============ PROYECTO ============ -->
-<section class="case" id="proyecto" aria-labelledby="caseT">
-  <div class="case-head rv"><span class="mono">Case study · Adrián Birnbaun</span><h2 id="caseT">Sobre el<br>proyecto</h2></div>
+<section class="case" id="proyecto" lang="en" aria-labelledby="caseT">
+  <div class="case-head rv"><span class="mono">Case study · Adrián Birnbaun</span><h2 id="caseT">About the<br>project</h2></div>
   <dl class="case-grid rv">
-    <div><dt class="mono">Rol</dt><dd>Identidad, UX/UI y desarrollo</dd></div>
-    <div><dt class="mono">Año</dt><dd>2026</dd></div>
-    <div><dt class="mono">Herramientas</dt><dd>Illustrator, Figma, HTML, CSS y JavaScript</dd></div>
-    <div class="wide"><dt class="mono">Desafío</dt><dd>Una marca que habla a la vez a la montaña y a la ciudad necesitaba una tienda que no se sintiera como un catálogo más, sin perder la claridad al momento de comprar.</dd></div>
-    <div class="wide sol"><dt class="mono">→ Solución</dt><dd>Una ficha de producto única con carrusel, compra, guía de talles y envío en el mismo lugar, y un manifiesto en blanco y negro que cuenta la marca sin sacar al usuario del recorrido.</dd></div>
+    <div><dt class="mono">Role</dt><dd>Brand identity, UX/UI &amp; development</dd></div>
+    <div><dt class="mono">Year</dt><dd>2026</dd></div>
+    <div><dt class="mono">Tools</dt><dd>Illustrator, Figma, HTML, CSS &amp; JavaScript</dd></div>
+    <div class="wide"><dt class="mono">Challenge</dt><dd>A brand that speaks to the mountains and the city at once needed a store that didn’t feel like just another catalog — without losing clarity at the moment of purchase.</dd></div>
+    <div class="wide sol"><dt class="mono">→ Solution</dt><dd>A single product page that brings the carousel, checkout, size guide and shipping together in one place, plus a black-and-white manifesto that tells the brand story without pulling the user out of the flow.</dd></div>
   </dl>
 </section>
 </main>
