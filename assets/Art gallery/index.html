@@ -70,12 +70,12 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;op
 .cap h2 span{display:block;transition:transform .5s var(--ease),opacity .5s}
 .cap h2 span.out{transform:translateY(-100%);opacity:0}
 .cap h2 span.in{transform:translateY(100%);opacity:0}
-.bar{position:absolute;left:var(--pad);right:var(--pad);top:88px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.bar{position:absolute;z-index:6;pointer-events:none;left:var(--pad);right:var(--pad);top:88px;display:flex;justify-content:space-between;align-items:center;gap:20px}
 .prog{flex:1;max-width:340px;height:1px;background:var(--line);position:relative}
 .prog i{position:absolute;left:0;top:-1px;height:3px;background:var(--ink);width:0}
-.nav{display:flex;gap:6px}
-.nav button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:.25s}
-.nav button:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.nav{display:flex;align-items:center;gap:10px;pointer-events:auto}
+.nav .hint{color:var(--ink-2,#6f746a);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.nav .pill{white-space:nowrap}
 
 /* lightbox */
 .lb{position:fixed;inset:0;z-index:80;background:rgba(238,241,234,.96);backdrop-filter:blur(6px);display:grid;grid-template-rows:auto 1fr auto;opacity:0;pointer-events:none;transition:opacity .3s}
@@ -146,7 +146,7 @@ footer{padding:40px var(--pad) 30px;border-top:1px solid var(--line);display:fle
       <div class="bar">
         <span class="mono" id="count">01</span>
         <span class="prog" aria-hidden="true"><i id="prog"></i></span>
-        <div class="nav"><button id="prev" aria-label="Previous piece">←</button><button id="next" aria-label="Next piece">→</button></div>
+        <div class="nav"><span class="hint mono">Scroll to browse</span><button class="mono pill" id="prev">← Prev</button><button class="mono pill" id="next">Next →</button></div>
       </div>
       <div class="stage" id="stage"></div>
       <div class="cap" aria-live="polite">
