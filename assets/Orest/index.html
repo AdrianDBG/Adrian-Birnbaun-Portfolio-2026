@@ -151,6 +151,17 @@ a{color:inherit;text-decoration:none}
 @keyframes flash{0%{opacity:.9}100%{opacity:0}}
 .mani.shake{animation:shake2 .32s cubic-bezier(.36,.07,.19,.97)}
 @keyframes shake2{20%{transform:translate(-3px,1px)}40%{transform:translate(3px,-2px)}60%{transform:translate(-2px,2px)}80%{transform:translate(1px,-1px)}}
+
+.mani .top{align-items:center;gap:16px}
+.crack-cue{color:#8a8a8a;display:inline-flex;align-items:center;gap:9px;font:inherit;letter-spacing:.14em;text-transform:uppercase;opacity:0;transform:translateY(4px);transition:opacity .6s var(--ease),transform .6s var(--ease),color .25s;pointer-events:none;cursor:crosshair}
+.crack-cue.on{opacity:1;transform:none;pointer-events:auto}
+.crack-cue.used{opacity:0;transform:translateY(-4px);pointer-events:none}
+.crack-cue:hover{color:#fff}
+.crack-cue i{position:relative;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.crack-cue i::after{content:"";position:absolute;inset:-5px;border:1px solid currentColor;border-radius:50%;opacity:.6;animation:cuePulse 2.2s var(--ease) infinite}
+@keyframes cuePulse{0%{transform:scale(.6);opacity:.7}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
+@media (max-width:640px){.crack-cue{display:none}}
+@media (prefers-reduced-motion:reduce){.crack-cue i::after{animation:none}}
 .glass-hint{position:absolute;right:var(--pad);bottom:4%;color:#5c5c5c;opacity:0;transition:opacity .6s}
 .glass.ready .glass-hint{opacity:1}
 @media (max-width:640px){.glass{width:92%;top:60px;opacity:.55;pointer-events:none}.glass-hint{display:none}}
@@ -534,7 +545,7 @@ html.lock,html.lock body{overflow:hidden}
       <radialGradient id="gcore"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
     </svg>
   </div>
-  <div class="top mono rv"><span>OREST — Manifiesto</span><span>Buenos Aires · AR</span></div>
+  <div class="top mono rv"><span>OREST — Manifiesto</span><button type="button" class="crack-cue mono" id="crackCue"><i aria-hidden="true"></i>Clic para seguir rompiendo</button><span>Buenos Aires · AR</span></div>
   <h2 class="rv">Nacimos para <em>romper</em> las reglas.</h2>
   <div class="sub rv">
     <p>Una misma prenda pensada para acompañarte afuera de la ciudad, pero también adentro de ella. Funcionalidad, comodidad y diseño, sin elegir entre el sendero y la vereda.</p>
@@ -895,15 +906,18 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
     requestAnimationFrame(()=>requestAnimationFrame(()=>g.classList.add('hit')));
     return g;
   }
-  const mani=document.querySelector('.mani');
+  const mani=document.querySelector('.mani'),cue=document.getElementById('crackCue');
   function shake(){mani.classList.remove('shake');void mani.offsetWidth;mani.classList.add('shake')}
   // primer impacto al entrar en pantalla
   const ob=new IntersectionObserver(es=>{if(es[0].isIntersecting){ob.disconnect();
-    setTimeout(()=>{impact(760,460,560);shake();setTimeout(()=>wrap.classList.add('ready'),1400)},350)}},{threshold:.35});
+    setTimeout(()=>{impact(760,460,560);shake();setTimeout(()=>{wrap.classList.add('ready');cue&&cue.classList.add('on')},1400)},350)}},{threshold:.35});
   ob.observe(wrap);
   // click = nuevo impacto (máx. 6, luego se reinicia)
   let hits=0;
+  if(cue)cue.addEventListener('click',()=>{cue.classList.add('used');
+    seed=Math.floor(Math.random()*1e6)+1;impact(420+Math.random()*500,300+Math.random()*380,260+Math.random()*180);shake();hits++});
   wrap.addEventListener('click',e=>{
+    if(cue)cue.classList.add('used');
     const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal,sc=Math.max(vb.width/r.width,vb.height/r.height);
     const x=vb.width/2+(e.clientX-r.left-r.width/2)*sc,y=vb.height/2+(e.clientY-r.top-r.height/2)*sc;
     if(++hits>6){svg.querySelectorAll('g').forEach(g=>g.remove());hits=1}
