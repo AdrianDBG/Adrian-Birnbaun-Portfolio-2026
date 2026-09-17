@@ -79,8 +79,22 @@
      anything more is a drag and the click is swallowed.
      -------------------------------------------------------------------- */
   const field = document.querySelector('.projects-field');
+  const fieldHint = document.getElementById('fieldHint');
+  const canDrag = field && window.matchMedia('(min-width: 40rem)').matches;
 
-  if (field && window.matchMedia('(min-width: 40rem)').matches) {
+  if (fieldHint) {
+    const hintText = document.getElementById('fieldHintText');
+    if (hintText && !canDrag) hintText.textContent = 'Tap a piece to open it';
+    setTimeout(function () { fieldHint.classList.add('is-on'); }, 900);
+    const hideHint = function () {
+      fieldHint.classList.remove('is-on');
+      fieldHint.classList.add('is-gone');
+    };
+    if (field) field.addEventListener('pointerdown', hideHint, { once: true });
+    setTimeout(hideHint, 12000);
+  }
+
+  if (canDrag) {
     const DRAG_THRESHOLD = 6;
     let zTop = 1;
 

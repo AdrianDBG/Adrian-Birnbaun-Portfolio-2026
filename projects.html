@@ -22,7 +22,10 @@
   </header>
 
   <main class="page-main projects-main" id="main">
-    <p class="projects-list__label projects-field__label">My children /</p>
+    <div class="projects-head">
+      <p class="projects-list__label projects-field__label">My children /</p>
+      <p class="field-hint" id="fieldHint" aria-live="polite"><span class="field-hint__dot" aria-hidden="true"></span><span id="fieldHintText">Drag them around · click to open</span></p>
+    </div>
 
     <!-- The field. Every piece carries its own position and size:
            --x / --y  : top-left corner, as % of the field
