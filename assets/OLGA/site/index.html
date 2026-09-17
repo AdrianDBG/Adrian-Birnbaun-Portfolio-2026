@@ -192,27 +192,6 @@ img{display:block;max-width:100%}
 .pc:nth-child(1) .n{background:var(--rojo)}.pc:nth-child(2) .n{background:var(--azul)}.pc:nth-child(3) .n{background:var(--tinta)}
 .pc h3{font:800 26px/1 var(--f);text-transform:uppercase;margin-bottom:10px}
 .pc p{color:var(--gris)}
-
-/* cta */
-.cta{margin:0 var(--pad) clamp(60px,7vw,100px);border:2px solid var(--tinta);border-radius:clamp(24px,3vw,40px);background:var(--azul);color:#fff;padding:clamp(50px,7vw,100px) clamp(24px,5vw,80px);position:relative;overflow:hidden;box-shadow:10px 10px 0 var(--tinta)}
-.cta::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(60% 80% at 90% 110%,rgba(238,27,72,.22),transparent 60%),
-    radial-gradient(50% 70% at 0% 0%,rgba(255,255,255,.12),transparent 60%),
-    radial-gradient(rgba(255,255,255,.13) 1.2px,transparent 1.4px) 0 0/14px 14px;
-  -webkit-mask-image:linear-gradient(115deg,#000 0%,rgba(0,0,0,.35) 55%,#000 100%);mask-image:linear-gradient(115deg,#000 0%,rgba(0,0,0,.35) 55%,#000 100%)}
-.cta::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.22;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-.cta .tt{z-index:1}
-.cta h2{font:900 clamp(48px,7.5vw,130px)/.86 var(--f);text-transform:uppercase;letter-spacing:-.03em;max-width:10ch;position:relative;z-index:1}
-.cta h2 em{font-style:italic;color:var(--rojo);-webkit-text-stroke:2px #fff}
-.cta p{position:relative;z-index:1;color:rgba(255,255,255,.8);margin:22px 0 30px;max-width:40ch;font-size:17px}
-.cta .btn{position:relative;z-index:1;border-color:var(--tinta)}
-.cta .tt{position:absolute;right:4%;bottom:-18%;height:130%;rotate:14deg;filter:drop-shadow(0 30px 40px rgba(0,0,0,.4));transition:rotate .8s var(--spring)}
-.cta:hover .tt{rotate:8deg}
-.cta .tt.x{right:18%;rotate:-10deg;bottom:-30%}
-.cta:hover .tt.x{rotate:-4deg}
-
 footer{padding:0 0 30px}
 .fb{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border-top:2px solid var(--tinta);padding-top:22px}
 .fb img{height:54px}
@@ -238,7 +217,6 @@ footer{padding:0 0 30px}
   .scroll{display:none}
   .sk.a{width:62%;left:3%;top:10%}.sk.b{width:66%;right:3%;top:44%}
   .sk.c{width:24%;left:6%;bottom:4%}.sk.d{width:26%;right:6%;bottom:auto;top:6%}.sk.e{display:none}
-  .cta .tt{height:70%;bottom:-10%;right:-6%;opacity:.5}.cta .tt.x{display:none}
 }
 @media (max-width:600px){
   .pf span{display:none}
@@ -295,15 +273,17 @@ footer{padding:0 0 30px}
   .pc .n{margin-bottom:18px;width:40px;height:40px;font-size:14px}
   .pc h3{font-size:22px}
   .pgrid{gap:14px}
-  .cta{margin:0 16px 56px;padding:44px 22px 0;box-shadow:6px 6px 0 var(--tinta);display:flex;flex-direction:column}
-  .cta h2{font-size:clamp(44px,14vw,60px)}
-  .cta p{font-size:15.5px}
-  .cta .btn{align-self:stretch;justify-content:center}
-  .cta .tt,.cta .tt.x{display:block;position:relative;right:auto;bottom:auto;height:auto;width:44%;opacity:1;margin:30px auto -90px;rotate:-8deg;order:5}
-  .cta .tt.x{display:none}
   .fb{flex-direction:column;align-items:flex-start;gap:18px}
   .fb nav{flex-wrap:wrap;gap:10px 18px}
   .totop{right:14px;bottom:14px;width:48px;height:48px}
+}
+
+.swipe{display:none}
+@media (max-width:600px){
+  .swipe{display:inline-flex;width:fit-content;align-items:center;gap:8px;font:500 11px ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta);opacity:.6;transition:opacity .4s}
+  .swipe.gone{opacity:0}
+  .swipe span{display:inline-block;animation:swiper 1.8s var(--ease,ease-in-out) infinite}
+  @keyframes swiper{0%,100%{transform:translateX(0)}50%{transform:translateX(7px)}}
 }
 @media (max-width:360px){.nav .btn{display:none}}
 </style>
@@ -387,6 +367,7 @@ footer{padding:0 0 30px}
   <div class="wrap shead">
     <h2 class="h2 rv">El arte,<br><span class="r">desplegado.</span></h2>
     <p class="rv d1">Así se ve cada diseño antes de envolver el termo: una pieza continua que funciona de frente, de costado y dando la vuelta completa.</p>
+    <p class="swipe rv d1" id="swipeHint">Deslizá para ver los dos diseños <span aria-hidden="true">→</span></p>
   </div>
   <div class="strip" id="strip">
     <figure class="frame rv"><img src="img/arte-fdm.jpg" alt="Arte completo del termo El Fin del Mundo" loading="lazy" width="796" height="1024"><figcaption>01 · El Fin del Mundo</figcaption></figure>
@@ -429,14 +410,6 @@ footer{padding:0 0 30px}
   </div>
 </section>
 
-<!-- CTA -->
-<section class="cta rv">
-  <img class="tt x" src="img/termo-sqv.webp?v=2" alt="" aria-hidden="true" loading="lazy">
-  <img class="tt" src="img/termo-fdm.webp" alt="" aria-hidden="true" loading="lazy">
-  <h2>Cebá con <em>OLGA</em></h2>
-  <p>Termos, vasos y accesorios de la esquina más famosa del mundo.</p>
-  <a class="btn btn-rojo" href="https://olga.store/" target="_blank" rel="noopener">Ir a olga.store ↗</a>
-</section>
 </main>
 
 <footer>
@@ -595,6 +568,10 @@ $$('.sk').forEach(el=>{
 /* reveal */
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.12});
 $$('.rv').forEach(el=>io.observe(el));
+
+// Pista de swipe en el carrusel del arte (mobile)
+(()=>{const st=document.getElementById('strip'),h=document.getElementById('swipeHint');if(!st||!h)return;
+  st.addEventListener('scroll',()=>{if(st.scrollLeft>24)h.classList.add('gone')},{passive:true});})();
 </script>
 </body>
 </html>
