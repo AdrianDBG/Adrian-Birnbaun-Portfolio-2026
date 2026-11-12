@@ -79,9 +79,13 @@
 
   <p class="contact-mark home-mark" aria-label="Copyright 2026">© <span>26</span></p>
 
-  <!-- Canvas grain stays behind the interface and never receives pointer input. -->
-  <canvas class="grain" aria-hidden="true"></canvas>
+  <!-- Background: a field of drifting dots drawn on a canvas (js/ocean.js).
+       It sits behind the interface and never receives pointer input; the
+       dots still scatter from the cursor because the script listens on
+       window. The ?v= is a cache buster — bump it when ocean.js changes. -->
+  <canvas class="ocean" aria-hidden="true"></canvas>
 
+  <script src="js/ocean.js?v=2" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Projects — Adrián Birnbaun</title>
   <meta name="description" content="Selected projects by Adrián Birnbaun, graphic, digital, web and UX/UI designer.">
-  <meta name="theme-color" content="#f1f0ec">
+  <meta name="theme-color" content="#d9d6ce">
   <link rel="icon" href="assets/favicon/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/icon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/icon-192.png">
@@ -28,86 +28,121 @@
   <main class="page-main projects-main" id="main">
     <div class="projects-head">
       <p class="projects-list__label projects-field__label">My children /</p>
-      <p class="field-hint" id="fieldHint" aria-live="polite"><span class="field-hint__dot" aria-hidden="true"></span><span id="fieldHintText">Drag them around · click to open</span></p>
+      <p class="field-hint" id="fieldHint" aria-live="polite"><span class="field-hint__dot" aria-hidden="true"></span><span id="fieldHintText">Hover to peek · click to open</span></p>
     </div>
 
-    <!-- The field. Every piece carries its own position and size:
-           --x / --y  : top-left corner, as % of the field
-           --s        : size multiplier (1 = small, 1.25, 1.5 = large)
-         Move a piece by changing two numbers. On desktop pieces can also be
-         dragged around; the numbers here are where they start. -->
-    <ul class="projects-field" aria-label="Projects">
-      <li class="piece" style="--x: 4%;  --y: 24%; --s: 1.5">
-        <a href="assets/Orest/index.html" class="piece__link">
-          <img src="assets/logoorest.jpg" alt="" width="600" height="600">
-          <span class="piece__name">OREST</span>
+    <!-- Folders. One per project: three preview files sit inside a glass
+         folder, rise and fan out on hover / focus, and the whole folder is
+         the link. To add a project: copy one <li>, point href and the three
+         assets/folders/<name>-1..3.jpg thumbnails (560×340). -->
+    <svg class="folder-defs" width="0" height="0" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id="folder-back" clipPathUnits="objectBoundingBox"><path d="M0,.24 Q0,.14 .07,.14 H.44 Q.48,.14 .51,.09 L.56,.03 Q.59,0 .64,0 H.93 Q1,0 1,.1 V.9 Q1,1 .93,1 H.07 Q0,1 0,.9 Z"/></clipPath>
+        <clipPath id="folder-front" clipPathUnits="objectBoundingBox"><path d="M0,.1 Q0,0 .07,0 H.35 Q.39,0 .42,.04 L.48,.12 Q.51,.16 .56,.16 H.93 Q1,.16 1,.26 V.9 Q1,1 .93,1 H.07 Q0,1 0,.9 Z"/></clipPath>
+      </defs>
+    </svg>
+
+    <ul class="folders" aria-label="Projects">
+      <li class="folders__item">
+        <a class="folder" href="assets/Orest/index.html" aria-label="Open OREST">
+          <span class="folder__back" aria-hidden="true"></span>
+          <img class="folder__file" style="--i: 0; --o: -0.5" src="assets/folders/orest-1.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 1; --o: 0" src="assets/folders/orest-2.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 2; --o: 0.5" src="assets/folders/orest-logo.jpg" alt="" width="560" height="340" draggable="false">
+          <span class="folder__front" aria-hidden="true"></span>
+          <span class="folder__meta">
+            <span class="folder__text"><span class="folder__name">OREST</span><span class="folder__count">Identity · UX/UI</span></span>
+            <span class="folder__action" aria-hidden="true">↗</span>
+          </span>
         </a>
       </li>
-      <li class="piece" style="--x: 20%; --y: 52%; --s: 1.25">
-        <a href="assets/Loula/site/index.html" class="piece__link">
-          <img src="assets/logoloula.jpg" alt="" width="600" height="600">
-          <span class="piece__name">Loula</span>
+      <li class="folders__item">
+        <a class="folder" href="assets/Loula/site/index.html" aria-label="Open Loula — favourite project">
+          <span class="folder__back" aria-hidden="true"></span>
+          <img class="folder__file" style="--i: 0; --o: -0.5" src="assets/folders/loula-2.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 1; --o: 0" src="assets/folders/loula-3.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 2; --o: 0.5" src="assets/folders/loula-logo.jpg" alt="" width="560" height="340" draggable="false">
+          <span class="folder__front" aria-hidden="true"></span>
+          <span class="folder__meta">
+            <span class="folder__text"><span class="folder__name">Loula<span class="folder__fav" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z" fill="currentColor"/></svg></span></span><span class="folder__count">Fintech · UX/UI</span></span>
+            <span class="folder__action" aria-hidden="true">↗</span>
+          </span>
         </a>
       </li>
-      <li class="piece" style="--x: 31%; --y: 10%; --s: 1">
-        <a href="hipodromo.html" class="piece__link">
-          <img src="assets/logopalermo.jpg" alt="" width="600" height="600">
-          <span class="piece__name">Hipódromo de Palermo</span>
+      <li class="folders__item">
+        <a class="folder" href="hipodromo.html" aria-label="Open Hipódromo de Palermo">
+          <span class="folder__back" aria-hidden="true"></span>
+          <img class="folder__file" style="--i: 0; --o: -0.5" src="assets/folders/hip-1.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 1; --o: 0" src="assets/folders/hip-2.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 2; --o: 0.5" src="assets/folders/hip-logo.jpg" alt="" width="560" height="340" draggable="false">
+          <span class="folder__front" aria-hidden="true"></span>
+          <span class="folder__meta">
+            <span class="folder__text"><span class="folder__name">Hipódromo de Palermo</span><span class="folder__count">Print · Web</span></span>
+            <span class="folder__action" aria-hidden="true">↗</span>
+          </span>
         </a>
       </li>
-      <li class="piece" style="--x: 42%; --y: 44%; --s: 1.5">
-        <a href="assets/OLGA/site/index.html" class="piece__link">
-          <img src="assets/logoolga.jpg" alt="" width="600" height="600">
-          <span class="piece__name">OLGA</span>
+      <li class="folders__item">
+        <a class="folder" href="assets/OLGA/site/index.html" aria-label="Open OLGA">
+          <span class="folder__back" aria-hidden="true"></span>
+          <img class="folder__file" style="--i: 0; --o: -0.5" src="assets/folders/olga-1.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 1; --o: 0" src="assets/folders/olga-2.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 2; --o: 0.5" src="assets/folders/olga-logo.jpg" alt="" width="560" height="340" draggable="false">
+          <span class="folder__front" aria-hidden="true"></span>
+          <span class="folder__meta">
+            <span class="folder__text"><span class="folder__name">OLGA</span><span class="folder__count">Art · Merch</span></span>
+            <span class="folder__action" aria-hidden="true">↗</span>
+          </span>
         </a>
       </li>
-      <li class="piece" style="--x: 53%; --y: 14%; --s: 1">
-        <a href="assets/Barrow/index.html" class="piece__link">
-          <img src="assets/logobarrow.jpg" alt="" width="600" height="600">
-          <span class="piece__name">BARROW</span>
+      <li class="folders__item">
+        <a class="folder" href="assets/Barrow/index.html" aria-label="Open BARROW — favourite project">
+          <span class="folder__back" aria-hidden="true"></span>
+          <img class="folder__file" style="--i: 0; --o: -0.5" src="assets/folders/barrow-3.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 1; --o: 0" src="assets/folders/barrow-2.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 2; --o: 0.5" src="assets/folders/barrow-logo.jpg" alt="" width="560" height="340" draggable="false">
+          <span class="folder__front" aria-hidden="true"></span>
+          <span class="folder__meta">
+            <span class="folder__text"><span class="folder__name">BARROW<span class="folder__fav" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z" fill="currentColor"/></svg></span></span><span class="folder__count">Web · UX/UI</span></span>
+            <span class="folder__action" aria-hidden="true">↗</span>
+          </span>
         </a>
       </li>
-      <li class="piece" style="--x: 64%; --y: 4%; --s: 1.25">
-        <a href="undici.html" class="piece__link">
-          <img src="assets/logoundici.jpg" alt="" width="600" height="600">
-          <span class="piece__name">Undici Hotels</span>
+      <li class="folders__item">
+        <a class="folder" href="undici.html" aria-label="Open Undici Hotels">
+          <span class="folder__back" aria-hidden="true"></span>
+          <img class="folder__file" style="--i: 0; --o: -0.5" src="assets/folders/undici-1.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 1; --o: 0" src="assets/folders/undici-2.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 2; --o: 0.5" src="assets/folders/undici-logo.jpg" alt="" width="560" height="340" draggable="false">
+          <span class="folder__front" aria-hidden="true"></span>
+          <span class="folder__meta">
+            <span class="folder__text"><span class="folder__name">Undici Hotels</span><span class="folder__count">Social · Print</span></span>
+            <span class="folder__action" aria-hidden="true">↗</span>
+          </span>
         </a>
       </li>
-      <li class="piece" style="--x: 71%; --y: 52%; --s: 1">
-        <a class="piece__link" aria-disabled="true">
-          <span class="piece__empty" aria-hidden="true"></span>
-          <span class="piece__name">Coming soon</span>
+      <li class="folders__item">
+        <a class="folder" href="assets/Art%20gallery/index.html" aria-label="Open Side B">
+          <span class="folder__back" aria-hidden="true"></span>
+          <img class="folder__file" style="--i: 0; --o: -0.5" src="assets/folders/sideb-1.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 1; --o: 0" src="assets/folders/sideb-2.jpg" alt="" width="560" height="340" draggable="false">
+          <img class="folder__file" style="--i: 2; --o: 0.5" src="assets/folders/sideb-3.jpg" alt="" width="560" height="340" draggable="false">
+          <span class="folder__front" aria-hidden="true"></span>
+          <span class="folder__meta">
+            <span class="folder__text"><span class="folder__name">Side B</span><span class="folder__count">Posters · Art</span></span>
+            <span class="folder__action" aria-hidden="true">↗</span>
+          </span>
         </a>
       </li>
-      <li class="piece" style="--x: 81%; --y: 20%; --s: 1.5">
-        <a href="assets/Art%20gallery/index.html" class="piece__link">
-          <img src="assets/logogallery.jpg" alt="" width="600" height="600">
-          <span class="piece__name">Side B</span>
-        </a>
-      </li>
-      <li class="piece" style="--x: 11%; --y: 68%; --s: 1">
-        <a class="piece__link" aria-disabled="true">
-          <span class="piece__empty" aria-hidden="true"></span>
-          <span class="piece__name">Coming soon</span>
-        </a>
-      </li>
-      <li class="piece" style="--x: 34%; --y: 70%; --s: 1">
-        <a class="piece__link" aria-disabled="true">
-          <span class="piece__empty" aria-hidden="true"></span>
-          <span class="piece__name">Coming soon</span>
-        </a>
-      </li>
-      <li class="piece" style="--x: 60%; --y: 72%; --s: 1">
-        <a class="piece__link" aria-disabled="true">
-          <span class="piece__empty" aria-hidden="true"></span>
-          <span class="piece__name">Coming soon</span>
-        </a>
-      </li>
-      <li class="piece" style="--x: 90%; --y: 64%; --s: 1">
-        <a class="piece__link" aria-disabled="true">
-          <span class="piece__empty" aria-hidden="true"></span>
-          <span class="piece__name">Coming soon</span>
-        </a>
+      <li class="folders__item">
+        <div class="folder folder--dark folder--empty" aria-disabled="true">
+          <span class="folder__back" aria-hidden="true"></span>
+          <span class="folder__front" aria-hidden="true"></span>
+          <span class="folder__meta">
+            <span class="folder__text"><span class="folder__name">Coming soon</span><span class="folder__count">In progress</span></span>
+            <span class="folder__action folder__action--outline" aria-hidden="true">···</span>
+          </span>
+        </div>
       </li>
     </ul>
   </main>

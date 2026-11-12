@@ -7,6 +7,13 @@
   'use strict';
 
   const canvas = document.querySelector('.grain');
+
+  /* Home background — the field of tiny fish (js/ocean.js). It handles its
+     own resize, pausing off-screen and prefers-reduced-motion. */
+  const ocean = document.querySelector('.ocean');
+  if (ocean && window.FishField) {
+    try { new window.FishField(ocean); } catch (error) { ocean.remove(); }
+  }
   const tickers = document.querySelectorAll('.ticker');
   const closeLink = document.querySelector('.page-close, .contact-close, .about-close, .projects-close');
 
@@ -84,13 +91,21 @@
 
   if (fieldHint) {
     const hintText = document.getElementById('fieldHintText');
-    if (hintText && !canDrag) hintText.textContent = 'Tap a piece to open it';
+    const folders = document.querySelector('.folders');
+    if (hintText && folders) {
+      hintText.textContent = window.matchMedia('(hover: none)').matches
+        ? 'Tap a folder to open it'
+        : 'Hover to peek · click to open';
+    } else if (hintText && !canDrag) {
+      hintText.textContent = 'Tap a piece to open it';
+    }
     setTimeout(function () { fieldHint.classList.add('is-on'); }, 900);
     const hideHint = function () {
       fieldHint.classList.remove('is-on');
       fieldHint.classList.add('is-gone');
     };
     if (field) field.addEventListener('pointerdown', hideHint, { once: true });
+    if (folders) folders.addEventListener('pointerover', hideHint, { once: true });
     setTimeout(hideHint, 12000);
   }
 
