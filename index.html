@@ -17,9 +17,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@900&family=JetBrains+Mono:wght@400&display=swap">
 
   <link rel="stylesheet" href="css/style.css?v=20261112">
+  <!-- Home background: dithered hand + sphere (css/aura.css). -->
+  <link rel="stylesheet" href="css/aura.css?v=20261125">
 </head>
 
-<body>
+<body class="aura-page">
 
   <!-- ============================================================
        HEADER
@@ -79,13 +81,21 @@
 
   <p class="contact-mark home-mark" aria-label="Copyright 2026">© <span>26</span></p>
 
-  <!-- Background: a field of drifting dots drawn on a canvas (js/ocean.js).
-       It sits behind the interface and never receives pointer input; the
-       dots still scatter from the cursor because the script listens on
-       window. The ?v= is a cache buster — bump it when ocean.js changes. -->
-  <canvas class="ocean" aria-hidden="true"></canvas>
+  <!-- Background: periwinkle drifting dots (js/ocean.js + js/aura-dots.js)
+       and a dithered hand holding a glowing sphere
+       (js/aura.js). It loops until one of the three words is clicked. -->
+  <canvas class="aura-dots" aria-hidden="true"></canvas>
+  <canvas class="aura" aria-hidden="true"></canvas>
 
   <script src="js/ocean.js?v=20261112" defer></script>
+  <script src="js/aura-dots.js?v=20261125" defer></script>
+  <script src="js/aura-hand.js?v=20261125" defer></script>
+  <script src="js/aura.js?v=20261125" defer></script>
+  <script>
+    /* The home page: ESC never navigates away from it (also at the bare / URL). */
+    window.addEventListener('keydown', function (e) { if (e.key === 'Escape') e.stopImmediatePropagation(); }, true);
+    window.addEventListener('keyup', function (e) { if (e.key === 'Escape') e.stopImmediatePropagation(); }, true);
+  </script>
   <script src="js/main.js?v=20261112" defer></script>
 </body>
 </html>
